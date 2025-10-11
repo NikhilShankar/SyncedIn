@@ -1,0 +1,97 @@
+% Resume Template for TeXWorks - DYNAMIC VERSION
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{fontspec}
+
+
+% Set the main font to your custom font
+% Use the full font name (case-sensitive) or the filename.
+\setmainfont{Lato-Regular.ttf}
+[
+    % The only crucial option needed here is BoldFont
+    BoldFont = Lato-Bold.ttf,
+    ItalicFont = Lato-Italic.ttf,
+    BoldItalicFont = Lato-BoldItalic.ttf,
+]
+
+
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{6pt}
+
+% Remove page numbers
+\pagestyle{empty}
+
+% Custom commands
+\newcommand{\resumeItem}[1]{\item\small{#1}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\begin{document}
+
+%----------HEADER----------
+\begin{center}
+    \textbf{\huge {{NAME}}} \\
+    \vspace{6pt}
+    \small {{ADDRESS}} \\
+    \small {{PHONE}} | \href{mailto:{{EMAIL}}}{{{EMAIL}}} \\
+    \small \href{{{LINKEDIN}}}{LinkedIn} | \href{{{PORTFOLIO}}}{Portfolio} | \href{{{LEETCODE}}}{LeetCode}
+\end{center}
+
+%----------PROFESSIONAL SUMMARY----------
+\section{Professional Summary}
+{{SUMMARY}}
+
+%----------TECHNICAL SKILLS----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages: }{{{LANGUAGES}}} \\
+     \textbf{Platforms: }{{{PLATFORMS}}} \\
+     \textbf{Skills: }{{{SKILLS}}} \\
+     \textbf{Frameworks: }{{{FRAMEWORKS}}} \\
+     \textbf{Tools: }{{{TOOLS}}} \\
+     \textbf{Database: }{{{DATABASE}}}
+    }}
+\end{itemize}
+
+%----------PROFESSIONAL EXPERIENCE----------
+\section{Professional Experience}
+\begin{itemize}[leftmargin=0.15in, label={}]
+{{EXPERIENCE_ITEMS}}
+\end{itemize}
+
+%----------EDUCATION----------
+\section{Education}
+\begin{itemize}[leftmargin=0.15in, label={}]
+{{EDUCATION_ITEMS}}
+\end{itemize}
+
+%----------PROJECTS----------
+\section{Personal Projects}
+\begin{itemize}[leftmargin=0.15in, label={}]
+{{PROJECT_ITEMS}}
+\end{itemize}
+
+\end{document}

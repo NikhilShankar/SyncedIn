@@ -1,0 +1,129 @@
+{
+  "static_info": {
+    "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
+    "address": "602-A 50 University Avenue East, Waterloo, Ontario - N2J-2V8",
+    "phone": "226-820-1762",
+    "email": "nikhil.shankar.cs@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "https://yourportfolio.com",
+    "leetcode": "https://leetcode.com/yourprofile"
+  },
+
+  "summaries": {
+    "android": "Senior Android Developer with 8 years of experience developing, refactoring and optimizing Android apps, Android libraries in Ad-tech and Fintech software domains. Played crucial roles in developing android libraries and Fintech App respectively at two early stage startups which scaled exponentially, of which the latter gained Unicorn status eventually in 2023.",
+    "fullstack": "Versatile Full-stack Developer with 8 years of experience in mobile and backend development, specializing in scalable architectures. Proven track record in Ad-tech and Fintech domains with expertise in Android, iOS, and microservices.",
+    "ml": "Software Engineer with strong foundation in mobile development and emerging AI/ML technologies. Currently pursuing Applied AI & Machine Learning with hands-on experience in LLMs, NLP, and ML model training.",
+    "general": "Senior Software Engineer with 8 years of experience across mobile, backend, and emerging technologies. Strong problem-solving skills with proven ability to architect scalable solutions and mentor development teams."
+  },
+
+  "skills": {
+    "languages": ["Kotlin", "Java", "Dart", "Python", "Golang", "C++", "C#", "Swift", "Objective-C", "Solidity"],
+    "platforms": ["Android Studio", "Firebase", "AWS", "GCM", "IntelliJ", "Goland", "VSCode", "Figma", "PyCharm", "DataGrip"],
+    "skills": ["Modular code using MVVM MVI and Clean Architecture", "Multi Module App Design", "Complex UI Development using Compose", "UI Optimizations", "Designing Framework and Libraries", "Agile Planning", "OOP", "Design patterns", "Code Reviews and detecting code smells and bugs", "Code refactoring", "Deadlock detection", "Performance profiling", "Google Play Store Management", "Project Planning", "UML Diagrams", "Mentoring Junior Developers", "Flowcharts", "Use case diagrams", "Sequence diagrams", "Spring-boot Kotlin", "NLP", "LLMs", "Model Training"],
+    "frameworks": ["Android SDK", "NDK", "Jetpack Compose", "Retrofit", "OkHttp", "Dagger", "Hilt", "Picasso", "Room", "SQLite", "Coroutines", "Livedata", "Lottie", "Motion Layout", "JUnit", "Material Components", "Jetpack Libraries", "NDK", "Flutter", "Unity", "Gradle", "Glide", "Detekt", "Websockets", "Spotless", "Javadoc", "JNI", "Llama", "OLlama", "Langchain", "Langgraph", "HuggingFace Transformers", "Spring Boot Kotlin", "Web-3"],
+    "tools": ["Leak Canary", "AS Profiler", "Git", "Debugger", "Stetho", "Postman", "GPU Profiler", "Network Profiler", "Charles", "Benchmark Library", "Lint", "Github Actions", "Jira", "Trello", "Confluence", "Bitbucket", "Groq", "Llama"],
+    "database": ["MySQL", "SQLite", "MongoDB", "Firebase Realtime", "Firebase Firestore", "Weaviate-Vector DB"]
+  },
+
+  "companies": [
+    {
+      "id": "slice",
+      "name": "Slice",
+      "position": "Software Development Engineer 3 - Android",
+      "dates": "Nov 2020 - Feb 2024",
+      "location": "Fintech, Bengaluru, India",
+      "website": "Website",
+      "playstore": "Playstore",
+      "bullets": [
+        "Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024.",
+        "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app.",
+        "Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices.",
+        "Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40% and cost by a huge 70%",
+        "Adopted unit tests for modules under the UPI project, achieving 90% code coverage.",
+        "Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions.",
+        "Designed and created architecture for web socket library for real-time chat and achieved seamless integration between backend API's and complex UI elements of chat feature."
+      ]
+    },
+    {
+      "id": "greedygame",
+      "name": "GreedyGame",
+      "position": "Senior Developer | Android, iOS, Backend",
+      "dates": "Sep 2015 - Oct 2019",
+      "location": "Ad-Tech, Bengaluru, India",
+      "website": "Website",
+      "bullets": [
+        "Developed core Android library, which other developers can integrate to show native ads. Handling ~5 million ad requests/day.",
+        "Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts.",
+        "Integrated Admob, Mopub and Facebook Ads and wrote wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, facilitating the Android library to inject ads into games and apps.",
+        "Ideated and designed separate settings tool app which allows to view debug logs of other games integrated with the Android library in debug mode which resulted in faster debugging and helped QA to reduce bug reporting time by at least 50%",
+        "Created a Unity game engine plugin that reduced developers' initial integration time from 1-2 days to less than 10 minutes.",
+        "Initiated development of the iOS plugin from scratch as a personal project by learning swift and iOS app development which was later incorporated as a separate product line in the organization attracting iOS app and game development companies into the business.",
+        "Refactored the monolithic Backend written in NodeJS to microservices based architecture using Golang, which helped streamline the development and reduced overall development time, time for debugging issues, and time for deployment."
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "id": "aingel",
+      "name": "AIngel",
+      "tech": "Android, AI, LLMs, Machine Learning",
+      "description": "An android app to nurture relationships created using AI powered bots with LLMs and Machine Learning algorithms to find meaningful matches. This is currently part of Venture Tech Lab CEC Conestoga College.",
+      "date": "Jan 2025",
+      "link": ""
+    },
+    {
+      "id": "fanfight",
+      "name": "Fan Fight Club",
+      "tech": "Android, Python Scripts",
+      "description": "An android repository that can be used to generate multiple apps by using python scripts. Fan Fight Club Messi vs Ronaldo was one such app out of around 10 that were created which garnered 2 lakh installs with more than 200 ratings averaged at 4.7/5 stars",
+      "date": "2019",
+      "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
+    },
+    {
+      "id": "phifactory",
+      "name": "The Phi Factory",
+      "tech": "Android, Google AR Core",
+      "description": "An AR based furniture display app created for a startup found by my brother and friends. It allowed users to create and view customized furnitures",
+      "date": "Nov 2021",
+      "link": "https://bitbucket.org/nikhilshankarcs/phifactory"
+    },
+    {
+      "id": "mmdb",
+      "name": "MMDB: My Movie Database",
+      "tech": "Android, TMDB API",
+      "description": "A social movie review android app created using TMDB api which allows users to create and share movie lists and allow users to comment, review, and like them",
+      "date": "July 2020",
+      "link": "https://bitbucket.org/nikhilshankarcs/mmdb"
+    },
+    {
+      "id": "wholookslikeme",
+      "name": "WhoLooksLikeMe",
+      "tech": "Python, Inception V3, Vector Embeddings",
+      "description": "A fun machine learning college project done in 1 week using Inception V3 and Vector Embeddings to find your celebrity look alike",
+      "date": "2019",
+      "link": "https://wholookslikeme.com"
+    }
+  ],
+
+  "education": [
+    {
+      "degree": "Post-Graduate Diploma in Applied Artificial Intelligence & Machine Learning",
+      "institution": "Conestoga College, Waterloo",
+      "dates": "Sep 2024 - Expected to complete by Apr 2025",
+      "location": ""
+    },
+    {
+      "degree": "Master of Technology in Software Engineering",
+      "institution": "CUSAT, Kerala, India",
+      "dates": "Aug 2012 - Apr 2014",
+      "location": ""
+    },
+    {
+      "degree": "Bachelor of Technology in Computer Science & Engineering",
+      "institution": "CoET, Thalassery, India",
+      "dates": "Aug 2007 - Apr 2011",
+      "location": ""
+    }
+  ]
+}
