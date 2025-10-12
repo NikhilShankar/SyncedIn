@@ -97,7 +97,19 @@
           "mandatory": false
         },
         {
-          "text": "Designed and created architecture for web socket library for real-time chat and achieved seamless integration between backend API's and complex UI elements of chat feature.",
+          "text": "Refactored existing multi-module architecture further into data and ui modules to ensure common api's and data are not duplicated across modules thereby reducing dev effort across teams.",
+          "mandatory": false
+        },
+        {
+          "text": "Integrated detekt and spotless library to enforce coding standards across modules thereby ensuring easier code reviews",
+          "mandatory": false
+        },
+        {
+          "text": "Incorporated creation of Use Case, Flow and Class diagrams before feature implementation thereby ensuring product - engineering alignment and better clarity and guidance for junior developers",
+          "mandatory": false
+        },
+        {
+          "text": "Integrated ruler gradle plugin from Spotify to analyze and make sure apk size is under control thereby identifying and ironing out size related issues before app release",
           "mandatory": false
         }
       ]
@@ -117,31 +129,27 @@
       },
       "bullets": [
         {
-          "text": "Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024.",
+          "text": "Designed and architected chat feature by integrating socket io at client side and helped architect websocket apis at backend for seamless realtime data transfer",
           "mandatory": false
         },
         {
-          "text": "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app.",
+          "text": "Developed a social media feature module as an MVP in 3 weeks to be integrated into the fintech app for A/B testing",
           "mandatory": false
         },
         {
-          "text": "Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices.",
+          "text": "Designed an emoji-shower library making it easier for different teams to integrate confetti and emoji animations and reduced memory consumption by 95% by reusing image vectors",
           "mandatory": false
         },
         {
-          "text": "Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40% and cost by a huge 70%",
+          "text": "Refactored existing fragments in the codebase thereby increasing UI performance by forcing reuse of already inflated layouts",
           "mandatory": false
         },
         {
-          "text": "Adopted unit tests for modules under the UPI project, achieving 90% code coverage.",
+          "text": "Identified frequent use of onboarding stories across teams and created an onboarding status library thereby reducing onboarding feature development time across teams from 1-2 days to half a day",
           "mandatory": false
         },
         {
-          "text": "Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions.",
-          "mandatory": false
-        },
-        {
-          "text": "Designed and created architecture for web socket library for real-time chat and achieved seamless integration between backend API's and complex UI elements of chat feature.",
+          "text": "Identified that modular architecture was not being followed in the organization and initiated multi module architecture thereby making scaling across teams easier",
           "mandatory": false
         }
       ]

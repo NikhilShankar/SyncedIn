@@ -1,0 +1,189 @@
+% Resume Template for TeXWorks - DYNAMIC VERSION
+\documentclass[11pt,a4paper]{article}
+
+\raggedright
+% Packages
+\usepackage[margin=0.70in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{fontspec}
+
+
+
+% Set the main font to your custom font
+% Use the full font name (case-sensitive) or the filename.
+
+
+\setmainfont{Lato-Regular.ttf}
+[
+    % The only crucial option needed here is BoldFont
+    BoldFont = Lato-Bold.ttf,
+    ItalicFont = Lato-Italic.ttf,
+    BoldItalicFont = Lato-BoldItalic.ttf,
+]
+
+
+
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{16pt}{10pt}
+
+% Remove page numbers
+\pagestyle{empty}
+
+% Custom commands
+\newcommand{\resumeItem}[1]{\item\normalfont{#1}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\normalfont#3} & \textit{\normalfont #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+% New command for three lines of left/right-aligned content
+\newcommand{\resumeThreeLineSubheading}[6]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \normalfont #2 \\  % Line 1: Degree (Left) | Dates (Right)
+      \textbf{\normalfont #3} & \normalfont #4 \\  % Line 2: Course (Left) | Location (Right)
+      \normalfont #5 & \normalfont #6 \\  % Line 3: Institution (Left) | Blank (Right)
+    \end{tabular*}\vspace{-5pt}
+}
+
+\begin{document}
+
+%----------HEADER----------
+\begin{center}
+    \textbf{\large NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN} \\
+    \vspace{6pt}
+    \normalfont 602-A 50 University Avenue East, Waterloo, Ontario - N2J-2V8 \\
+    \normalfont 226-820-1762 | \href{mailto:nikhil.shankar.cs@gmail.com}{nikhil.shankar.cs@gmail.com} \\
+    \normalfont \href{https://www.linkedin.com/in/nikhilshankarcs}{LinkedIn} | \href{https://yourportfolio.com}{Portfolio} | \href{https://leetcode.com/yourprofile}{LeetCode}
+\end{center}
+
+%----------PROFESSIONAL SUMMARY----------
+\section{Professional Summary}
+Senior Android Developer with 8 years of experience developing, refactoring and optimizing Android apps, Android libraries in Ad-tech and Fintech software domains. Played crucial roles in developing android libraries and Fintech App respectively at two early stage startups which scaled exponentially, of which the latter gained Unicorn status eventually in 2023.
+
+%----------PROFESSIONAL EXPERIENCE----------
+\section{Professional Experience}
+\begin{itemize}[leftmargin=0.15in, label={}]
+\resumeSubheading
+  {Software Development Engineer 3 - Android}{Nov 2022 - Feb 2024}
+  {Slice, Fintech}{Bengaluru, India}
+\begin{itemize}[leftmargin=0.3in]
+  \resumeItem{Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024.}
+  \resumeItem{Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions.}
+  \resumeItem{Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices.}
+  \resumeItem{Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40\% and cost by a huge 70\%}
+  \resumeItem{Adopted unit tests for modules under the UPI project, achieving 90\% code coverage.}
+\end{itemize}
+
+\resumeSubheading
+  {Software Development Engineer 2 - Android}{Nov 2020 - Nov 2022}
+  {Slice, Fintech}{Bengaluru, India}
+\begin{itemize}[leftmargin=0.3in]
+  \resumeItem{Designed and architected chat feature by integrating socket io at client side and helped architect websocket apis at backend for seamless realtime data transfer}
+  \resumeItem{Designed an emoji-shower library making it easier for different teams to integrate confetti and emoji animations and reduced memory consumption by 95\% by reusing image vectors}
+  \resumeItem{Refactored existing fragments in the codebase thereby increasing UI performance by forcing reuse of already inflated layouts}
+  \resumeItem{Identified that modular architecture was not being followed in the organization and initiated multi module architecture thereby making scaling across teams easier}
+  \resumeItem{Developed a social media feature module as an MVP in 3 weeks to be integrated into the fintech app for A/B testing}
+\end{itemize}
+
+\resumeSubheading
+  {Fullstack Developer iOS, Backend}{Sep 2015 - Oct 2019}
+  {GreedyGame, Ad-Tech}{Bengaluru, India}
+\begin{itemize}[leftmargin=0.3in]
+  \resumeItem{Initiated development of the iOS plugin from scratch as a personal project by learning swift and iOS app development which was later incorporated as a separate product line in the organization attracting iOS app and game development companies into the business.}
+  \resumeItem{Refactored the monolithic Backend written in NodeJS to microservices based architecture using Golang, which helped streamline the development and reduced overall development time, time for debugging issues, and time for deployment.}
+  \resumeItem{Integrated Jenkins CI/CD pipeline for automating artifact creation thereby reducing previous manual effort of 2-3 hours}
+  \resumeItem{Developed integration documentation website in Angular JS thereby reducing integration related queries}
+\end{itemize}
+
+\resumeSubheading
+  {Senior Developer | Android}{Sep 2015 - Apr 2018}
+  {GreedyGame, Ad-Tech}{Bengaluru, India}
+\begin{itemize}[leftmargin=0.3in]
+  \resumeItem{Developed core Android library, which other developers can integrate to show native ads, focusing on optimization and performance thereby reducing memory consumption and library conflicts}
+  \resumeItem{Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts.}
+  \resumeItem{Integrated Admob, Mopub and Facebook Ads and wrote wrappers for Unity Game Engine and Cocos-2dx using JNI, C\#, and C++, facilitating the Android library to inject ads into games and apps thereby increasing compatible dev environment by 4x}
+  \resumeItem{Ideated and designed separate settings tool app which allows to view debug logs of other games integrated with the Android library in debug mode which resulted in faster debugging and helped QA to reduce bug reporting time by at least 50\%}
+\end{itemize}
+
+
+\end{itemize}
+
+
+%----------TECHNICAL SKILLS----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \normalfont{\item{
+     \textbf{Languages: }{Kotlin, Java, Python, Dart, Golang, C++, Swift} \\
+     \textbf{Platforms: }{Android Studio, Firebase, AWS, IntelliJ, Figma, VSCode} \\
+     \textbf{Skills: }{Modular code using MVVM MVI and Clean Architecture, Complex UI Development using Compose, Design patterns, Multi Module App Design, UI Optimizations, Code Reviews and detecting code smells and bugs, Performance profiling, Mentoring Junior Developers, OOP, Agile Planning} \\
+     \textbf{Frameworks: }{Android SDK, Jetpack Compose, Retrofit, Coroutines, Dagger, Hilt, Room, OkHttp, Livedata, Material Components, Jetpack Libraries, JUnit, Motion Layout, Gradle} \\
+     \textbf{Tools: }{Git, AS Profiler, Leak Canary, Debugger, Postman, Network Profiler, Github Actions, Jira} \\
+     \textbf{Database: }{SQLite, Firebase Firestore, Firebase Realtime, MySQL}
+    }}
+\end{itemize}
+
+
+
+%----------EDUCATION----------
+\section{Education}
+\begin{itemize}[leftmargin=0.15in, label={}]
+\resumeThreeLineSubheading
+  {Post-Graduate Diploma}
+  {Sep 2024 - Dec 2025}
+  {Applied Artificial Intelligence \& Machine Learning | Cloud Dev-Ops}
+  {Waterloo, Ontario, Canada}
+  {Conestoga College, Waterloo}
+  {}
+
+\resumeThreeLineSubheading
+  {Master of Technology}
+  {Aug 2012 - Apr 2014}
+  {Software Engineering}
+  {Cochin, Kerala, India}
+  {CUSAT, Kerala, India}
+  {}
+
+\resumeThreeLineSubheading
+  {Bachelor of Technology}
+  {Aug 2007 - Apr 2011}
+  {Computer Science \& Engineering}
+  {Thalassery, Kerala, India}
+  {CoET, Thalassery, India}
+  {}
+
+
+\end{itemize}
+
+%----------PROJECTS----------
+\section{Personal Projects}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \item \textbf{AIngel} - An android app to nurture relationships created using AI powered bots with LLMs and Machine Learning algorithms to find meaningful matches. This is currently part of Venture Tech Lab CEC Conestoga College.
+          \textit{Android, AI, LLMs, Machine Learning} | Jan 2025
+
+    \item \textbf{Fan Fight Club} - An android repository that can be used to generate multiple apps by using python scripts. Fan Fight Club Messi vs Ronaldo was one such app out of around 10 that were created which garnered 2 lakh installs with more than 200 ratings averaged at 4.7/5 stars
+          \textit{Android, Python Scripts} | 2019 | \href{https://bitbucket.org/nikhilshankarcs/fanfightclub}{Link}
+
+    \item \textbf{MMDB: My Movie Database} - A social movie review android app created using TMDB api which allows users to create and share movie lists and allow users to comment, review, and like them
+          \textit{Android, TMDB API} | July 2020 | \href{https://bitbucket.org/nikhilshankarcs/mmdb}{Link}
+
+
+\end{itemize}
+
+\end{document}

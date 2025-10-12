@@ -1,0 +1,224 @@
+{
+  "title": "League - Senior Software Engineer, Android",
+  "reasoning": "Selected 5 bullets for slice (minimum 4 required), 5 bullets for slice2 (minimum 4 required), 4 bullets for greedygame (minimum 4 required), 4 bullets for greedygame2 (minimum 4 required), total 18 bullets (requirement: 16-20). Chose 3 projects, met all skill category minimums with strong focus on Android/Kotlin stack matching job requirements.",
+  "static_info": {
+    "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
+    "address": "602-A 50 University Avenue East, Waterloo, Ontario - N2J-2V8",
+    "phone": "226-820-1762",
+    "email": "nikhil.shankar.cs@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "https://yourportfolio.com",
+    "leetcode": "https://leetcode.com/yourprofile"
+  },
+  "summaries": {
+    "selected_type": "Senior Android Developer with 8 years of experience developing, refactoring and optimizing Android apps, Android libraries in Ad-tech and Fintech software domains. Played crucial roles in developing android libraries and Fintech App respectively at two early stage startups which scaled exponentially, of which the latter gained Unicorn status eventually in 2023."
+  },
+  "skills": {
+    "languages": [
+      "Kotlin",
+      "Java",
+      "Python",
+      "Dart",
+      "Golang",
+      "C++",
+      "Swift"
+    ],
+    "platforms": [
+      "Android Studio",
+      "Firebase",
+      "AWS",
+      "IntelliJ",
+      "Figma",
+      "VSCode"
+    ],
+    "skills": [
+      "Modular code using MVVM MVI and Clean Architecture",
+      "Complex UI Development using Compose",
+      "Design patterns",
+      "Multi Module App Design",
+      "UI Optimizations",
+      "Code Reviews and detecting code smells and bugs",
+      "Performance profiling",
+      "Mentoring Junior Developers",
+      "OOP",
+      "Agile Planning"
+    ],
+    "frameworks": [
+      "Android SDK",
+      "Jetpack Compose",
+      "Retrofit",
+      "Coroutines",
+      "Dagger",
+      "Hilt",
+      "Room",
+      "OkHttp",
+      "Livedata",
+      "Material Components",
+      "Jetpack Libraries",
+      "JUnit",
+      "Motion Layout",
+      "Gradle"
+    ],
+    "tools": [
+      "Git",
+      "AS Profiler",
+      "Leak Canary",
+      "Debugger",
+      "Postman",
+      "Network Profiler",
+      "Github Actions",
+      "Jira"
+    ],
+    "database": [
+      "SQLite",
+      "Firebase Firestore",
+      "Firebase Realtime",
+      "MySQL"
+    ]
+  },
+  "companies": [
+    {
+      "id": "slice",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 3 - Android",
+      "dates": "Nov 2022 - Feb 2024",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024."
+        },
+        {
+          "text": "Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions."
+        },
+        {
+          "text": "Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices."
+        },
+        {
+          "text": "Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40% and cost by a huge 70%"
+        },
+        {
+          "text": "Adopted unit tests for modules under the UPI project, achieving 90% code coverage."
+        }
+      ]
+    },
+    {
+      "id": "slice2",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 2 - Android",
+      "dates": "Nov 2020 - Nov 2022",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Designed and architected chat feature by integrating socket io at client side and helped architect websocket apis at backend for seamless realtime data transfer"
+        },
+        {
+          "text": "Designed an emoji-shower library making it easier for different teams to integrate confetti and emoji animations and reduced memory consumption by 95% by reusing image vectors"
+        },
+        {
+          "text": "Refactored existing fragments in the codebase thereby increasing UI performance by forcing reuse of already inflated layouts"
+        },
+        {
+          "text": "Identified that modular architecture was not being followed in the organization and initiated multi module architecture thereby making scaling across teams easier"
+        },
+        {
+          "text": "Developed a social media feature module as an MVP in 3 weeks to be integrated into the fintech app for A/B testing"
+        }
+      ]
+    },
+    {
+      "id": "greedygame",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Fullstack Developer iOS, Backend",
+      "dates": "Sep 2015 - Oct 2019",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Initiated development of the iOS plugin from scratch as a personal project by learning swift and iOS app development which was later incorporated as a separate product line in the organization attracting iOS app and game development companies into the business."
+        },
+        {
+          "text": "Refactored the monolithic Backend written in NodeJS to microservices based architecture using Golang, which helped streamline the development and reduced overall development time, time for debugging issues, and time for deployment."
+        },
+        {
+          "text": "Integrated Jenkins CI/CD pipeline for automating artifact creation thereby reducing previous manual effort of 2-3 hours"
+        },
+        {
+          "text": "Developed integration documentation website in Angular JS thereby reducing integration related queries"
+        }
+      ]
+    },
+    {
+      "id": "greedygame2",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Senior Developer | Android",
+      "dates": "Sep 2015 - Apr 2018",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Developed core Android library, which other developers can integrate to show native ads, focusing on optimization and performance thereby reducing memory consumption and library conflicts"
+        },
+        {
+          "text": "Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts."
+        },
+        {
+          "text": "Integrated Admob, Mopub and Facebook Ads and wrote wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, facilitating the Android library to inject ads into games and apps thereby increasing compatible dev environment by 4x"
+        },
+        {
+          "text": "Ideated and designed separate settings tool app which allows to view debug logs of other games integrated with the Android library in debug mode which resulted in faster debugging and helped QA to reduce bug reporting time by at least 50%"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "aingel",
+      "name": "AIngel",
+      "tech": "Android, AI, LLMs, Machine Learning",
+      "description": "An android app to nurture relationships created using AI powered bots with LLMs and Machine Learning algorithms to find meaningful matches. This is currently part of Venture Tech Lab CEC Conestoga College.",
+      "date": "Jan 2025",
+      "link": ""
+    },
+    {
+      "id": "fanfight",
+      "name": "Fan Fight Club",
+      "tech": "Android, Python Scripts",
+      "description": "An android repository that can be used to generate multiple apps by using python scripts. Fan Fight Club Messi vs Ronaldo was one such app out of around 10 that were created which garnered 2 lakh installs with more than 200 ratings averaged at 4.7/5 stars",
+      "date": "2019",
+      "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
+    },
+    {
+      "id": "mmdb",
+      "name": "MMDB: My Movie Database",
+      "tech": "Android, TMDB API",
+      "description": "A social movie review android app created using TMDB api which allows users to create and share movie lists and allow users to comment, review, and like them",
+      "date": "July 2020",
+      "link": "https://bitbucket.org/nikhilshankarcs/mmdb"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Post-Graduate Diploma",
+      "course": "Applied Artificial Intelligence & Machine Learning | Cloud Dev-Ops",
+      "institution": "Conestoga College, Waterloo",
+      "dates": "Sep 2024 - Dec 2025",
+      "location": "Waterloo, Ontario, Canada"
+    },
+    {
+      "degree": "Master of Technology",
+      "course": "Software Engineering",
+      "institution": "CUSAT, Kerala, India",
+      "dates": "Aug 2012 - Apr 2014",
+      "location": "Cochin, Kerala, India"
+    },
+    {
+      "degree": "Bachelor of Technology",
+      "course": "Computer Science & Engineering",
+      "institution": "CoET, Thalassery, India",
+      "dates": "Aug 2007 - Apr 2011",
+      "location": "Thalassery, Kerala, India"
+    }
+  ]
+}

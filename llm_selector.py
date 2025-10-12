@@ -44,7 +44,7 @@ class ResumeSelector:
 
         # Build the prompt
         prompt = self._build_prompt(full_resume_data, job_description)
-
+        print(f"Model is: {self.model}")
         # Call Claude API
         try:
             response = self.client.messages.create(
@@ -78,15 +78,22 @@ class ResumeSelector:
 
         config = full_resume_data.get('config', {})
 
+        # Build per-company constraints list
+        company_constraints = ""
+        for company in full_resume_data.get('companies', []):
+            constraints = company.get('bullet_constraints', {})
+            min_count = constraints.get('min', 4)
+            max_count = constraints.get('max', 6)
+            company_constraints += f"     * {company['id']} ({company['position']} at {company['name']}): MUST have EXACTLY {min_count} bullets minimum, {max_count} maximum\n"
+
         prompt = f"""You are an expert resume writer and ATS optimization specialist. Your task is to select the most relevant content from a candidate's resume based on a specific job description.
 
-**CRITICAL INSTRUCTIONS:**
+**CRITICAL INSTRUCTIONS - THESE ARE MANDATORY:**
 1. Return a JSON object with the EXACT SAME STRUCTURE as the input resume data
 2. DO NOT paraphrase or rewrite any content - return the EXACT text from the original bullets, skills, and projects
 3. Select content that best matches the job description requirements
-4. Prioritize EXPERIENCE bullets over PROJECTS when space is limited
+4. THE CONSTRAINTS BELOW ARE HARD REQUIREMENTS - YOU MUST MEET ALL OF THEM
 5. Maintain chronological order for all companies and bullets
-6. Ensure the final resume fits within 2 pages
 
 **JOB DESCRIPTION:**
 {job_description}
@@ -94,58 +101,84 @@ class ResumeSelector:
 **RESUME DATA:**
 {json.dumps(full_resume_data, indent=2)}
 
-**SELECTION CONSTRAINTS:**
-You MUST adhere to these constraints strictly:
+**⚠️  MANDATORY SELECTION CONSTRAINTS (MUST FOLLOW EXACTLY):**
 
-1. **Bullets (Experience):**
-   - Total bullets across all companies: {config.get('bullets', {}).get('total_min', 16)} to {config.get('bullets', {}).get('total_max', 20)}
-   - Per company constraints are specified in each company's "bullet_constraints" field
-   - ALL companies are MANDATORY - you must include all {len(full_resume_data.get('companies', []))} companies
-   - Respect the "mandatory" flag for bullets (if true, MUST include)
+These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constraint is violated.
 
-2. **Skills:**
-   - Select {config.get('skills_per_category', {}).get('languages', {}).get('min', 5)}-{config.get('skills_per_category', {}).get('languages', {}).get('max', 8)} languages
-   - Select {config.get('skills_per_category', {}).get('platforms', {}).get('min', 5)}-{config.get('skills_per_category', {}).get('platforms', {}).get('max', 8)} platforms
-   - Select {config.get('skills_per_category', {}).get('skills', {}).get('min', 8)}-{config.get('skills_per_category', {}).get('skills', {}).get('max', 12)} skills
-   - Select {config.get('skills_per_category', {}).get('frameworks', {}).get('min', 8)}-{config.get('skills_per_category', {}).get('frameworks', {}).get('max', 15)} frameworks
-   - Select {config.get('skills_per_category', {}).get('tools', {}).get('min', 6)}-{config.get('skills_per_category', {}).get('tools', {}).get('max', 10)} tools
-   - Select {config.get('skills_per_category', {}).get('database', {}).get('min', 4)}-{config.get('skills_per_category', {}).get('database', {}).get('max', 6)} databases
-   - ALWAYS include items from the "*_mandatory" arrays first
+1. **Bullets (Experience) - MANDATORY COUNTS:**
 
-3. **Projects:**
-   - Select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
-   - Prioritize projects that complement the experience section
-   - Consider space constraints - fewer projects if experience bullets are more valuable
+   Total bullets requirement:
+   - MUST have between {config.get('bullets', {}).get('total_min', 16)} and {config.get('bullets', {}).get('total_max', 20)} bullets total across ALL companies
+
+   Per-company requirements (YOU MUST MEET EACH ONE):
+{company_constraints}
+
+   Important notes:
+   - ALL {len(full_resume_data.get('companies', []))} companies are MANDATORY
+   - If a company doesn't have enough relevant bullets, ADD LESS RELEVANT ONES to meet the minimum
+   - Meeting count constraints is MORE IMPORTANT than perfect relevance
+   - Each company's bullets must come from THAT company's bullet list only
+
+2. **Skills - MANDATORY COUNTS (Must meet MINIMUM in each category):**
+   - Languages: SELECT AT LEAST {config.get('skills_per_category', {}).get('languages', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('languages', {}).get('max', 8)})
+   - Platforms: SELECT AT LEAST {config.get('skills_per_category', {}).get('platforms', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('platforms', {}).get('max', 8)})
+   - Skills: SELECT AT LEAST {config.get('skills_per_category', {}).get('skills', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('skills', {}).get('max', 12)})
+   - Frameworks: SELECT AT LEAST {config.get('skills_per_category', {}).get('frameworks', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('frameworks', {}).get('max', 15)})
+   - Tools: SELECT AT LEAST {config.get('skills_per_category', {}).get('tools', {}).get('min', 6)} items (max {config.get('skills_per_category', {}).get('tools', {}).get('max', 10)})
+   - Database: SELECT AT LEAST {config.get('skills_per_category', {}).get('database', {}).get('min', 4)} items (max {config.get('skills_per_category', {}).get('database', {}).get('max', 6)})
+   - ALWAYS include ALL items from "*_mandatory" arrays FIRST
+
+3. **Projects - MANDATORY COUNT:**
+   - MUST select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
+   - Aim for {config.get('projects', {}).get('max', 3)} projects to maximize content
 
 4. **Summary:**
-   - Select ONE summary type that best matches the job description (android/fullstack/ml/general)
+   - Select EXACTLY ONE summary type that best matches the job description
+
+**STEP-BY-STEP SELECTION PROCESS:**
+
+Step 1: For EACH company, select bullets in this order:
+   a) Start with most relevant bullets
+   b) Keep adding until you reach the MINIMUM count for that company
+   c) If still below minimum, add remaining bullets even if less relevant
+   d) Stop when you hit the maximum count for that company
+
+Step 2: Check total bullet count:
+   - If below {config.get('bullets', {}).get('total_min', 16)}, go back and add more bullets to companies that haven't hit their maximum
+   - If above {config.get('bullets', {}).get('total_max', 20)}, remove least relevant bullets from companies
+
+Step 3: Select skills - prioritize mandatory items, then most relevant
+
+Step 4: Select {config.get('projects', {}).get('max', 3)} projects
 
 **OUTPUT FORMAT:**
 Return ONLY a valid JSON object with this structure:
 
 {{
-  "static_info": {{ ... }},  // Keep as-is
+  "title": "Company Name - Job Title from job description",
+  "reasoning": "Explain how you met the count requirements: 'Selected X bullets for company1 (minimum Y required), Z bullets for company2 (minimum W required), total A bullets (requirement: {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}). Chose B projects, C skills per category.'",
+  "static_info": {{ ... }},
   "summaries": {{
-    "selected_type": "the summary text you selected"  // Only ONE summary
+    "selected_type": "the exact summary text"
   }},
   "skills": {{
-    "languages": ["skill1", "skill2", ...],  // Trimmed arrays, NO "_mandatory" suffix
-    "platforms": [...],
-    "skills": [...],
-    "frameworks": [...],
-    "tools": [...],
-    "database": [...]
+    "languages": ["exact skill names"],
+    "platforms": ["exact platform names"],
+    "skills": ["exact skill names"],
+    "frameworks": ["exact framework names"],
+    "tools": ["exact tool names"],
+    "database": ["exact database names"]
   }},
   "companies": [
     {{
-      "id": "company_id",
+      "id": "exact company id",
       "mandatory": true,
-      "name": "Company Name",
-      "position": "Position",
-      "dates": "Dates",
-      "location": "Location",
+      "name": "exact company name",
+      "position": "exact position",
+      "dates": "exact dates",
+      "location": "exact location",
       "bullets": [
-        {{"text": "exact bullet text from original"}},
+        {{"text": "exact bullet text - no paraphrasing"}},
         ...
       ]
     }},
@@ -153,26 +186,30 @@ Return ONLY a valid JSON object with this structure:
   ],
   "projects": [
     {{
-      "id": "project_id",
-      "name": "Project Name",
-      "tech": "Technologies",
-      "description": "Description",
-      "date": "Date",
-      "link": "URL"
+      "id": "exact project id",
+      "name": "exact name",
+      "tech": "exact tech",
+      "description": "exact description",
+      "date": "exact date",
+      "link": "exact link"
     }},
     ...
   ],
-  "education": [ ... ]  // Keep as-is, never trim
+  "education": [ ... ]
 }}
 
-**IMPORTANT REMINDERS:**
-- DO NOT add any explanation or commentary before or after the JSON
-- DO NOT paraphrase bullets - use EXACT text from the original
-- DO NOT skip any companies - all {len(full_resume_data.get('companies', []))} must be present
-- DO NOT exceed the max constraints or go below min constraints
-- Ensure chronological order is maintained
+**FINAL VALIDATION CHECKLIST (Check before returning):**
+- [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
+- [ ] Each company meets its minimum bullet requirement? (Check each one!)
+- [ ] All {len(full_resume_data.get('companies', []))} companies included?
+- [ ] Each skill category meets minimum count?
+- [ ] {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects selected?
+- [ ] Exactly 1 summary?
+- [ ] Approximately 770 - 820 words in total?
 
-Return ONLY the JSON object, nothing else."""
+If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
+
+Return ONLY the JSON object, nothing else. No markdown, no explanations outside the JSON."""
 
         return prompt
 
@@ -181,7 +218,7 @@ Return ONLY the JSON object, nothing else."""
 
         response_text = response_text.strip()
 
-        # Remove markdown code blocks if present (shouldn't happen with json_object mode)
+        # Remove markdown code blocks if present
         if response_text.startswith('```json'):
             response_text = response_text[7:]
         elif response_text.startswith('```'):
