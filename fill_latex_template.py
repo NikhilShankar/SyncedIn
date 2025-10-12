@@ -102,10 +102,19 @@ def fill_latex_template(template_path, data, selected_summary_type, selected_com
     # --- 4. Generate Education Section (APPLY ESCAPING) ---
     education_text = ""
     for edu in data.get('education', []):
-        education_text += f"\\resumeSubheading\n"
-        education_text += f"  {{{escape_latex_special_chars(edu['degree'])}}}{{{escape_latex_special_chars(edu['dates'])}}}\n"
-        education_text += f"  {{{escape_latex_special_chars(edu['institution'])}}}{{{escape_latex_special_chars(edu['location'])}}}\n\n"
-
+        degree = escape_latex_special_chars(edu['degree'])
+        dates = escape_latex_special_chars(edu['dates'])
+        course = escape_latex_special_chars(edu['course'])
+        institution = escape_latex_special_chars(edu['institution'])
+        location = escape_latex_special_chars(edu['location'])
+        empty = ""
+        education_text += f"\\resumeThreeLineSubheading\n"
+        education_text += f"  {{{degree}}}\n"
+        education_text += f"  {{{dates}}}\n"
+        education_text += f"  {{{course}}}\n"
+        education_text += f"  {{{location}}}\n"
+        education_text += f"  {{{institution}}}\n"
+        education_text += f"  {{{empty}}}\n\n"
     # FIX: Using {{EDUCATION_ITEMS}} to match the placeholder in resume_template.tex
     template = template.replace('{{EDUCATION_ITEMS}}', education_text)
 
@@ -135,7 +144,7 @@ def fill_latex_template(template_path, data, selected_summary_type, selected_com
     return output_path
 
 
-def compile_latex_to_pdf(tex_path, output_dir='./generated'):
+def compile_latex_to_pdf(tex_path, output_dir='./../generated'):
     """Compiles a .tex file to PDF using pdflatex."""
     try:
         # We need to run pdflatex multiple times for cross-references (like hyperref)
@@ -199,7 +208,29 @@ if __name__ == '__main__':
             ]
         },
         {
+            "id": "slice2",
+            "bullets": [
+                "Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024.",
+                "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app.",
+                "Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices.",
+                "Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40% and cost by a huge 70%",
+                "Adopted unit tests for modules under the UPI project, achieving 90% code coverage.",
+                "Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions."
+            ]
+        },
+        {
             "id": "greedygame",
+            "bullets": [
+                "Developed core Android library, which other developers can integrate to show native ads. Handling ~5 million ad requests/day.",
+                "Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts.",
+                "Integrated Admob, Mopub and Facebook Ads and wrote wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, facilitating the Android library to inject ads into games and apps.",
+                "Created a Unity game engine plugin that reduced developers' initial integration time from 1-2 days to less than 10 minutes.",
+                "Initiated development of the iOS plugin from scratch as a personal project by learning swift and iOS app development which was later incorporated as a separate product line in the organization attracting iOS app and game development companies into the business.",
+                "Refactored the monolithic Backend written in NodeJS to microservices based architecture using Golang, which helped streamline the development and reduced overall development time, time for debugging issues, and time for deployment."
+            ]
+        },
+        {
+            "id": "greedygame2",
             "bullets": [
                 "Developed core Android library, which other developers can integrate to show native ads. Handling ~5 million ad requests/day.",
                 "Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts.",
@@ -221,7 +252,7 @@ if __name__ == '__main__':
         selected_summary_type='android',
         selected_companies=selected_companies,
         selected_projects=selected_projects,
-        output_path='resume_filled.tex'
+        output_path='./../generated/resume_filled.tex'
     )
 
     print(f"✅ LaTeX file generated: {filled_tex}")
@@ -229,7 +260,7 @@ if __name__ == '__main__':
 
     # Try to compile to PDF (optional)
     print("\nAttempting PDF compilation...")
-    pdf_path = compile_latex_to_pdf(filled_tex, output_dir='./generated')
+    pdf_path = compile_latex_to_pdf(filled_tex, output_dir='./../generated')
 
     if pdf_path:
         print(f"✅ Resume PDF generated: {pdf_path}")

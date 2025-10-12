@@ -1,8 +1,9 @@
 % Resume Template for TeXWorks - DYNAMIC VERSION
 \documentclass[11pt,a4paper]{article}
 
+\raggedright
 % Packages
-\usepackage[margin=0.6in]{geometry}
+\usepackage[margin=0.70in]{geometry}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -11,8 +12,11 @@
 \usepackage{fontspec}
 
 
+
 % Set the main font to your custom font
 % Use the full font name (case-sensitive) or the filename.
+
+
 \setmainfont{Lato-Regular.ttf}
 [
     % The only crucial option needed here is BoldFont
@@ -20,6 +24,7 @@
     ItalicFont = Lato-Italic.ttf,
     BoldItalicFont = Lato-BoldItalic.ttf,
 ]
+
 
 
 
@@ -33,18 +38,27 @@
 
 % Section formatting
 \titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
-\titlespacing{\section}{0pt}{10pt}{6pt}
+\titlespacing{\section}{0pt}{16pt}{10pt}
 
 % Remove page numbers
 \pagestyle{empty}
 
 % Custom commands
-\newcommand{\resumeItem}[1]{\item\small{#1}}
+\newcommand{\resumeItem}[1]{\item\normalfont{#1}}
 \newcommand{\resumeSubheading}[4]{
   \vspace{-1pt}\item
     \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
       \textbf{#1} & #2 \\
-      \textit{\small#3} & \textit{\small #4} \\
+      \textit{\normalfont#3} & \textit{\normalfont #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+% New command for three lines of left/right-aligned content
+\newcommand{\resumeThreeLineSubheading}[6]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \normalfont #2 \\  % Line 1: Degree (Left) | Dates (Right)
+      \textbf{\normalfont #3} & \normalfont #4 \\  % Line 2: Course (Left) | Location (Right)
+      \normalfont #5 & \normalfont #6 \\  % Line 3: Institution (Left) | Blank (Right)
     \end{tabular*}\vspace{-5pt}
 }
 
@@ -52,21 +66,28 @@
 
 %----------HEADER----------
 \begin{center}
-    \textbf{\huge {{NAME}}} \\
+    \textbf{\large {{NAME}}} \\
     \vspace{6pt}
-    \small {{ADDRESS}} \\
-    \small {{PHONE}} | \href{mailto:{{EMAIL}}}{{{EMAIL}}} \\
-    \small \href{{{LINKEDIN}}}{LinkedIn} | \href{{{PORTFOLIO}}}{Portfolio} | \href{{{LEETCODE}}}{LeetCode}
+    \normalfont {{ADDRESS}} \\
+    \normalfont {{PHONE}} | \href{mailto:{{EMAIL}}}{{{EMAIL}}} \\
+    \normalfont \href{{{LINKEDIN}}}{LinkedIn} | \href{{{PORTFOLIO}}}{Portfolio} | \href{{{LEETCODE}}}{LeetCode}
 \end{center}
 
 %----------PROFESSIONAL SUMMARY----------
 \section{Professional Summary}
 {{SUMMARY}}
 
+%----------PROFESSIONAL EXPERIENCE----------
+\section{Professional Experience}
+\begin{itemize}[leftmargin=0.15in, label={}]
+{{EXPERIENCE_ITEMS}}
+\end{itemize}
+
+
 %----------TECHNICAL SKILLS----------
 \section{Technical Skills}
 \begin{itemize}[leftmargin=0.15in, label={}]
-    \small{\item{
+    \normalfont{\item{
      \textbf{Languages: }{{{LANGUAGES}}} \\
      \textbf{Platforms: }{{{PLATFORMS}}} \\
      \textbf{Skills: }{{{SKILLS}}} \\
@@ -76,11 +97,7 @@
     }}
 \end{itemize}
 
-%----------PROFESSIONAL EXPERIENCE----------
-\section{Professional Experience}
-\begin{itemize}[leftmargin=0.15in, label={}]
-{{EXPERIENCE_ITEMS}}
-\end{itemize}
+
 
 %----------EDUCATION----------
 \section{Education}
