@@ -1,0 +1,14 @@
+# Anthropic Claude API
+anthropic>=0.39.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# JSON handling (built-in, but listed for clarity)
+# json - built-in
+
+# For future Streamlit frontend
+streamlit>=1.39.0
+
+# Optional: JSON schema validation
+jsonschema>=4.23.0
