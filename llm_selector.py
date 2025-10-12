@@ -28,13 +28,15 @@ class ResumeSelector:
         self.model = model or os.getenv('CLAUDE_MODEL', 'claude-3-5-haiku-20241022')
         self.client = Anthropic(api_key=self.api_key)
 
-    def select_resume_content(self, full_resume_data, job_description):
+    def select_resume_content(self, full_resume_data, job_description, should_rewrite_selected=False):
         """
         Select the most relevant resume content based on job description.
 
         Args:
             full_resume_data: Complete resume data dictionary (from resume_data_enhanced.json)
             job_description: Job description text to tailor the resume for
+            should_rewrite_selected: If True, LLM rewrites bullets/projects to better match job description.
+                                    If False, uses exact text from original data.
 
         Returns:
             tuple: (trimmed_data: dict, validation_result: tuple)
@@ -43,8 +45,10 @@ class ResumeSelector:
         """
 
         # Build the prompt
-        prompt = self._build_prompt(full_resume_data, job_description)
+        prompt = self._build_prompt(full_resume_data, job_description, should_rewrite_selected)
         print(f"Model is: {self.model}")
+        print(f"Rewrite mode: {'ENABLED ✏️' if should_rewrite_selected else 'DISABLED 📋'}")
+
         # Call Claude API
         try:
             response = self.client.messages.create(
@@ -73,7 +77,7 @@ class ResumeSelector:
             print(f"Error calling Claude API: {e}")
             raise
 
-    def _build_prompt(self, full_resume_data, job_description):
+    def _build_prompt(self, full_resume_data, job_description, should_rewrite_selected=False):
         """Build the prompt for Claude with instructions and data."""
 
         config = full_resume_data.get('config', {})
@@ -86,11 +90,56 @@ class ResumeSelector:
             max_count = constraints.get('max', 6)
             company_constraints += f"     * {company['id']} ({company['position']} at {company['name']}): MUST have EXACTLY {min_count} bullets minimum, {max_count} maximum\n"
 
+        # Conditional instruction based on rewrite mode
+        if should_rewrite_selected:
+            rewrite_instruction = """2. **REWRITE MODE ENABLED**: You MAY rewrite the selected bullets and project descriptions to better align with the job description.
+
+   🚨 **CRITICAL: ZERO TOLERANCE FOR FABRICATION** 🚨
+   - NEVER add facts, contexts, industries, or details not in the original
+   - NEVER infer or assume information
+   - NEVER add impressive-sounding but unverified claims
+   - EXAMPLES OF FORBIDDEN ADDITIONS:
+     ❌ Adding "healthcare" when original says "fintech"
+     ❌ Adding "enterprise-grade" when not mentioned
+     ❌ Adding "startup environment" when not specified
+     ❌ Adding "critical" or "mission-critical" if not stated
+     ❌ Adding specific technologies not in original
+
+   **WHAT YOU CAN DO:**
+   ✅ Rephrase using synonyms for existing words
+   ✅ Reorder existing information for emphasis
+   ✅ Highlight different aspects that ARE in the original
+   ✅ Change sentence structure while keeping all facts
+
+   **STRICTLY MAINTAIN:**
+   - EVERY factual detail from the original (companies, technologies, numbers, outcomes)
+   - Technical accuracy - NO adding technologies or skills not mentioned in original
+   - NO fabricating or adding context that wasn't in the original bullet
+   - Similar length to original
+
+   Example CORRECT transformation:
+   Original: "Developed Android library for ad integration with 90% code coverage"
+   Job needs: Testing focus
+   ✅ GOOD: "Implemented Android library with comprehensive testing achieving 90% code coverage for ad integration"
+   ❌ BAD: "Developed enterprise-grade Android library for ad integration with 90% code coverage in healthcare sector"
+   Why BAD? Added "enterprise-grade" and "healthcare" - NOT in original!
+
+   Example 2:
+   Original: "Designed UPI payment system using Clean Architecture at Slice fintech startup"
+   Job needs: Architecture focus  
+   ✅ GOOD: "Architected UPI payment system using Clean Architecture principles at Slice fintech"
+   ❌ BAD: "Architected healthcare-critical payment system using Clean Architecture at Slice"
+   Why BAD? Changed "fintech" to "healthcare" and added "critical" - NOT in original!
+
+   **GOLDEN RULE: When in doubt, use EXACT original text. Better to be less optimized than dishonest.**"""
+        else:
+            rewrite_instruction = """2. DO NOT paraphrase or rewrite any content - return the EXACT text from the original bullets, skills, and projects"""
+
         prompt = f"""You are an expert resume writer and ATS optimization specialist. Your task is to select the most relevant content from a candidate's resume based on a specific job description.
 
 **CRITICAL INSTRUCTIONS - THESE ARE MANDATORY:**
 1. Return a JSON object with the EXACT SAME STRUCTURE as the input resume data
-2. DO NOT paraphrase or rewrite any content - return the EXACT text from the original bullets, skills, and projects
+{rewrite_instruction}
 3. Select content that best matches the job description requirements
 4. THE CONSTRAINTS BELOW ARE HARD REQUIREMENTS - YOU MUST MEET ALL OF THEM
 5. Maintain chronological order for all companies and bullets
@@ -131,6 +180,7 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
 3. **Projects - MANDATORY COUNT:**
    - MUST select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
    - Aim for {config.get('projects', {}).get('max', 3)} projects to maximize content
+   {'- REWRITE project descriptions to align with job requirements while keeping technical details' if should_rewrite_selected else '- Use EXACT project descriptions from original data'}
 
 4. **Summary:**
    - Select EXACTLY ONE summary type that best matches the job description
@@ -142,6 +192,7 @@ Step 1: For EACH company, select bullets in this order:
    b) Keep adding until you reach the MINIMUM count for that company
    c) If still below minimum, add remaining bullets even if less relevant
    d) Stop when you hit the maximum count for that company
+   {'d1) CAREFULLY rewrite each selected bullet - ONLY rephrase existing info, NEVER add new facts or contexts' if should_rewrite_selected else ''}
 
 Step 2: Check total bullet count:
    - If below {config.get('bullets', {}).get('total_min', 16)}, go back and add more bullets to companies that haven't hit their maximum
@@ -149,14 +200,14 @@ Step 2: Check total bullet count:
 
 Step 3: Select skills - prioritize mandatory items, then most relevant
 
-Step 4: Select {config.get('projects', {}).get('max', 3)} projects
+Step 4: Select {config.get('projects', {}).get('max', 3)} projects{'and carefully rewrite descriptions using ONLY information from the original description' if should_rewrite_selected else ''}
 
 **OUTPUT FORMAT:**
 Return ONLY a valid JSON object with this structure:
 
 {{
   "title": "Company Name - Job Title from job description",
-  "reasoning": "Explain how you met the count requirements: 'Selected X bullets for company1 (minimum Y required), Z bullets for company2 (minimum W required), total A bullets (requirement: {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}). Chose B projects, C skills per category.'",
+  "reasoning": "Explain how you met the count requirements: 'Selected X bullets for company1 (minimum Y required), Z bullets for company2 (minimum W required), total A bullets (requirement: {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}). Chose B projects, C skills per category.{' Rewrote bullets and projects to align with job requirements.' if should_rewrite_selected else ''}'",
   "static_info": {{ ... }},
   "summaries": {{
     "selected_type": "the exact summary text"
@@ -178,7 +229,7 @@ Return ONLY a valid JSON object with this structure:
       "dates": "exact dates",
       "location": "exact location",
       "bullets": [
-        {{"text": "exact bullet text - no paraphrasing"}},
+        {{"text": "{'rephrased bullet using ONLY information from original - NO added facts or contexts' if should_rewrite_selected else 'exact bullet text - no paraphrasing'}"}},
         ...
       ]
     }},
@@ -189,7 +240,7 @@ Return ONLY a valid JSON object with this structure:
       "id": "exact project id",
       "name": "exact name",
       "tech": "exact tech",
-      "description": "exact description",
+      "description": "{'rephrased description using ONLY original information - NO fabricated details' if should_rewrite_selected else 'exact description'}",
       "date": "exact date",
       "link": "exact link"
     }},
@@ -206,6 +257,8 @@ Return ONLY a valid JSON object with this structure:
 - [ ] {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects selected?
 - [ ] Exactly 1 summary?
 - [ ] Approximately 770 - 820 words in total?
+{'- [ ] All rewritten bullets contain ONLY information from originals - NO added facts, industries, or contexts?' if should_rewrite_selected else '- [ ] All bullets and project descriptions are EXACT copies from original?'}
+{'- [ ] Double-checked: No "healthcare", "enterprise", or other terms added that were not in original?' if should_rewrite_selected else ''}
 
 If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
 
@@ -351,7 +404,7 @@ Return ONLY the JSON object, nothing else. No markdown, no explanations outside 
             return False, validation_message
 
 
-def select_resume_content(full_resume_data, job_description, api_key=None):
+def select_resume_content(full_resume_data, job_description, api_key=None, should_rewrite_selected=False):
     """
     Convenience function to select resume content.
 
@@ -359,12 +412,13 @@ def select_resume_content(full_resume_data, job_description, api_key=None):
         full_resume_data: Complete resume data dictionary
         job_description: Job description text
         api_key: Optional API key (if not set in environment)
+        should_rewrite_selected: If True, rewrites bullets/projects to match job description
 
     Returns:
         tuple: (trimmed_data: dict, validation_result: tuple)
     """
     selector = ResumeSelector(api_key=api_key)
-    return selector.select_resume_content(full_resume_data, job_description)
+    return selector.select_resume_content(full_resume_data, job_description, should_rewrite_selected)
 
 
 if __name__ == '__main__':
@@ -398,13 +452,28 @@ if __name__ == '__main__':
     - Knowledge of Clean Architecture principles
     """
 
-    print("Testing LLM Resume Selector with Claude Haiku...")
+    print("Testing LLM Resume Selector with Claude...")
     print(f"Job Description: {job_description[:100]}...\n")
+
+    # Ask user which mode to test
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == '--rewrite':
+        should_rewrite = True
+        print("🔄 Testing REWRITE mode - bullets will be tailored to job description\n")
+    else:
+        should_rewrite = False
+        print("📋 Testing EXACT mode - using original bullet text\n")
+        print("💡 Tip: Use '--rewrite' flag to test rewrite mode: python llm_selector.py --rewrite\n")
 
     try:
         # Select resume content
         selector = ResumeSelector()
-        trimmed_data, (is_valid, validation_message) = selector.select_resume_content(full_data, job_description)
+        trimmed_data, (is_valid, validation_message) = selector.select_resume_content(
+            full_data,
+            job_description,
+            should_rewrite_selected=should_rewrite
+        )
 
         # Print summary of selections
         print("\n" + "=" * 60)

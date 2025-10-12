@@ -18,7 +18,7 @@ from datetime import date
 
 
 def generate_resume(job_description, resume_data_path='resume_data_enhanced.json',
-                   template_path='resume_template.tex', base_output_dir='./generated'):
+                   template_path='resume_template.tex', base_output_dir='./generated', shouldRewrite=False):
     """
     Generate a tailored resume based on job description.
 
@@ -58,7 +58,7 @@ def generate_resume(job_description, resume_data_path='resume_data_enhanced.json
 
     try:
         selector = ResumeSelector()
-        trimmed_resume_data, (is_valid, validation_message) = selector.select_resume_content(full_resume_data, job_description)
+        trimmed_resume_data, (is_valid, validation_message) = selector.select_resume_content(full_resume_data, job_description, should_rewrite_selected=shouldRewrite)
         print(f"   ✅ Content selection complete")
 
         # Print selection summary
@@ -266,7 +266,8 @@ Review our Privacy Policy for information on how League is protecting personal d
             job_description=job_description,
             resume_data_path='resume_data_enhanced.json',
             template_path='resume_template.tex',
-            base_output_dir='./generated'
+            base_output_dir='./generated',
+            shouldRewrite=True
         )
     except Exception as e:
         print(f"\n❌ Fatal error: {e}")
