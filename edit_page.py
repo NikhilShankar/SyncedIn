@@ -50,7 +50,7 @@ def show():
                 try:
                     # Create backup before saving
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    backup_path = Path(f"resume_data_enhanced_backup_{timestamp}.json")
+                    backup_path = Path(f"./resume_backups/resume_data_enhanced_backup_{timestamp}.json")
                     shutil.copy(resume_data_path, backup_path)
 
                     # Save changes
