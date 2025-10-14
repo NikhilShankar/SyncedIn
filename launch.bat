@@ -38,5 +38,5 @@ echo.
 echo Press Ctrl+C to stop the server
 echo.
 
-REM Launch streamlit
-streamlit run app.py
+REM Launch streamlit with main_app.py
+streamlit run main_app.py
