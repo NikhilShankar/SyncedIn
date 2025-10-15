@@ -49,7 +49,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     template = template.replace('{{PHONE}}', escape_latex_special_chars(static['phone']))
     template = template.replace('{{EMAIL}}', escape_latex_special_chars(static['email']))
     template = template.replace('{{LINKEDIN}}', static['linkedin'])  # Keep raw for href
-    template = template.replace('{{PORTFOLIO}}', static['portfolio'])  # Keep raw for href
+    #template = template.replace('{{PORTFOLIO}}', static['portfolio'])  # Keep raw for href
     template = template.replace('{{LEETCODE}}', static['leetcode'])  # Keep raw for href
 
     # --- 2. Fill summary (LLM should select which summary type to use) ---

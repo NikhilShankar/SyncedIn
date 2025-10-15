@@ -47,6 +47,20 @@ def show():
             help="Rephrase bullets to match job (use with caution)"
         )
 
+        # Organized saving
+        save_organized = st.checkbox(
+            "Save to Organized Folders",
+            value=True,
+            help="Save PDFs in Month/Company/Name structure"
+        )
+
+        # Output folder path
+        output_base_path = st.text_input(
+            "Output Folder Path",
+            value=os.getenv('OUTPUT_BASE_PATH', './output'),
+            help="Base folder for organized PDFs (e.g., D:/Resumes/output)"
+        )
+
         # Resume data path
         resume_data_path = st.text_input(
             "Resume Data Path",
@@ -191,12 +205,51 @@ Requirements:
 
                     st.write(f"✅ PDF generated: {pdf_path}")
 
+                    # Step 5: Save to organized folder structure (optional)
+                    if save_organized:
+                        st.write("📁 Organizing PDF in output folder...")
+
+                        from datetime import datetime
+
+                        # Get candidate name from resume data
+                        candidate_name = full_resume_data.get('static_info', {}).get('name', 'Unknown')
+                        # Clean name for filename (remove special chars, replace spaces with hyphens)
+                        safe_name = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in candidate_name)
+                        safe_name = safe_name.replace(' ', '-')
+
+                        # Get current month/year
+                        current_month = datetime.now().strftime("%Y-%m-%B")  # e.g., "2025-01-January"
+
+                        # Clean company name for folder
+                        safe_company = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in company_name)
+                        safe_company = safe_company.replace(' ', '-')
+
+                        # Create organized path: output_base_path/Month/CompanyName/
+                        organized_dir = Path(output_base_path) / current_month / safe_company
+                        organized_dir.mkdir(parents=True, exist_ok=True)
+
+                        # Create organized filename: CandidateName-Resume.pdf
+                        organized_filename = f"{safe_name}-Resume.pdf"
+                        organized_path = organized_dir / organized_filename
+
+                        # Copy PDF to organized location
+                        import shutil
+                        shutil.copy(pdf_path, organized_path)
+
+                        st.write(f"✅ Saved to: {organized_path}")
+                    else:
+                        organized_path = None
+
                     # Update status
                     status.update(label="✅ Resume Generated Successfully!", state="complete", expanded=False)
 
             # Display results in output column
             with output_container:
                 st.success("🎉 Resume generated successfully!")
+
+                # Show organized path if enabled
+                if save_organized and organized_path:
+                    st.info(f"📂 Organized copy saved to: `{organized_path}`")
 
                 # Stats
                 col_a, col_b, col_c = st.columns(3)

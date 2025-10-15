@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  resume-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile.optimized
+    container_name: ai-resume-generator
+    ports:
+      - "8765:8765"
+    volumes:
+      # Mount the output directories to persist generated PDFs on host
+      - ./generated:/app/generated
+      - ./output:/app/output
+      # Optional: Mount .env file for API keys (if you prefer file-based config)
+      - ./.env:/app/.env:ro
+    environment:
+      # Optional: Set API key via environment variable
+      # Uncomment and set your key, or use .env file
+      # - ANTHROPIC_API_KEY=your_api_key_here
+      - STREAMLIT_SERVER_PORT=8765
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Generated files (will be created in container or mounted)
+generated/
+output/
+
+# Documentation
+*.md
+!requirements.txt
+STREAMLIT_GUIDE.pdf
+
+# Test files
+test_*.py
+*_test.py
+*.http
+
+# Logs
+*.log
+
+# Environment
+.env.example
+.env.local
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Batch files (Windows-specific launchers not needed in container)
+*.bat
