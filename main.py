@@ -264,7 +264,7 @@ Review our Privacy Policy for information on how League is protecting personal d
     try:
         generate_resume(
             job_description=job_description,
-            resume_data_path='resume_data_enhanced.json',
+            resume_data_path='resume_data_enhanced_default.json',
             template_path='resume_template.tex',
             base_output_dir='./generated',
             shouldRewrite=True

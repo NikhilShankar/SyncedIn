@@ -13,7 +13,7 @@ def show():
     st.markdown("Manage your resume data with an easy-to-use interface")
 
     # File paths
-    resume_data_path = Path("resume_data_enhanced.json")
+    resume_data_path = Path("resume_data_enhanced_default.json")
     default_backup_path = Path("resume_data_enhanced_DEFAULT.json")
 
     # Initialize session state

@@ -376,7 +376,7 @@
       "mandatory": false,
       "name": "AIngel",
       "tech": "Android, AI, LLMs, Machine Learning",
-      "description": "An android app to nurture relationships created using AI powered bots with LLMs and Machine Learning algorithms to find meaningful matches. This is currently part of Venture Tech Lab CEC Conestoga College.",
+      "description": "Architected AIngel, a full-stack dating platform with Kotlin/Compose frontend and Kotlin Spring Boot backend leveraging Supabase, utilizing Kotlin Multiplatform for seamless code sharing. Engineered an ML-powered matching system combining cosine similarity, KNN, and Random Forest algorithms to analyze chat interactions via LLM integration, delivering personalized profile suggestions removing the need for swipe or search for potential dates.",
       "date": "Jan 2025",
       "link": ""
     },

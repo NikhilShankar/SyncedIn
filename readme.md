@@ -91,10 +91,10 @@ Senior Android Developer
 """
 
 tex_path, pdf_path = generate_resume(
-    job_description=job_description,
-    resume_data_path='resume_data_enhanced.json',
-    template_path='resume_template.tex',
-    output_dir='./generated'
+   job_description=job_description,
+   resume_data_path='resume_data_enhanced_default.json',
+   template_path='resume_template.tex',
+   output_dir='./generated'
 )
 ```
 

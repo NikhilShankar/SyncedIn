@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY *.py ./
 COPY *.tex ./
-COPY resume_data_enhanced.json ./
+COPY resume_data_enhanced_default.json ./
 COPY resume_data_enhanced_DEFAULT.json ./
 
 # Copy font files to both locations

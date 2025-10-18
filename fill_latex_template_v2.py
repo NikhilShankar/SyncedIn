@@ -194,7 +194,7 @@ if __name__ == '__main__':
 
     # Load the FULL data from JSON (in production, LLM would receive this)
     try:
-        with open('resume_data_enhanced.json', 'r') as f:
+        with open('resume_data_enhanced_default.json', 'r') as f:
             full_data = json.load(f)
     except FileNotFoundError:
         print("Error: 'resume_data_enhanced.json' not found.")
