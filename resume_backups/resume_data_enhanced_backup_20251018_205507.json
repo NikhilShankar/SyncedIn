@@ -47,7 +47,7 @@
     "leetcode": "https://leetcode.com/u/user2137S/"
   },
   "summaries": {
-    "android": "Senior Android Engineer with 8 years of experience architecting and scaling mobile applications serving millions of users in fintech and ad-tech domains. Led development of UPI payment systems handling 1.5M daily transactions with expertise in designing scalable architectures, optimizing system performance, and driving cross-functional collaboration. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring, and establishing engineering best practices. Contributed to a startup's journey to unicorn status through technical leadership and scalable system design.",
+    "android": "Senior Android Engineer with 8 years of experience architecting and scaling mobile applications serving millions of users in fintech and ad-tech domains. Led development of UPI payment systems handling 1.5M daily transactions and reduced infrastructure costs by 70% through strategic optimization. Expertise in Clean Architecture, MVI patterns, and Jetpack Compose with a proven track record of mentoring teams and establishing engineering best practices. Contributed to a startup's journey to unicorn status ($1B+ valuation) through technical leadership and scalable system design.",
     "fullstack": "Versatile Software Engineer with 8 years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status. ",
     "ml": "Software Engineer blending 8 years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications.",
     "general": "Senior Android Architect with 8 years designing scalable mobile systems and building high-performing engineering teams. Led architecture decisions for fintech platform serving 1.5M daily users, mentored developers across multiple teams, and established engineering standards that reduced development time by 40%. Proven ability to drive technical initiatives from conception to production, including multi-module architectures, CI/CD optimization (70% cost reduction), and adoption of modern patterns (MVI, Clean Architecture, Compose). Track record of taking startups from early stage to unicorn status through technical excellence and team empowerment."
@@ -390,11 +390,20 @@
       "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
     },
     {
+      "id": "phifactory",
+      "mandatory": false,
+      "name": "The Phi Factory",
+      "tech": "Android, Google AR Core",
+      "description": "An AR based furniture display app created for a startup found by my brother and friends. It allowed users to create and view customized furnitures",
+      "date": "Nov 2021",
+      "link": "https://bitbucket.org/nikhilshankarcs/phifactory"
+    },
+    {
       "id": "mmdb",
       "mandatory": false,
       "name": "MMDB: My Movie Database",
       "tech": "Android, TMDB API",
-      "description": "Developed MMDB (My Movie Database), a social movie review Android app integrating TMDB API for comprehensive movie data with Firebase Realtime Database for user-generated content. Built a feature-rich platform enabling users to create custom movie lists, share reviews, and engage through comments and likes, fostering an interactive movie enthusiast community.",
+      "description": "A social movie review android app created using TMDB api which allows users to create and share movie lists and allow users to comment, review, and like them",
       "date": "July 2020",
       "link": "https://bitbucket.org/nikhilshankarcs/mmdb"
     },
@@ -403,8 +412,8 @@
       "mandatory": false,
       "name": "WhoLooksLikeMe",
       "tech": "Python, Inception V3, Vector Embeddings",
-      "description": "Built WhoLooksLikeMe, an ML-powered facial recognition system leveraging transfer learning with InceptionV3 for feature extraction and vector embeddings for similarity matching. Designed a scalable pipeline that eliminates costly retraining by storing pre-computed embeddings, allowing seamless celebrity dataset expansion, and implemented cosine similarity algorithms while benchmarking multiple pre-trained base models (FaceNet, VGGFace, InceptionV3).",
-      "date": "2024 Dec",
+      "description": "A fun machine learning college project done in 1 week using Inception V3 and Vector Embeddings to find your celebrity look alike",
+      "date": "2019",
       "link": "https://wholookslikeme.com"
     }
   ],

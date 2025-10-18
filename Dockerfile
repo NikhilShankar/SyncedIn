@@ -22,8 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY *.py ./
 COPY *.tex ./
-COPY resume_data_enhanced_default.json ./
-COPY resume_data_enhanced_DEFAULT.json ./
+COPY resume_data_enhanced.json ./
 
 # Copy font files to both locations
 # 1. Keep in app directory for LaTeX to find by filename
@@ -37,8 +36,8 @@ RUN mkdir -p /usr/share/fonts/truetype/lato && \
     fc-cache -f -v
 
 # Create necessary directories with proper permissions
-RUN mkdir -p generated output && \
-    chmod 777 generated output
+RUN mkdir -p generated output resume_backups && \
+    chmod 777 generated output resume_backups
 
 # Expose custom port (8765 instead of default 8501)
 EXPOSE 8765

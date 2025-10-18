@@ -426,7 +426,7 @@ if __name__ == '__main__':
 
     # Load full resume data
     try:
-        with open('resume_data_enhanced_default.json', 'r') as f:
+        with open('resume_data_enhanced.json', 'r') as f:
             full_data = json.load(f)
     except FileNotFoundError:
         print("Error: 'resume_data_enhanced.json' not found.")
