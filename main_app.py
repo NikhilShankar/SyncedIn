@@ -44,6 +44,13 @@ with st.sidebar:
         st.session_state.current_page = 'edit'
         st.rerun()
 
+    # Edit & Regenerate button (only show if trimmed_data exists)
+    if 'trimmed_data' in st.session_state and st.session_state.trimmed_data:
+        if st.button("🔄 Edit & Regenerate", use_container_width=True,
+                     type="primary" if st.session_state.current_page == 'edit_regenerate' else "secondary"):
+            st.session_state.current_page = 'edit_regenerate'
+            st.rerun()
+
     st.markdown("---")
 
     # Info section
@@ -61,9 +68,10 @@ with st.sidebar:
 # Route to appropriate page
 if st.session_state.current_page == 'generate':
     import generate_page
-
     generate_page.show()
 elif st.session_state.current_page == 'edit':
     import edit_page
-
     edit_page.show()
+elif st.session_state.current_page == 'edit_regenerate':
+    import edit_regenerate_page
+    edit_regenerate_page.show()

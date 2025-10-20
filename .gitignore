@@ -206,3 +206,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 /generated/
+/output
+/resume_backups
+resume_data_enhanced_backup_old.json
+

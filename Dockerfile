@@ -2,8 +2,9 @@
 FROM python:3.11-slim
 
 # Install system dependencies for LaTeX and font handling
-RUN apt-get update && apt-get install -y \
-    texlive-xetex \
+# Corrected command
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    texlive-luatex \
     texlive-fonts-recommended \
     texlive-fonts-extra \
     texlive-latex-extra \

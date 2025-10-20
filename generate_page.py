@@ -140,6 +140,11 @@ Requirements:
             st.error(f"❌ LaTeX template not found: {template_path}")
             st.stop()
 
+        # Save to session state for later use
+        st.session_state.company_name = company_name
+        st.session_state.job_description = job_description
+        st.session_state.template_path = template_path
+
         # Create output directory
         output_dir = Path("./generated")
         output_dir.mkdir(exist_ok=True)
@@ -169,7 +174,10 @@ Requirements:
                     else:
                         st.warning(f"⚠️ Validation warnings:\n{validation_message}")
 
-                    # Save trimmed data
+                    # Save trimmed data to session state
+                    st.session_state.trimmed_data = trimmed_data
+
+                    # Save trimmed data to file
                     trimmed_json_path = output_dir / "resume_data_trimmed.json"
                     with open(trimmed_json_path, 'w') as f:
                         json.dump(trimmed_data, f, indent=2)
@@ -205,40 +213,49 @@ Requirements:
 
                     st.write(f"✅ PDF generated: {pdf_path}")
 
-                    # Step 5: Save to organized folder structure (optional)
-                    if save_organized:
-                        st.write("📁 Organizing PDF in output folder...")
+                    # Save PDF path to session state
+                    st.session_state.current_pdf_path = str(pdf_path)
 
-                        from datetime import datetime
+                    # Step 5: Save to organized folder structure with versioning
+                    st.write("📁 Saving to organized output folder...")
 
-                        # Get candidate name from resume data
-                        candidate_name = full_resume_data.get('static_info', {}).get('name', 'Unknown')
-                        # Clean name for filename (remove special chars, replace spaces with hyphens)
-                        safe_name = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in candidate_name)
-                        safe_name = safe_name.replace(' ', '-')
+                    from datetime import datetime
+                    import shutil
 
-                        # Get current month/year
-                        current_month = datetime.now().strftime("%Y-%m-%B")  # e.g., "2025-01-January"
+                    # Clean company name for folder
+                    safe_company = "".join(c if c.isalnum() or c in (' ', '-', '_') else '' for c in company_name)
+                    safe_company = safe_company.replace(' ', '-')
 
-                        # Clean company name for folder
-                        safe_company = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in company_name)
-                        safe_company = safe_company.replace(' ', '-')
+                    # Create company folder: output_base_path/CompanyName/
+                    company_dir = Path(output_base_path) / safe_company
+                    company_dir.mkdir(parents=True, exist_ok=True)
 
-                        # Create organized path: output_base_path/Month/CompanyName/
-                        organized_dir = Path(output_base_path) / current_month / safe_company
-                        organized_dir.mkdir(parents=True, exist_ok=True)
+                    # Find next version number by checking existing files
+                    version = 1
+                    while (company_dir / f"{safe_company}_{version}.pdf").exists():
+                        version += 1
 
-                        # Create organized filename: CandidateName-Resume.pdf
-                        organized_filename = f"{safe_name}-Resume.pdf"
-                        organized_path = organized_dir / organized_filename
+                    # Save PDF with version number
+                    versioned_pdf = company_dir / f"{safe_company}_{version}.pdf"
+                    shutil.copy(pdf_path, versioned_pdf)
+                    st.write(f"✅ PDF saved: {versioned_pdf}")
 
-                        # Copy PDF to organized location
-                        import shutil
-                        shutil.copy(pdf_path, organized_path)
+                    # Save Job Description (only once, not versioned)
+                    job_desc_file = company_dir / f"{safe_company}-JobDescription.txt"
+                    if not job_desc_file.exists():
+                        with open(job_desc_file, 'w', encoding='utf-8') as f:
+                            f.write(job_description)
+                        st.write(f"✅ Job description saved: {job_desc_file}")
 
-                        st.write(f"✅ Saved to: {organized_path}")
-                    else:
-                        organized_path = None
+                    # Save trimmed JSON with version number
+                    versioned_json = company_dir / f"{safe_company}_{version}-Json.json"
+                    with open(versioned_json, 'w', encoding='utf-8') as f:
+                        json.dump(trimmed_data, f, indent=2)
+                    st.write(f"✅ JSON saved: {versioned_json}")
+
+                    organized_path = versioned_pdf
+                    st.session_state.latest_saved_version = version
+                    st.session_state.company_output_dir = str(company_dir)
 
                     # Update status
                     status.update(label="✅ Resume Generated Successfully!", state="complete", expanded=False)
@@ -247,9 +264,14 @@ Requirements:
             with output_container:
                 st.success("🎉 Resume generated successfully!")
 
-                # Show organized path if enabled
-                if save_organized and organized_path:
-                    st.info(f"📂 Organized copy saved to: `{organized_path}`")
+                # Show organized path
+                if organized_path:
+                    st.info(f"📂 Saved to: `{organized_path}`")
+
+                # Button to edit and regenerate
+                if st.button("✏️ Edit & Regenerate Resume", type="secondary", use_container_width=True):
+                    st.session_state.current_page = 'edit_regenerate'
+                    st.rerun()
 
                 # Stats
                 col_a, col_b, col_c = st.columns(3)

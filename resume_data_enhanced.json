@@ -39,7 +39,7 @@
   },
   "static_info": {
     "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
-    "address": "602-A 50 University Avenue East, Waterloo, Ontario - N2J-2V8",
+    "address": "Unit 259 - 475 King Street North",
     "phone": "226-820-1762",
     "email": "nikhil.shankar.cs@gmail.com",
     "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
@@ -47,10 +47,10 @@
     "leetcode": "https://leetcode.com/u/user2137S/"
   },
   "summaries": {
-    "android": "Senior Android Engineer with 8 years of experience architecting and scaling mobile applications serving millions of users in fintech and ad-tech domains. Led development of UPI payment systems handling 1.5M daily transactions with expertise in designing scalable architectures, optimizing system performance, and driving cross-functional collaboration. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring, and establishing engineering best practices. Contributed to a startup's journey to unicorn status through technical leadership and scalable system design.",
+    "android": "Senior Android Engineer with 8 years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving.",
     "fullstack": "Versatile Software Engineer with 8 years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status. ",
     "ml": "Software Engineer blending 8 years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications.",
-    "general": "Senior Android Architect with 8 years designing scalable mobile systems and building high-performing engineering teams. Led architecture decisions for fintech platform serving 1.5M daily users, mentored developers across multiple teams, and established engineering standards that reduced development time by 40%. Proven ability to drive technical initiatives from conception to production, including multi-module architectures, CI/CD optimization (70% cost reduction), and adoption of modern patterns (MVI, Clean Architecture, Compose). Track record of taking startups from early stage to unicorn status through technical excellence and team empowerment."
+    "general": "Senior Android Engineer with 8 years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
   },
   "skills": {
     "languages": [
@@ -307,7 +307,7 @@
       "id": "greedygame",
       "mandatory": true,
       "name": "GreedyGame, Ad-Tech",
-      "position": "Fullstack Developer iOS, Backend",
+      "position": "Fullstack Developer Android, iOS, Backend",
       "dates": "Sep 2015 - Oct 2019",
       "location": "Bengaluru, India",
       "website": "Website",

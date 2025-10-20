@@ -23,8 +23,10 @@ if not exist "resume_template.tex" (
     echo    Make sure you're in the correct folder
 )
 
-REM Create output directory
+REM Create necessary directories
 if not exist "generated" mkdir generated
+if not exist "output" mkdir output
+if not exist "resume_backups" mkdir resume_backups
 
 echo.
 echo ✅ Launching Streamlit app...
