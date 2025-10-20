@@ -43,7 +43,7 @@ def show():
         # Rewrite mode
         should_rewrite = st.checkbox(
             "Enable Rewrite Mode",
-            value=False,
+            value=True,
             help="Rephrase bullets to match job (use with caution)"
         )
 
@@ -260,58 +260,9 @@ Requirements:
                     # Update status
                     status.update(label="✅ Resume Generated Successfully!", state="complete", expanded=False)
 
-            # Display results in output column
-            with output_container:
-                st.success("🎉 Resume generated successfully!")
-
-                # Show organized path
-                if organized_path:
-                    st.info(f"📂 Saved to: `{organized_path}`")
-
-                # Button to edit and regenerate
-                if st.button("✏️ Edit & Regenerate Resume", type="secondary", use_container_width=True):
-                    st.session_state.current_page = 'edit_regenerate'
-                    st.rerun()
-
-                # Stats
-                col_a, col_b, col_c = st.columns(3)
-                with col_a:
-                    total_bullets = sum(len(c['bullets']) for c in trimmed_data['companies'])
-                    st.metric("Total Bullets", total_bullets)
-                with col_b:
-                    st.metric("Companies", len(trimmed_data['companies']))
-                with col_c:
-                    st.metric("Projects", len(trimmed_data['projects']))
-
-                # Download button
-                if pdf_path.exists():
-                    with open(pdf_path, 'rb') as f:
-                        pdf_bytes = f.read()
-
-                    st.download_button(
-                        label="📥 Download Resume PDF",
-                        data=pdf_bytes,
-                        file_name=f"resume_{company_name.replace(' ', '_')}.pdf",
-                        mime="application/pdf",
-                        use_container_width=True
-                    )
-
-                # Preview PDF
-                if pdf_path.exists():
-                    st.subheader("📄 Preview")
-                    with open(pdf_path, 'rb') as f:
-                        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-                    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf"></iframe>'
-                    st.markdown(pdf_display, unsafe_allow_html=True)
-
-                # Show trimmed data
-                with st.expander("📊 View Selected Content (JSON)"):
-                    st.json(trimmed_data)
-
-                # Show validation details
-                if not is_valid:
-                    with st.expander("⚠️ Validation Warnings"):
-                        st.warning(validation_message)
+            # Automatically redirect to edit & regenerate page
+            st.session_state.current_page = 'edit_regenerate'
+            st.rerun()
 
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
