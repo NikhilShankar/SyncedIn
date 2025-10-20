@@ -51,6 +51,12 @@ with st.sidebar:
             st.session_state.current_page = 'edit_regenerate'
             st.rerun()
 
+    # Stats button
+    if st.button("📊 Application Stats", use_container_width=True,
+                 type="primary" if st.session_state.current_page == 'stats' else "secondary"):
+        st.session_state.current_page = 'stats'
+        st.rerun()
+
     st.markdown("---")
 
     # Info section
@@ -75,3 +81,6 @@ elif st.session_state.current_page == 'edit':
 elif st.session_state.current_page == 'edit_regenerate':
     import edit_regenerate_page
     edit_regenerate_page.show()
+elif st.session_state.current_page == 'stats':
+    import stats_page
+    stats_page.show()

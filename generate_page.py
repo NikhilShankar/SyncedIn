@@ -257,6 +257,11 @@ Requirements:
                     st.session_state.latest_saved_version = version
                     st.session_state.company_output_dir = str(company_dir)
 
+                    # Track application in stats
+                    from stats_page import add_application
+                    add_application(company_name, job_description)
+                    st.write("✅ Application tracked in stats")
+
                     # Update status
                     status.update(label="✅ Resume Generated Successfully!", state="complete", expanded=False)
 
