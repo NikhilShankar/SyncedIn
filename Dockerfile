@@ -2,14 +2,40 @@
 FROM python:3.11-slim
 
 # Install system dependencies for LaTeX and font handling
-# Corrected command
+# Corrected command - Use this if we need the whole latex environment
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#    texlive-luatex \
+#    texlive-fonts-recommended \
+#    texlive-fonts-extra \
+#    texlive-latex-extra \
+#    fontconfig \
+#    && rm -rf /var/lib/apt/lists/*
+
+# ADD THIS OPTIMIZED BLOCK INSTEAD
+
+# 1. Install prerequisites for TinyTeX and font management
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    texlive-luatex \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
-    texlive-latex-extra \
+    wget \
+    perl \
     fontconfig \
     && rm -rf /var/lib/apt/lists/*
+
+# 2. Download and install TinyTeX, a minimal LaTeX distribution
+RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh -s - --admin --no-path \
+    && mv /root/bin/* /usr/local/bin/ \
+    && rmdir /root/bin
+
+# 3. Use TinyTeX's manager (tlmgr) to install only the necessary packages
+RUN tlmgr update --self \
+    && tlmgr install \
+    luatex \
+    luaotfload \
+    fontspec \
+    latex-base \
+    latex-recommended \
+    titlesec \
+    lm-math \
+    && tlmgr path add
 
 # Set working directory
 WORKDIR /app
