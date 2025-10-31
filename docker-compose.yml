@@ -16,6 +16,8 @@ services:
       - ./resume_data_enhanced.json:/app/resume_data_enhanced.json
       - ./resume_data_enhanced_DEFAULT.json:/app/resume_data_enhanced_DEFAULT.json
       - ./resume_backups:/app/resume_backups
+      # Mount applications tracking to persist stats
+      - ./applications_tracking.json:/app/applications_tracking.json
       # Optional: Mount .env file for API keys (if you prefer file-based config)
       - ./.env:/app/.env:ro
     environment:

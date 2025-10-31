@@ -47,10 +47,10 @@
     "leetcode": "https://leetcode.com/u/user2137S/"
   },
   "summaries": {
-    "android": "Senior Android Engineer with 8 years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving.",
-    "fullstack": "Versatile Software Engineer with 8 years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status. ",
-    "ml": "Software Engineer blending 8 years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications.",
-    "general": "Senior Android Engineer with 8 years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
+    "android": "Senior Android Engineer with 7+ years of professional experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving.",
+    "fullstack": "Versatile Software Engineer with 7+ years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status. ",
+    "ml": "Software Engineer blending 7+ years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications.",
+    "general": "Senior Android Engineer with 7+ years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
   },
   "skills": {
     "languages": [
@@ -226,6 +226,10 @@
           "mandatory": false
         },
         {
+          "text": "Refactored the complex Gradle and build files to establish a centralized baseline for dependencies, successfully isolating new module creation and preventing unexpected dependency breaks in release and production builds.",
+          "mandatory": false
+        },
+        {
           "text": "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app.",
           "mandatory": false
         },
@@ -300,6 +304,10 @@
         {
           "text": "Identified that modular architecture was not being followed in the organization and initiated multi module architecture thereby making scaling across teams easier",
           "mandatory": false
+        },
+        {
+          "text": "Decoupled cross-module navigation by implementing a Navigation Contract Interface in a core module and using Dependency Injection for registration, successfully eliminating tight coupling issues and circular-dependency restrictions in a scalable multi-module architecture.",
+          "mandatory": false
         }
       ]
     },
@@ -308,7 +316,7 @@
       "mandatory": true,
       "name": "GreedyGame, Ad-Tech",
       "position": "Fullstack Developer Android, iOS, Backend",
-      "dates": "Sep 2015 - Oct 2019",
+      "dates": "Apr 2018 - Oct 2019",
       "location": "Bengaluru, India",
       "website": "Website",
       "bullet_constraints": {
@@ -330,6 +338,10 @@
         },
         {
           "text": "Developed integration documentation website in Angular JS thereby reducing integration related queries",
+          "mandatory": false
+        },
+        {
+          "text": "Achieved 90%+ unit test coverage using Mockito after refactoring the core library, significantly enhancing the reliability and ongoing quality assurance of the SDK's essential features.",
           "mandatory": false
         }
       ]
@@ -372,12 +384,12 @@
   ],
   "projects": [
     {
-      "id": "aingel",
-      "mandatory": false,
-      "name": "AIngel",
-      "tech": "Android, AI, LLMs, Machine Learning",
-      "description": "Built AIngel using Kotlin (Compose + Spring Boot + Multiplatform) with Supabase backend, featuring LLM-integrated chat functionality and an ML recommendation engine. Deployed multiple algorithms (cosine similarity, KNN, Random Forest) to analyze user conversations and generate intelligent profile matches based on behavioral and conversational patterns. This was developed as part of Venture Tech Lab CEC Conestoga College.",
-      "date": "Jan 2025",
+      "id": "momentor",
+      "mandatory": true,
+      "name": "Momentor: Moments worth Mentoring",
+      "tech": "Android, AI/LLM Integration, Supabase, PostgreSQL, Python, Dino Edge-Functions",
+      "description": "Momentor is a specialized mindfulness journaling application developed natively on Android to ensure an optimized, minimalist user experience. The Android client was engineered with a conversational interface for journaling and integrated directly with a robust serverless backend. This backend utilized Python for core logic, PostgreSQL via Supabase for secure data persistence, and Deno Edge Functions to deliver low-latency, philosophy-specific responses from the AI/LLM-powered mentors. This architecture successfully paired a high-performance Android application with advanced AI logic to deliver personalized, real-time guidance.",
+      "date": "April 2025 - Current",
       "link": ""
     },
     {

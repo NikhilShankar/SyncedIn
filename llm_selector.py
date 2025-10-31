@@ -6,6 +6,15 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Load LLM configuration
+def load_llm_config():
+    """Load LLM configuration from llm_config.json"""
+    config_path = os.path.join(os.path.dirname(__file__), 'llm_config.json')
+    with open(config_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+LLM_CONFIG = load_llm_config()
+
 
 class ResumeSelector:
     """
@@ -44,26 +53,41 @@ class ResumeSelector:
                 - validation_result: (is_valid: bool, message: str)
         """
 
-        # Build the prompt
-        prompt = self._build_prompt(full_resume_data, job_description, should_rewrite_selected)
+        # Build system prompt and user message separately for caching
+        system_blocks, user_message = self._build_prompt_with_caching(
+            full_resume_data, job_description, should_rewrite_selected
+        )
+
         print(f"Model is: {self.model}")
         print(f"Rewrite mode: {'ENABLED ✏️' if should_rewrite_selected else 'DISABLED 📋'}")
+        print(f"🔥 Prompt caching: ENABLED (resume data cached for 5 minutes)")
 
-        # Call Claude API
+        # Call Claude API with prompt caching
         try:
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=int(os.getenv('MAX_TOKENS', 4096)),
+                system=system_blocks,  # System blocks with caching
                 messages=[
                     {
                         "role": "user",
-                        "content": prompt
+                        "content": user_message
                     }
                 ]
             )
 
             # Extract the JSON response
             response_text = response.content[0].text
+
+            # Print cache usage stats if available
+            usage = response.usage
+            if hasattr(usage, 'cache_creation_input_tokens') and usage.cache_creation_input_tokens:
+                print(f"💾 Cache write: {usage.cache_creation_input_tokens} tokens")
+            if hasattr(usage, 'cache_read_input_tokens') and usage.cache_read_input_tokens:
+                print(f"⚡ Cache hit: {usage.cache_read_input_tokens} tokens (90% savings!)")
+
+            # Debug: Print first 500 chars of response
+            print(f"📝 LLM Response (first 500 chars):\n{response_text[:500]}")
 
             # Parse JSON from response
             trimmed_data = self._parse_response(response_text)
@@ -208,7 +232,15 @@ Return ONLY a valid JSON object with this structure:
 {{
   "title": "Company Name - Job Title from job description",
   "reasoning": "Explain how you met the count requirements: 'Selected X bullets for company1 (minimum Y required), Z bullets for company2 (minimum W required), total A bullets (requirement: {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}). Chose B projects, C skills per category.{' Rewrote bullets and projects to align with job requirements.' if should_rewrite_selected else ''}'",
-  "static_info": {{ ... }},
+  "static_info": {{
+    "name": "exact name from resume data",
+    "email": "exact email",
+    "phone": "exact phone",
+    "address": "exact address",
+    "linkedin": "exact linkedin URL",
+    "portfolio": "exact portfolio URL",
+    "leetcode": "exact leetcode URL"
+  }},
   "summaries": {{
     "selected_type": "the exact summary text"
   }},
@@ -246,8 +278,19 @@ Return ONLY a valid JSON object with this structure:
     }},
     ...
   ],
-  "education": [ ... ]
+  "education": [
+    {{
+      "degree": "exact degree",
+      "dates": "exact dates",
+      "course": "exact course",
+      "institution": "exact institution",
+      "location": "exact location"
+    }},
+    ... (copy ALL education entries exactly from resume data)
+  ]
 }}
+
+**CRITICAL: Copy static_info and education EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
 
 **FINAL VALIDATION CHECKLIST (Check before returning):**
 - [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
@@ -265,6 +308,209 @@ If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
 Return ONLY the JSON object, nothing else. No markdown, no explanations outside the JSON."""
 
         return prompt
+
+    def _build_prompt_with_caching(self, full_resume_data, job_description, should_rewrite_selected=False):
+        """
+        Build the prompt split into system blocks (with caching) and user message.
+
+        This enables prompt caching by placing the resume data (which stays constant)
+        in the system parameter with cache_control, and the job description (which varies)
+        in the user message.
+
+        Returns:
+            tuple: (system_blocks: list, user_message: str)
+        """
+
+        config = full_resume_data.get('config', {})
+
+        # Build per-company constraints list
+        company_constraints = ""
+        for company in full_resume_data.get('companies', []):
+            constraints = company.get('bullet_constraints', {})
+            min_count = constraints.get('min', 4)
+            max_count = constraints.get('max', 6)
+            company_constraints += f"     * {company['id']} ({company['position']} at {company['name']}): MUST have EXACTLY {min_count} bullets minimum, {max_count} maximum\n"
+
+        # Get rewrite instruction from config
+        rewrite_mode_config = LLM_CONFIG['system_prompt']['rewrite_mode']
+        if should_rewrite_selected:
+            rewrite_instruction = f"2. {rewrite_mode_config['enabled_instruction']}"
+        else:
+            rewrite_instruction = f"2. {rewrite_mode_config['disabled_instruction']}"
+
+        # Build system instructions using config
+        role_desc = LLM_CONFIG['system_prompt']['role_description']
+        critical_instructions = LLM_CONFIG['system_prompt']['critical_instructions']
+
+        instructions_text = "\n".join([f"{i+1}. {instr}" if i > 0 else f"{i+1}. {instr}"
+                                       for i, instr in enumerate([critical_instructions[0], rewrite_instruction] + critical_instructions[1:])])
+
+        system_instructions = f"""{role_desc}
+
+**CRITICAL INSTRUCTIONS - THESE ARE MANDATORY:**
+{instructions_text}
+
+**⚠️  MANDATORY SELECTION CONSTRAINTS (MUST FOLLOW EXACTLY):**
+
+These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constraint is violated.
+
+1. **Bullets (Experience) - MANDATORY COUNTS:**
+
+   Total bullets requirement:
+   - MUST have between {config.get('bullets', {}).get('total_min', 16)} and {config.get('bullets', {}).get('total_max', 20)} bullets total across ALL companies
+
+   Per-company requirements (YOU MUST MEET EACH ONE):
+{company_constraints}
+
+   Important notes:
+   - ALL {len(full_resume_data.get('companies', []))} companies are MANDATORY
+   - If a company doesn't have enough relevant bullets, ADD LESS RELEVANT ONES to meet the minimum
+   - Meeting count constraints is MORE IMPORTANT than perfect relevance
+   - Each company's bullets must come from THAT company's bullet list only
+
+2. **Skills - MANDATORY COUNTS (Must meet MINIMUM in each category):**
+   - Languages: SELECT AT LEAST {config.get('skills_per_category', {}).get('languages', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('languages', {}).get('max', 8)})
+   - Platforms: SELECT AT LEAST {config.get('skills_per_category', {}).get('platforms', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('platforms', {}).get('max', 8)})
+   - Skills: SELECT AT LEAST {config.get('skills_per_category', {}).get('skills', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('skills', {}).get('max', 12)})
+   - Frameworks: SELECT AT LEAST {config.get('skills_per_category', {}).get('frameworks', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('frameworks', {}).get('max', 15)})
+   - Tools: SELECT AT LEAST {config.get('skills_per_category', {}).get('tools', {}).get('min', 6)} items (max {config.get('skills_per_category', {}).get('tools', {}).get('max', 10)})
+   - Database: SELECT AT LEAST {config.get('skills_per_category', {}).get('database', {}).get('min', 4)} items (max {config.get('skills_per_category', {}).get('database', {}).get('max', 6)})
+   - ALWAYS include ALL items from "*_mandatory" arrays FIRST
+
+3. **Projects - MANDATORY COUNT:**
+   - MUST select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
+   - Aim for {config.get('projects', {}).get('max', 3)} projects to maximize content
+   {'- REWRITE project descriptions to align with job requirements while keeping technical details' if should_rewrite_selected else '- Use EXACT project descriptions from original data'}
+
+4. **Summary:**
+   - Select EXACTLY ONE summary type that best matches the job description
+
+**STEP-BY-STEP SELECTION PROCESS:**
+
+Step 1: For EACH company, select bullets in this order:
+   a) Start with most relevant bullets
+   b) Keep adding until you reach the MINIMUM count for that company
+   c) If still below minimum, add remaining bullets even if less relevant
+   d) Stop when you hit the maximum count for that company
+   {'d1) CAREFULLY rewrite each selected bullet - ONLY rephrase existing info, NEVER add new facts or contexts' if should_rewrite_selected else ''}
+
+Step 2: Check total bullet count:
+   - If below {config.get('bullets', {}).get('total_min', 16)}, go back and add more bullets to companies that haven't hit their maximum
+   - If above {config.get('bullets', {}).get('total_max', 20)}, remove least relevant bullets from companies
+
+Step 3: Select skills - prioritize mandatory items, then most relevant
+
+Step 4: Select {config.get('projects', {}).get('max', 3)} projects{'and carefully rewrite descriptions using ONLY information from the original description' if should_rewrite_selected else ''}
+
+**OUTPUT FORMAT:**
+Return ONLY a valid JSON object with this structure:
+
+{{
+  "title": "Company Name - Job Title from job description",
+  "reasoning": "Explain how you met the count requirements: 'Selected X bullets for company1 (minimum Y required), Z bullets for company2 (minimum W required), total A bullets (requirement: {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}). Chose B projects, C skills per category.{' Rewrote bullets and projects to align with job requirements.' if should_rewrite_selected else ''}'",
+  "static_info": {{
+    "name": "exact name from resume data",
+    "email": "exact email",
+    "phone": "exact phone",
+    "address": "exact address",
+    "linkedin": "exact linkedin URL",
+    "portfolio": "exact portfolio URL",
+    "leetcode": "exact leetcode URL"
+  }},
+  "summaries": {{
+    "selected_type": "the exact summary text"
+  }},
+  "skills": {{
+    "languages": ["exact skill names"],
+    "platforms": ["exact platform names"],
+    "skills": ["exact skill names"],
+    "frameworks": ["exact framework names"],
+    "tools": ["exact tool names"],
+    "database": ["exact database names"]
+  }},
+  "companies": [
+    {{
+      "id": "exact company id",
+      "mandatory": true,
+      "name": "exact company name",
+      "position": "exact position",
+      "dates": "exact dates",
+      "location": "exact location",
+      "bullets": [
+        {{"text": "{'rephrased bullet using ONLY information from original - NO added facts or contexts' if should_rewrite_selected else 'exact bullet text - no paraphrasing'}"}},
+        ...
+      ]
+    }},
+    ...
+  ],
+  "projects": [
+    {{
+      "id": "exact project id",
+      "name": "exact name",
+      "tech": "exact tech",
+      "description": "{'rephrased description using ONLY original information - NO fabricated details' if should_rewrite_selected else 'exact description'}",
+      "date": "exact date",
+      "link": "exact link"
+    }},
+    ...
+  ],
+  "education": [
+    {{
+      "degree": "exact degree",
+      "dates": "exact dates",
+      "course": "exact course",
+      "institution": "exact institution",
+      "location": "exact location"
+    }},
+    ... (copy ALL education entries exactly from resume data)
+  ]
+}}
+
+**CRITICAL: Copy static_info and education EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
+
+**FINAL VALIDATION CHECKLIST (Check before returning):**
+- [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
+- [ ] Each company meets its minimum bullet requirement? (Check each one!)
+- [ ] All {len(full_resume_data.get('companies', []))} companies included?
+- [ ] Each skill category meets minimum count?
+- [ ] {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects selected?
+- [ ] Exactly 1 summary?
+- [ ] Approximately 770 - 820 words in total?
+{'- [ ] All rewritten bullets contain ONLY information from originals - NO added facts, industries, or contexts?' if should_rewrite_selected else '- [ ] All bullets and project descriptions are EXACT copies from original?'}
+{'- [ ] Double-checked: No "healthcare", "enterprise", or other terms added that were not in original?' if should_rewrite_selected else ''}
+
+If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
+
+{LLM_CONFIG['system_prompt']['final_instruction']}"""
+
+        # Resume data - THIS GETS CACHED! 🔥
+        resume_data_block = f"""**FULL RESUME DATA:**
+
+{json.dumps(full_resume_data, indent=2)}"""
+
+        # Build system blocks - conditionally add caching based on config
+        system_blocks = [
+            {
+                "type": "text",
+                "text": system_instructions
+            }
+        ]
+
+        # Add resume data block with optional caching
+        resume_block = {
+            "type": "text",
+            "text": resume_data_block
+        }
+
+        if LLM_CONFIG['cache_config']['use_prompt_caching']:
+            resume_block["cache_control"] = {"type": "ephemeral"}  # 🔥 CACHE THIS!
+
+        system_blocks.append(resume_block)
+
+        # User message using template from config
+        user_message = LLM_CONFIG['user_prompt_template'].format(job_description=job_description)
+
+        return system_blocks, user_message
 
     def _parse_response(self, response_text):
         """Parse JSON from Claude's response, handling markdown code blocks if present."""
