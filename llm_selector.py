@@ -28,13 +28,13 @@ class ResumeSelector:
 
         Args:
             api_key: Anthropic API key (if None, reads from ANTHROPIC_API_KEY env var)
-            model: Claude model to use (default: claude-3-5-haiku-20241022)
+            model: Claude model to use (default: claude-3-5-haiku-20241022) or claude-sonnet-4-20250514
         """
         self.api_key = api_key or os.getenv('ANTHROPIC_API_KEY')
         if not self.api_key:
             raise ValueError("ANTHROPIC_API_KEY not found. Set it in .env file or pass as argument.")
 
-        self.model = model or os.getenv('CLAUDE_MODEL', 'claude-3-5-haiku-20241022')
+        self.model = model or os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-20250514')
         self.client = Anthropic(api_key=self.api_key)
 
     def select_resume_content(self, full_resume_data, job_description, should_rewrite_selected=False):
@@ -207,7 +207,7 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
    {'- REWRITE project descriptions to align with job requirements while keeping technical details' if should_rewrite_selected else '- Use EXACT project descriptions from original data'}
 
 4. **Summary:**
-   - Select EXACTLY ONE summary type that best matches the job description
+   - Select EXACTLY ONE summary from the available options that best matches the job description
 
 **STEP-BY-STEP SELECTION PROCESS:**
 
@@ -241,9 +241,13 @@ Return ONLY a valid JSON object with this structure:
     "portfolio": "exact portfolio URL",
     "leetcode": "exact leetcode URL"
   }},
-  "summaries": {{
-    "selected_type": "the exact summary text"
-  }},
+  "summaries": [
+    {{
+      "id": "exact id from selected summary",
+      "label": "exact label from selected summary",
+      "text": "exact text from selected summary"
+    }}
+  ],
   "skills": {{
     "languages": ["exact skill names"],
     "platforms": ["exact platform names"],
@@ -287,10 +291,13 @@ Return ONLY a valid JSON object with this structure:
       "location": "exact location"
     }},
     ... (copy ALL education entries exactly from resume data)
-  ]
+  ],
+  "display_settings": {{
+    ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
+  }}
 }}
 
-**CRITICAL: Copy static_info and education EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
+**CRITICAL: Copy static_info, education, and display_settings EXACTLY from the resume data with ALL fields. Do NOT omit anything. If display_settings is present in the input, it MUST be included in the output.**
 
 **FINAL VALIDATION CHECKLIST (Check before returning):**
 - [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
@@ -383,7 +390,7 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
    {'- REWRITE project descriptions to align with job requirements while keeping technical details' if should_rewrite_selected else '- Use EXACT project descriptions from original data'}
 
 4. **Summary:**
-   - Select EXACTLY ONE summary type that best matches the job description
+   - Select EXACTLY ONE summary from the available options that best matches the job description
 
 **STEP-BY-STEP SELECTION PROCESS:**
 
@@ -417,9 +424,13 @@ Return ONLY a valid JSON object with this structure:
     "portfolio": "exact portfolio URL",
     "leetcode": "exact leetcode URL"
   }},
-  "summaries": {{
-    "selected_type": "the exact summary text"
-  }},
+  "summaries": [
+    {{
+      "id": "exact id from selected summary",
+      "label": "exact label from selected summary",
+      "text": "exact text from selected summary"
+    }}
+  ],
   "skills": {{
     "languages": ["exact skill names"],
     "platforms": ["exact platform names"],
@@ -463,10 +474,13 @@ Return ONLY a valid JSON object with this structure:
       "location": "exact location"
     }},
     ... (copy ALL education entries exactly from resume data)
-  ]
+  ],
+  "display_settings": {{
+    ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
+  }}
 }}
 
-**CRITICAL: Copy static_info and education EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
+**CRITICAL: Copy static_info, education, and display_settings EXACTLY from the resume data with ALL fields. Do NOT omit anything. If display_settings is present in the input, it MUST be included in the output.**
 
 **FINAL VALIDATION CHECKLIST (Check before returning):**
 - [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
@@ -627,14 +641,25 @@ If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
                     print(f"  ✅ {skill_category}: {count} items")
 
         # 6. Validate summary is present and only one
-        summaries = trimmed_data.get('summaries', {})
-        if len(summaries) != 1:
-            issue = f"⚠️  Expected exactly 1 summary, got {len(summaries)}"
-            print(f"\n{issue}")
-            issues.append(issue)
+        summaries = trimmed_data.get('summaries', [])
+        if isinstance(summaries, list):
+            # New array format
+            if len(summaries) != 1:
+                issue = f"⚠️  Expected exactly 1 summary, got {len(summaries)}"
+                print(f"\n{issue}")
+                issues.append(issue)
+            else:
+                summary_label = summaries[0].get('label', 'unknown')
+                print(f"\n✅ Summary: 1 option selected ({summary_label})")
         else:
-            summary_type = list(summaries.keys())[0]
-            print(f"\n✅ Summary: 1 type selected ({summary_type})")
+            # Old dict format (backward compatibility)
+            if len(summaries) != 1:
+                issue = f"⚠️  Expected exactly 1 summary, got {len(summaries)}"
+                print(f"\n{issue}")
+                issues.append(issue)
+            else:
+                summary_type = list(summaries.keys())[0]
+                print(f"\n✅ Summary: 1 type selected ({summary_type})")
 
         # Print final result
         print("\n" + "=" * 60)

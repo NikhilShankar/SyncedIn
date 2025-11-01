@@ -106,7 +106,7 @@ def show():
         st.markdown("## 📑 Sections")
         section = st.radio(
             "Navigate to:",
-            ["Static Info", "Summaries", "Companies", "Skills", "Projects", "Education", "Configuration"],
+            ["Static Info", "Summaries", "Companies", "Skills", "Projects", "Education", "Configuration", "Display Settings"],
             label_visibility="collapsed"
         )
 
@@ -147,19 +147,85 @@ def show():
     # Section: Summaries
     elif section == "Summaries":
         st.header("📝 Professional Summaries")
-        st.markdown("Edit your professional summaries for different job types")
+        st.markdown("Manage your professional summary options. The AI will select the most appropriate one for each job.")
 
-        summaries = data.get('summaries', {})
+        # Initialize summaries as array if it's not
+        summaries = data.get('summaries', [])
+        if isinstance(summaries, dict):
+            # Convert old format to new format
+            summaries = [
+                {"id": f"summary_{i+1}", "label": f"Option {i+1}", "text": text}
+                for i, text in enumerate(summaries.values())
+            ]
+            data['summaries'] = summaries
 
-        for key in ['android', 'fullstack', 'ml', 'general']:
-            new_summary = st.text_area(
-                f"{key.upper()} Summary",
-                value=summaries.get(key, ''),
-                height=100,
-                key=f"summary_{key}"
+        # Ensure it's a list
+        if not isinstance(summaries, list):
+            summaries = []
+
+        # Add New Summary button
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            if st.button("➕ Add New Summary", use_container_width=True):
+                next_id = len(summaries) + 1
+                summaries.append({
+                    "id": f"summary_{next_id}",
+                    "label": f"Option {next_id}",
+                    "text": ""
+                })
+                st.session_state.modified = True
+                st.rerun()
+
+        st.markdown("---")
+
+        # Display each summary with delete option
+        summaries_to_delete = []
+
+        for idx, summary in enumerate(summaries):
+            st.markdown(f"### Summary {idx + 1}")
+
+            col1, col2 = st.columns([3, 1])
+
+            with col1:
+                # Label input
+                new_label = st.text_input(
+                    "Label",
+                    value=summary.get('label', f"Option {idx+1}"),
+                    key=f"summary_label_{idx}",
+                    help="This helps you identify the summary (e.g., 'Android Focus', 'ML Focus')"
+                )
+                summary['label'] = new_label
+
+            with col2:
+                # Delete button
+                st.markdown("<br>", unsafe_allow_html=True)  # Spacing
+                if st.button(f"🗑️ Delete", key=f"delete_summary_{idx}", use_container_width=True):
+                    summaries_to_delete.append(idx)
+
+            # Text area for summary
+            new_text = st.text_area(
+                "Summary Text",
+                value=summary.get('text', ''),
+                height=120,
+                key=f"summary_text_{idx}",
+                label_visibility="collapsed"
             )
-            summaries[key] = new_summary
+            summary['text'] = new_text
 
+            # Update ID if not present
+            if 'id' not in summary:
+                summary['id'] = f"summary_{idx+1}"
+
+            st.markdown("---")
+
+        # Delete summaries marked for deletion
+        if summaries_to_delete:
+            for idx in sorted(summaries_to_delete, reverse=True):
+                summaries.pop(idx)
+            st.session_state.modified = True
+            st.rerun()
+
+        # Update button
         if st.button("💾 Update Summaries", type="primary"):
             data['summaries'] = summaries
             st.session_state.modified = True
@@ -519,6 +585,151 @@ def show():
             data['config'] = config
             st.session_state.modified = True
             st.success("✅ Configuration updated! Remember to save changes.")
+
+    # Section: Display Settings
+    elif section == "Display Settings":
+        st.header("🎨 Display Settings")
+        st.markdown("Customize section titles and visibility in your resume")
+
+        # Initialize display_settings if not present
+        if 'display_settings' not in data:
+            data['display_settings'] = {
+                "sections": {
+                    "summary": {"enabled": True, "title": "Professional Summary"},
+                    "experience": {"enabled": True, "title": "Professional Experience"},
+                    "skills": {
+                        "enabled": True,
+                        "title": "Technical Skills",
+                        "categories": ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"]
+                    },
+                    "education": {"enabled": True, "title": "Education"},
+                    "projects": {"enabled": True, "title": "Personal Projects"}
+                }
+            }
+
+        display_settings = data.get('display_settings', {})
+        sections_config = display_settings.get('sections', {})
+
+        # Summary Section
+        st.markdown("### 📝 Summary Section")
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            summary_enabled = st.checkbox(
+                "Enabled",
+                value=sections_config.get('summary', {}).get('enabled', True),
+                key="summary_enabled"
+            )
+        with col2:
+            summary_title = st.text_input(
+                "Section Title",
+                value=sections_config.get('summary', {}).get('title', 'Professional Summary'),
+                key="summary_title"
+            )
+        sections_config['summary'] = {"enabled": summary_enabled, "title": summary_title}
+
+        st.markdown("---")
+
+        # Experience Section
+        st.markdown("### 💼 Experience Section")
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            experience_enabled = st.checkbox(
+                "Enabled",
+                value=sections_config.get('experience', {}).get('enabled', True),
+                key="experience_enabled"
+            )
+        with col2:
+            experience_title = st.text_input(
+                "Section Title",
+                value=sections_config.get('experience', {}).get('title', 'Professional Experience'),
+                key="experience_title"
+            )
+        sections_config['experience'] = {"enabled": experience_enabled, "title": experience_title}
+
+        st.markdown("---")
+
+        # Skills Section
+        st.markdown("### 🛠️ Skills Section")
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            skills_enabled = st.checkbox(
+                "Enabled",
+                value=sections_config.get('skills', {}).get('enabled', True),
+                key="skills_enabled"
+            )
+        with col2:
+            skills_title = st.text_input(
+                "Section Title",
+                value=sections_config.get('skills', {}).get('title', 'Technical Skills'),
+                key="skills_title"
+            )
+
+        st.markdown("**Skill Category Names** (in order: Languages, Platforms, Skills, Frameworks, Tools, Database)")
+        default_categories = ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"]
+        current_categories = sections_config.get('skills', {}).get('categories', default_categories)
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            cat1 = st.text_input("Category 1 (languages)", value=current_categories[0] if len(current_categories) > 0 else "Languages", key="cat1")
+            cat2 = st.text_input("Category 2 (platforms)", value=current_categories[1] if len(current_categories) > 1 else "Platforms", key="cat2")
+        with col2:
+            cat3 = st.text_input("Category 3 (skills)", value=current_categories[2] if len(current_categories) > 2 else "Skills", key="cat3")
+            cat4 = st.text_input("Category 4 (frameworks)", value=current_categories[3] if len(current_categories) > 3 else "Frameworks", key="cat4")
+        with col3:
+            cat5 = st.text_input("Category 5 (tools)", value=current_categories[4] if len(current_categories) > 4 else "Tools", key="cat5")
+            cat6 = st.text_input("Category 6 (database)", value=current_categories[5] if len(current_categories) > 5 else "Database", key="cat6")
+
+        sections_config['skills'] = {
+            "enabled": skills_enabled,
+            "title": skills_title,
+            "categories": [cat1, cat2, cat3, cat4, cat5, cat6]
+        }
+
+        st.markdown("---")
+
+        # Education Section
+        st.markdown("### 🎓 Education Section")
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            education_enabled = st.checkbox(
+                "Enabled",
+                value=sections_config.get('education', {}).get('enabled', True),
+                key="education_enabled"
+            )
+        with col2:
+            education_title = st.text_input(
+                "Section Title",
+                value=sections_config.get('education', {}).get('title', 'Education'),
+                key="education_title"
+            )
+        sections_config['education'] = {"enabled": education_enabled, "title": education_title}
+
+        st.markdown("---")
+
+        # Projects Section
+        st.markdown("### 🚀 Projects Section")
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            projects_enabled = st.checkbox(
+                "Enabled",
+                value=sections_config.get('projects', {}).get('enabled', True),
+                key="projects_enabled"
+            )
+        with col2:
+            projects_title = st.text_input(
+                "Section Title",
+                value=sections_config.get('projects', {}).get('title', 'Personal Projects'),
+                key="projects_title"
+            )
+        sections_config['projects'] = {"enabled": projects_enabled, "title": projects_title}
+
+        # Update display_settings
+        display_settings['sections'] = sections_config
+
+        if st.button("💾 Update Display Settings", type="primary"):
+            data['display_settings'] = display_settings
+            st.session_state.modified = True
+            st.success("✅ Display settings updated! Remember to save changes.")
 
     # JSON Preview
     with st.expander("🔍 Preview JSON"):

@@ -38,6 +38,25 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
         Path to the generated .tex file
     """
 
+    # Default display settings if not provided
+    default_display_settings = {
+        "sections": {
+            "summary": {"enabled": True, "title": "Professional Summary"},
+            "experience": {"enabled": True, "title": "Professional Experience"},
+            "skills": {
+                "enabled": True,
+                "title": "Technical Skills",
+                "categories": ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"]
+            },
+            "education": {"enabled": True, "title": "Education"},
+            "projects": {"enabled": True, "title": "Personal Projects"}
+        }
+    }
+
+    # Get display settings from data or use defaults
+    display_settings = trimmed_resume_data.get('display_settings', default_display_settings)
+    sections = display_settings.get('sections', default_display_settings['sections'])
+
     # Read template
     with open(template_path, 'r') as f:
         template = f.read()
@@ -49,95 +68,146 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     template = template.replace('{{PHONE}}', escape_latex_special_chars(static['phone']))
     template = template.replace('{{EMAIL}}', escape_latex_special_chars(static['email']))
     template = template.replace('{{LINKEDIN}}', static['linkedin'])  # Keep raw for href
-    #template = template.replace('{{PORTFOLIO}}', static['portfolio'])  # Keep raw for href
     template = template.replace('{{LEETCODE}}', static['leetcode'])  # Keep raw for href
 
-    # --- 2. Fill summary (LLM should select which summary type to use) ---
-    # The trimmed JSON will have only ONE summary in the 'summaries' dict
-    summaries = trimmed_resume_data.get('summaries', {})
-    if summaries:
-        # Get the first (and only) summary value
-        summary_text = list(summaries.values())[0]
-        template = template.replace('{{SUMMARY}}', escape_latex_special_chars(summary_text))
+    # --- 2. Build Summary Section ---
+    summary_section = ""
+    if sections.get('summary', {}).get('enabled', True):
+        summaries = trimmed_resume_data.get('summaries', [])
+        if summaries:
+            summary_title = sections['summary'].get('title', 'Professional Summary')
+            # Handle both array (new format) and dict (old format) for backward compatibility
+            if isinstance(summaries, list):
+                summary_text = summaries[0].get('text', '') if summaries else ''
+            else:
+                # Backward compatibility with old dict format
+                summary_text = list(summaries.values())[0] if summaries else ''
 
-    # --- 3. Fill technical skills (CONVERT LISTS TO STRINGS & APPLY ESCAPING) ---
-    skills_content = trimmed_resume_data.get('skills', {})
+            if summary_text:
+                summary_section = f"%----------{summary_title.upper()}----------\n"
+                summary_section += f"\\section{{{summary_title}}}\n"
+                summary_section += escape_latex_special_chars(summary_text)
 
-    def get_skill_string(key):
-        """Helper to safely retrieve skill data, joining lists into a string."""
-        value = skills_content.get(key, [])
-        if isinstance(value, list):
-            # Join list into a comma-separated string, as expected by LaTeX formatting
-            return ", ".join(value)
-        return value
+    template = template.replace('{{SUMMARY_SECTION}}', summary_section)
 
-    template = template.replace('{{LANGUAGES}}', escape_latex_special_chars(get_skill_string('languages')))
-    template = template.replace('{{PLATFORMS}}', escape_latex_special_chars(get_skill_string('platforms')))
-    template = template.replace('{{SKILLS}}', escape_latex_special_chars(get_skill_string('skills')))
-    template = template.replace('{{FRAMEWORKS}}', escape_latex_special_chars(get_skill_string('frameworks')))
-    template = template.replace('{{TOOLS}}', escape_latex_special_chars(get_skill_string('tools')))
-    template = template.replace('{{DATABASE}}', escape_latex_special_chars(get_skill_string('database')))
+    # --- 3. Build Experience Section ---
+    experience_section = ""
+    if sections.get('experience', {}).get('enabled', True):
+        companies = trimmed_resume_data.get('companies', [])
+        if companies:
+            experience_title = sections['experience'].get('title', 'Professional Experience')
+            experience_section = f"%----------{experience_title.upper()}----------\n"
+            experience_section += f"\\section{{{experience_title}}}\n"
+            experience_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
 
-    # --- 4. Generate Experience Section ---
-    experience_text = ""
-    companies = trimmed_resume_data.get('companies', [])
+            for company in companies:
+                title = escape_latex_special_chars(company['position'])
+                dates = escape_latex_special_chars(company['dates'])
+                company_name = escape_latex_special_chars(company['name'])
+                location = escape_latex_special_chars(company['location'])
 
-    for company in companies:
-        # Extract company info
-        title = escape_latex_special_chars(company['position'])
-        dates = escape_latex_special_chars(company['dates'])
-        company_name = escape_latex_special_chars(company['name'])
-        location = escape_latex_special_chars(company['location'])
+                experience_section += f"\\resumeSubheading\n"
+                experience_section += f"  {{{title}}}{{{dates}}}\n"
+                experience_section += f"  {{{company_name}}}{{{location}}}\n"
+                experience_section += f"\\begin{{itemize}}[leftmargin=0.3in]\n"
 
-        experience_text += f"\\resumeSubheading\n"
-        experience_text += f"  {{{title}}}{{{dates}}}\n"
-        experience_text += f"  {{{company_name}}}{{{location}}}\n"
-        experience_text += f"\\begin{{itemize}}[leftmargin=0.3in]\n"
+                for bullet in company.get('bullets', []):
+                    escaped_bullet = escape_latex_special_chars(bullet['text'])
+                    experience_section += f"  \\resumeItem{{{escaped_bullet}}}\n"
 
-        # Bullets are objects with 'text' field
-        for bullet in company.get('bullets', []):
-            escaped_bullet = escape_latex_special_chars(bullet['text'])
-            experience_text += f"  \\resumeItem{{{escaped_bullet}}}\n"
+                experience_section += f"\\end{{itemize}}\n\n"
 
-        experience_text += f"\\end{{itemize}}\n\n"
+            experience_section += "\\end{itemize}\n"
 
-    template = template.replace('{{EXPERIENCE_ITEMS}}', experience_text)
+    template = template.replace('{{EXPERIENCE_SECTION}}', experience_section)
 
-    # --- 5. Generate Education Section (APPLY ESCAPING) ---
-    education_text = ""
-    for edu in trimmed_resume_data.get('education', []):
-        degree = escape_latex_special_chars(edu['degree'])
-        dates = escape_latex_special_chars(edu['dates'])
-        course = escape_latex_special_chars(edu['course'])
-        institution = escape_latex_special_chars(edu['institution'])
-        location = escape_latex_special_chars(edu['location'])
-        empty = ""
-        education_text += f"\\resumeThreeLineSubheading\n"
-        education_text += f"  {{{degree}}}\n"
-        education_text += f"  {{{dates}}}\n"
-        education_text += f"  {{{course}}}\n"
-        education_text += f"  {{{location}}}\n"
-        education_text += f"  {{{institution}}}\n"
-        education_text += f"  {{{empty}}}\n\n"
+    # --- 4. Build Skills Section with Dynamic Categories ---
+    skills_section = ""
+    if sections.get('skills', {}).get('enabled', True):
+        skills_content = trimmed_resume_data.get('skills', {})
+        if skills_content:
+            skills_title = sections['skills'].get('title', 'Technical Skills')
+            categories = sections['skills'].get('categories',
+                ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"])
 
-    template = template.replace('{{EDUCATION_ITEMS}}', education_text)
+            # Skill keys in order (must match the categories array order)
+            skill_keys = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
 
-    # --- 6. Generate Projects Section (APPLY ESCAPING) ---
-    projects_text = ""
-    projects = trimmed_resume_data.get('projects', [])
+            skills_section = f"%----------{skills_title.upper()}----------\n"
+            skills_section += f"\\section{{{skills_title}}}\n"
+            skills_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+            skills_section += "    \\normalfont{\\item{\n"
 
-    for project in projects:
-        # Item line: \item \textbf{Name} - Description
-        projects_text += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
+            # Build skill category lines dynamically
+            skill_lines = []
+            for i, key in enumerate(skill_keys):
+                if i < len(categories):  # Only if we have a title for this category
+                    value = skills_content.get(key, [])
+                    if value:  # Only add if there's content
+                        if isinstance(value, list):
+                            value_str = ", ".join(value)
+                        else:
+                            value_str = value
+                        category_title = categories[i]
+                        skill_lines.append(f"     \\textbf{{{category_title}: }}{{{escape_latex_special_chars(value_str)}}}")
 
-        # Details line: \textit{Tech} | Date | \href{link}{Link}
-        details_line = f"          \\textit{{{escape_latex_special_chars(project['tech'])}}} | {escape_latex_special_chars(project['date'])}"
-        if project.get('link'):
-            details_line += f" | \\href{{{project['link']}}}{{Link}}"  # Keep raw for href
+            # Join with \\ and add final line
+            skills_section += " \\\\\n".join(skill_lines)
+            skills_section += "\n    }}\n\\end{itemize}\n"
 
-        projects_text += details_line + "\n\n"
+    template = template.replace('{{SKILLS_SECTION}}', skills_section)
 
-    template = template.replace('{{PROJECT_ITEMS}}', projects_text)
+    # --- 5. Build Education Section ---
+    education_section = ""
+    if sections.get('education', {}).get('enabled', True):
+        education_data = trimmed_resume_data.get('education', [])
+        if education_data:
+            education_title = sections['education'].get('title', 'Education')
+            education_section = f"%----------{education_title.upper()}----------\n"
+            education_section += f"\\section{{{education_title}}}\n"
+            education_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+
+            for edu in education_data:
+                degree = escape_latex_special_chars(edu['degree'])
+                dates = escape_latex_special_chars(edu['dates'])
+                course = escape_latex_special_chars(edu['course'])
+                institution = escape_latex_special_chars(edu['institution'])
+                location = escape_latex_special_chars(edu['location'])
+                empty = ""
+                education_section += f"\\resumeThreeLineSubheading\n"
+                education_section += f"  {{{degree}}}\n"
+                education_section += f"  {{{dates}}}\n"
+                education_section += f"  {{{course}}}\n"
+                education_section += f"  {{{location}}}\n"
+                education_section += f"  {{{institution}}}\n"
+                education_section += f"  {{{empty}}}\n\n"
+
+            education_section += "\\end{itemize}\n"
+
+    template = template.replace('{{EDUCATION_SECTION}}', education_section)
+
+    # --- 6. Build Projects Section ---
+    projects_section = ""
+    if sections.get('projects', {}).get('enabled', True):
+        projects = trimmed_resume_data.get('projects', [])
+        if projects:
+            projects_title = sections['projects'].get('title', 'Personal Projects')
+            projects_section = f"%----------{projects_title.upper()}----------\n"
+            projects_section += f"\\section{{{projects_title}}}\n"
+            projects_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+
+            for project in projects:
+                projects_section += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
+
+                details_line = f"          \\textit{{{escape_latex_special_chars(project['tech'])}}} | {escape_latex_special_chars(project['date'])}"
+                if project.get('link'):
+                    details_line += f" | \\href{{{project['link']}}}{{Link}}"
+
+                projects_section += details_line + "\n\n"
+
+            projects_section += "\\end{itemize}\n"
+
+    template = template.replace('{{PROJECTS_SECTION}}', projects_section)
 
     # Create output directory if it doesn't exist
     output_dir = os.path.dirname(output_path)
@@ -207,9 +277,9 @@ if __name__ == '__main__':
     # In production, this would be returned by llm_selector.py
     trimmed_resume_data = {
         "static_info": full_data["static_info"],
-        "summaries": {
-            "android": full_data["summaries"]["android"]  # LLM selected 'android' summary
-        },
+        "summaries": [
+            full_data["summaries"][0]  # LLM selected first summary option
+        ],
         "skills": {
             # LLM trimmed skills based on job description
             "languages": ["Kotlin", "Java", "Python", "Dart", "Golang"],

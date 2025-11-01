@@ -37,6 +37,38 @@
       "note": "Space-dependent. Prioritize experience bullets over projects."
     }
   },
+  "display_settings": {
+    "sections": {
+      "summary": {
+        "enabled": true,
+        "title": "Professional Summary SACHU"
+      },
+      "experience": {
+        "enabled": true,
+        "title": "Professional Experience SACHU"
+      },
+      "skills": {
+        "enabled": false,
+        "title": "Technical Skills SACHU",
+        "categories": [
+          "Languages",
+          "Platforms",
+          "Skills",
+          "Frameworks",
+          "Tools",
+          "Database"
+        ]
+      },
+      "education": {
+        "enabled": true,
+        "title": "Education SACHU"
+      },
+      "projects": {
+        "enabled": false,
+        "title": "Personal Projects SACHU"
+      }
+    }
+  },
   "static_info": {
     "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
     "address": "Unit 259 - 475 King Street North",
@@ -46,12 +78,28 @@
     "portfolio": "",
     "leetcode": "https://leetcode.com/u/user2137S/"
   },
-  "summaries": {
-    "android": "Senior Android Engineer with 7+ years of professional experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving.",
-    "fullstack": "Versatile Software Engineer with 7+ years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status. ",
-    "ml": "Software Engineer blending 7+ years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications.",
-    "general": "Senior Android Engineer with 7+ years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
-  },
+  "summaries": [
+    {
+      "id": "summary_1",
+      "label": "Option 1",
+      "text": "Senior Android Engineer with 7+ years of professional experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
+    },
+    {
+      "id": "summary_2",
+      "label": "Option 2",
+      "text": "Versatile Software Engineer with 7+ years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5M daily users, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status."
+    },
+    {
+      "id": "summary_3",
+      "label": "Option 3",
+      "text": "Software Engineer blending 7+ years of production mobile development with emerging AI/ML expertise. Built and scaled fintech systems serving 1.5M daily users while architecting high-performance Android applications using modern patterns and optimization techniques. Currently expanding into Applied AI/ML with hands-on experience in LLMs, NLP, vector embeddings, and model training. Strong foundation in system architecture, performance optimization (reduced costs by 70%), and taking products from MVP to scale. Seeking to bridge mobile engineering excellence with AI/ML innovation to build next-generation intelligent applications."
+    },
+    {
+      "id": "summary_4",
+      "label": "Option 4",
+      "text": "Senior Android Engineer with 7+ years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
+    }
+  ],
   "skills": {
     "languages": [
       "Kotlin",
