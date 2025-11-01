@@ -49,8 +49,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY *.py ./
 COPY *.tex ./
-COPY resume_data_enhanced.json ./
+COPY resume_template_minimal.json ./
 COPY llm_config.json ./
+COPY entrypoint.sh ./
 
 # Copy font files to both locations
 # 1. Keep in app directory for LaTeX to find by filename
@@ -58,17 +59,22 @@ COPY fonts/ ./fonts/
 # 2. Also copy individual font files to working directory for direct access
 COPY fonts/*.ttf ./
 
+# Make entrypoint script executable
+RUN chmod +x entrypoint.sh
+
 # Install custom fonts system-wide for fontconfig
 RUN mkdir -p /usr/share/fonts/truetype/lato && \
     cp fonts/*.ttf /usr/share/fonts/truetype/lato/ && \
     fc-cache -f -v
 
-# Create necessary directories with proper permissions
-RUN mkdir -p generated output resume_backups && \
-    chmod 777 generated output resume_backups && \
-    touch applications_tracking.json && \
-    echo "[]" > applications_tracking.json && \
-    chmod 666 applications_tracking.json
+# Create /data directory for bind mount
+RUN mkdir -p /data && chmod 777 /data
+
+# Create generated directory for temporary files
+RUN mkdir -p generated && chmod 777 generated
+
+# Declare volume for user data (will be bind-mounted)
+VOLUME ["/data"]
 
 # Expose custom port (8765 instead of default 8501)
 EXPOSE 8765
@@ -76,6 +82,9 @@ EXPOSE 8765
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8765/_stcore/health')" || exit 1
+
+# Set entrypoint
+ENTRYPOINT ["./entrypoint.sh"]
 
 # Run Streamlit app on port 8765
 CMD ["streamlit", "run", "main_app.py", "--server.port=8765", "--server.address=0.0.0.0", "--server.headless=true"]

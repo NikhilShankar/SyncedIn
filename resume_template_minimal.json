@@ -1,0 +1,239 @@
+{
+  "config": {
+    "page_limit": 2,
+    "bullets": {
+      "total_min": 16,
+      "total_max": 24
+    },
+    "skills_per_category": {
+      "languages": {
+        "min": 3,
+        "max": 6
+      },
+      "platforms": {
+        "min": 3,
+        "max": 6
+      },
+      "skills": {
+        "min": 5,
+        "max": 10
+      },
+      "frameworks": {
+        "min": 5,
+        "max": 10
+      },
+      "tools": {
+        "min": 3,
+        "max": 6
+      },
+      "database": {
+        "min": 2,
+        "max": 4
+      }
+    },
+    "projects": {
+      "min": 1,
+      "max": 2,
+      "note": "Space-dependent. Prioritize experience bullets over projects."
+    }
+  },
+  "display_settings": {
+    "sections": {
+      "summary": {
+        "enabled": true,
+        "title": "Professional Summary"
+      },
+      "experience": {
+        "enabled": true,
+        "title": "Professional Experience"
+      },
+      "skills": {
+        "enabled": true,
+        "title": "Technical Skills",
+        "categories": [
+          "Languages",
+          "Platforms",
+          "Skills",
+          "Frameworks",
+          "Tools",
+          "Database"
+        ]
+      },
+      "education": {
+        "enabled": true,
+        "title": "Education"
+      },
+      "projects": {
+        "enabled": true,
+        "title": "Personal Projects"
+      }
+    }
+  },
+  "static_info": {
+    "name": "YOUR FULL NAME",
+    "address": "Your Address",
+    "phone": "123-456-7890",
+    "email": "your.email@example.com",
+    "links": [
+      {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/in/yourprofile",
+        "icon": "linkedin"
+      },
+      {
+        "name": "GitHub",
+        "url": "https://github.com/yourusername",
+        "icon": "github"
+      },
+      {
+        "name": "Portfolio",
+        "url": "https://yourportfolio.com",
+        "icon": "web"
+      },
+      {
+        "name": "LeetCode",
+        "url": "https://leetcode.com/u/yourusername",
+        "icon": "code"
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "id": "summary_1",
+      "label": "General",
+      "text": "Software Engineer with X years of experience in full-stack development, mobile applications, or your specialization. Skilled in building scalable systems and solving complex problems. Add your key achievements and technologies here."
+    },
+    {
+      "id": "summary_2",
+      "label": "Specialized",
+      "text": "Create additional summary variants for different job types. For example: Frontend-focused, Backend-focused, Mobile-focused, ML-focused, etc."
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "Java"
+    ],
+    "languages_mandatory": [
+      "Python"
+    ],
+    "platforms": [
+      "AWS",
+      "Docker",
+      "Linux"
+    ],
+    "platforms_mandatory": [
+      "AWS"
+    ],
+    "skills": [
+      "RESTful API Design",
+      "System Architecture",
+      "Agile Development",
+      "Code Review",
+      "Problem Solving"
+    ],
+    "skills_mandatory": [
+      "RESTful API Design",
+      "System Architecture"
+    ],
+    "frameworks": [
+      "React",
+      "Node.js",
+      "Django",
+      "FastAPI"
+    ],
+    "frameworks_mandatory": [
+      "React",
+      "Node.js"
+    ],
+    "tools": [
+      "Git",
+      "VS Code",
+      "Postman"
+    ],
+    "tools_mandatory": [
+      "Git"
+    ],
+    "database": [
+      "PostgreSQL",
+      "MongoDB"
+    ],
+    "database_mandatory": [
+      "PostgreSQL"
+    ]
+  },
+  "companies": [
+    {
+      "id": "company_1",
+      "mandatory": true,
+      "name": "Example Company",
+      "position": "Software Engineer",
+      "dates": "Jan 2023 - Present",
+      "location": "City, Country",
+      "bullets": [
+        {
+          "id": "c1_b1",
+          "text": "Developed and deployed features that improved user engagement by X%",
+          "selected": true,
+          "impact": "high",
+          "tags": ["development", "impact"]
+        },
+        {
+          "id": "c1_b2",
+          "text": "Collaborated with cross-functional teams to design and implement solutions",
+          "selected": true,
+          "impact": "medium",
+          "tags": ["teamwork", "design"]
+        },
+        {
+          "id": "c1_b3",
+          "text": "Optimized system performance resulting in Y% improvement",
+          "selected": true,
+          "impact": "high",
+          "tags": ["performance", "optimization"]
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu_1",
+      "degree": "Bachelor of Science in Computer Science",
+      "university": "University Name",
+      "location": "City, Country",
+      "graduation_date": "May 2022",
+      "gpa": "3.8/4.0"
+    }
+  ],
+  "projects": [
+    {
+      "id": "project_1",
+      "name": "Example Project",
+      "description": "Brief description of your project",
+      "technologies": [
+        "React",
+        "Node.js",
+        "PostgreSQL"
+      ],
+      "bullets": [
+        {
+          "id": "p1_b1",
+          "text": "Built a full-stack application with authentication and real-time features",
+          "selected": true,
+          "impact": "high",
+          "tags": ["fullstack", "development"]
+        },
+        {
+          "id": "p1_b2",
+          "text": "Implemented responsive UI supporting multiple devices",
+          "selected": true,
+          "impact": "medium",
+          "tags": ["frontend", "ui"]
+        }
+      ],
+      "github": "https://github.com/yourusername/project",
+      "live_url": ""
+    }
+  ]
+}

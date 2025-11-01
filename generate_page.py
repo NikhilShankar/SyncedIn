@@ -6,6 +6,7 @@ from llm_selector import ResumeSelector
 from fill_latex_template_v2 import fill_latex_template
 import subprocess
 import base64
+import config_manager
 
 
 def show():
@@ -15,57 +16,36 @@ def show():
     st.markdown("<h1 class='main-header'>🤖 Generate Tailored Resume</h1>", unsafe_allow_html=True)
     st.markdown("Generate tailored resumes using Claude AI")
 
+    # Get current user paths
+    user_paths = config_manager.get_current_user_paths()
+    if not user_paths:
+        st.error("❌ No user configured. Please go to Settings to set up your profile.")
+        st.stop()
+
+    # Get API key and model from config
+    api_key = config_manager.get_api_key()
+    model = config_manager.get_selected_model()
+
+    if not api_key:
+        st.warning("⚠️ No API key configured. Please go to Settings to add your Anthropic API key.")
+        if st.button("Go to Settings"):
+            st.session_state.current_page = 'settings'
+            st.rerun()
+        st.stop()
+
     # Settings in sidebar
     with st.sidebar:
         st.markdown("---")
-        st.header("⚙️ Settings")
+        st.header("⚙️ Generation Settings")
 
-        # API Key input
-        api_key = st.text_input(
-            "Anthropic API Key",
-            type="password",
-            value=os.getenv('ANTHROPIC_API_KEY', ''),
-            help="Your Anthropic API key (starts with sk-ant-)"
-        )
-
-        # Model selection
-        model = st.selectbox(
-            "Claude Model",
-            options=[
-                "claude-3-5-haiku-20241022",
-                "claude-sonnet-4-20250514",
-                "claude-3-5-sonnet-20241022"
-            ],
-            index=0,
-            help="Haiku: Fast & cheap | Sonnet: Better quality"
-        )
+        # Show current model (read-only info)
+        st.info(f"🤖 Using: {model}")
 
         # Rewrite mode
         should_rewrite = st.checkbox(
             "Enable Rewrite Mode",
             value=True,
             help="Rephrase bullets to match job (use with caution)"
-        )
-
-        # Organized saving
-        save_organized = st.checkbox(
-            "Save to Organized Folders",
-            value=True,
-            help="Save PDFs in Month/Company/Name structure"
-        )
-
-        # Output folder path
-        output_base_path = st.text_input(
-            "Output Folder Path",
-            value=os.getenv('OUTPUT_BASE_PATH', './output'),
-            help="Base folder for organized PDFs (e.g., D:/Resumes/output)"
-        )
-
-        # Resume data path
-        resume_data_path = st.text_input(
-            "Resume Data Path",
-            value="resume_data_enhanced.json",
-            help="Path to your resume JSON file"
         )
 
         # Template path
@@ -128,12 +108,12 @@ Requirements:
             st.error("❌ Please enter a job description")
             st.stop()
 
-        if not api_key:
-            st.error("❌ Please enter your Anthropic API key in the sidebar")
-            st.stop()
+        # Get resume data path from config
+        resume_data_path = user_paths['resume_data']
 
         if not os.path.exists(resume_data_path):
             st.error(f"❌ Resume data file not found: {resume_data_path}")
+            st.info("💡 Your resume data should be at the path above. You can edit it using the 'Edit Resume Data' page.")
             st.stop()
 
         if not os.path.exists(template_path):
@@ -226,8 +206,8 @@ Requirements:
                     safe_company = "".join(c if c.isalnum() or c in (' ', '-', '_') else '' for c in company_name)
                     safe_company = safe_company.replace(' ', '-')
 
-                    # Create company folder: output_base_path/CompanyName/
-                    company_dir = Path(output_base_path) / safe_company
+                    # Create company folder: Resumes/CompanyName/
+                    company_dir = Path(user_paths['resumes_dir']) / safe_company
                     company_dir.mkdir(parents=True, exist_ok=True)
 
                     # Find next version number by checking existing files
@@ -261,6 +241,10 @@ Requirements:
                     from stats_page import add_application
                     add_application(company_name, job_description)
                     st.write("✅ Application tracked in stats")
+
+                    # Show absolute path for easy access
+                    st.write("")
+                    st.success(f"📁 Your PDF is saved at:\n{os.path.abspath(versioned_pdf)}")
 
                     # Update status
                     status.update(label="✅ Resume Generated Successfully!", state="complete", expanded=False)

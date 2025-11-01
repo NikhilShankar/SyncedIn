@@ -67,8 +67,31 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     template = template.replace('{{ADDRESS}}', escape_latex_special_chars(static['address']))
     template = template.replace('{{PHONE}}', escape_latex_special_chars(static['phone']))
     template = template.replace('{{EMAIL}}', escape_latex_special_chars(static['email']))
-    template = template.replace('{{LINKEDIN}}', static['linkedin'])  # Keep raw for href
-    template = template.replace('{{LEETCODE}}', static['leetcode'])  # Keep raw for href
+
+    # Handle links - support both old format (linkedin, leetcode fields) and new format (links array)
+    if 'links' in static and isinstance(static['links'], list):
+        # New format: links array
+        linkedin_url = ""
+        leetcode_url = ""
+        portfolio_url = ""
+
+        for link in static['links']:
+            link_name = link.get('name', '').lower()
+            if 'linkedin' in link_name:
+                linkedin_url = link.get('url', '')
+            elif 'leetcode' in link_name:
+                leetcode_url = link.get('url', '')
+            elif 'portfolio' in link_name or 'website' in link_name:
+                portfolio_url = link.get('url', '')
+
+        template = template.replace('{{LINKEDIN}}', linkedin_url)
+        template = template.replace('{{LEETCODE}}', leetcode_url)
+        template = template.replace('{{PORTFOLIO}}', portfolio_url)
+    else:
+        # Old format: separate fields
+        template = template.replace('{{LINKEDIN}}', static.get('linkedin', ''))
+        template = template.replace('{{LEETCODE}}', static.get('leetcode', ''))
+        template = template.replace('{{PORTFOLIO}}', static.get('portfolio', ''))
 
     # --- 2. Build Summary Section ---
     summary_section = ""

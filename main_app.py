@@ -1,5 +1,7 @@
 import streamlit as st
 from pathlib import Path
+import config_manager
+import setup_wizard
 
 # Page config - MUST be first Streamlit command
 st.set_page_config(
@@ -8,6 +10,11 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Check for first run - show setup wizard if needed
+if config_manager.is_first_run():
+    setup_wizard.show()
+    st.stop()
 
 # Custom CSS for better styling
 st.markdown("""
@@ -30,6 +37,12 @@ if 'current_page' not in st.session_state:
 
 # Sidebar Navigation
 with st.sidebar:
+    # Show current user at the top
+    current_user = config_manager.get_current_user()
+    if current_user:
+        st.markdown(f"### 👤 {current_user}")
+        st.markdown("---")
+
     st.markdown("## 🎯 Navigation")
 
     # Generate Resume button
@@ -59,6 +72,14 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # Settings button
+    if st.button("⚙️ Settings", use_container_width=True,
+                 type="primary" if st.session_state.current_page == 'settings' else "secondary"):
+        st.session_state.current_page = 'settings'
+        st.rerun()
+
+    st.markdown("---")
+
     # Info section
     st.markdown("### ℹ️ About")
     st.markdown("""
@@ -84,3 +105,6 @@ elif st.session_state.current_page == 'edit_regenerate':
 elif st.session_state.current_page == 'stats':
     import stats_page
     stats_page.show()
+elif st.session_state.current_page == 'settings':
+    import settings_page
+    settings_page.show()

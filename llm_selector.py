@@ -527,7 +527,7 @@ If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
         return system_blocks, user_message
 
     def _parse_response(self, response_text):
-        """Parse JSON from Claude's response, handling markdown code blocks if present."""
+        """Parse JSON from Claude's response, handling markdown code blocks and extra text."""
 
         response_text = response_text.strip()
 
@@ -543,11 +543,29 @@ If ANY checkbox above is NO, your response is WRONG. Fix it before returning.
         response_text = response_text.strip()
 
         try:
+            # First, try normal JSON parsing
             return json.loads(response_text)
         except json.JSONDecodeError as e:
+            # If that fails, try to extract just the JSON object
+            # This handles cases where there's extra text after the JSON
             print(f"Failed to parse JSON response: {e}")
             print(f"Response text: {response_text[:500]}...")
-            raise
+
+            try:
+                # Use JSONDecoder to parse just the first valid JSON object
+                # This will ignore any extra text after the JSON
+                decoder = json.JSONDecoder()
+                obj, idx = decoder.raw_decode(response_text)
+
+                # Warn if there was extra data
+                remaining = response_text[idx:].strip()
+                if remaining:
+                    print(f"Warning: Ignoring extra text after JSON: {remaining[:200]}...")
+
+                return obj
+            except json.JSONDecodeError as e2:
+                print(f"Failed to parse JSON even with raw_decode: {e2}")
+                raise
 
     def _validate_response(self, trimmed_data, full_resume_data):
         """

@@ -4,6 +4,7 @@ import subprocess
 import base64
 from pathlib import Path
 from fill_latex_template_v2 import fill_latex_template
+import config_manager
 
 
 def show():
@@ -17,13 +18,19 @@ def show():
             st.rerun()
         st.stop()
 
+    # Get current user paths
+    user_paths = config_manager.get_current_user_paths()
+    if not user_paths:
+        st.error("❌ No user configured. Please go to Settings.")
+        st.stop()
+
     # Title
     st.markdown("<h1 class='main-header'>✏️ Edit & Regenerate Resume</h1>", unsafe_allow_html=True)
     company_name = st.session_state.get('company_name', 'Unknown Company')
     st.markdown(f"**Company:** {company_name}")
 
     # Load full resume data for reference
-    resume_data_path = "resume_data_enhanced.json"
+    resume_data_path = user_paths['resume_data']
     try:
         with open(resume_data_path, 'r', encoding='utf-8') as f:
             full_resume_data = json.load(f)
@@ -72,29 +79,61 @@ def show():
     st.markdown("---")
     st.markdown("#### 📋 Professional Summary")
 
-    # Get current summary
-    current_summaries = data.get('summaries', {})
-    current_summary_type = list(current_summaries.keys())[0] if current_summaries else None
-    current_summary_text = current_summaries.get(current_summary_type, '') if current_summary_type else ''
+    # Get current summary - handle both list and dict formats
+    current_summaries = data.get('summaries', [])
 
-    # Get all summary types from full data
-    full_summaries = full_resume_data.get('summaries', {})
-    summary_types = list(full_summaries.keys())
+    # Convert to consistent format
+    if isinstance(current_summaries, list):
+        # List format: [{"id": "summary_1", "label": "Option 1", "text": "..."}]
+        current_summary_obj = current_summaries[0] if current_summaries else None
+        current_summary_type = current_summary_obj.get('label') if current_summary_obj else None
+        current_summary_text = current_summary_obj.get('text', '') if current_summary_obj else ''
+    else:
+        # Dict format: {"general": "text...", "fullstack": "text..."}
+        summary_keys = list(current_summaries.keys()) if current_summaries else []
+        current_summary_type = summary_keys[0] if summary_keys else None
+        current_summary_text = current_summaries.get(current_summary_type, '') if current_summary_type else ''
+
+    # Get all summary types from full data - handle both formats
+    full_summaries = full_resume_data.get('summaries', [])
+
+    if isinstance(full_summaries, list):
+        # List format
+        summary_types = [s.get('label', f"Option {i+1}") for i, s in enumerate(full_summaries)]
+        full_summaries_dict = {s.get('label'): s.get('text') for s in full_summaries}
+    else:
+        # Dict format
+        summary_types = list(full_summaries.keys())
+        full_summaries_dict = full_summaries
 
     # Render summary chips
     st.markdown("**Select Summary Type:**")
-    cols = st.columns(len(summary_types))
+    if summary_types:
+        cols = st.columns(len(summary_types))
 
-    for idx, sum_type in enumerate(summary_types):
-        with cols[idx]:
-            is_selected = (sum_type == current_summary_type)
-            button_type = "primary" if is_selected else "secondary"
-            label = f"✓ {sum_type.title()}" if is_selected else sum_type.title()
+        for idx, sum_type in enumerate(summary_types):
+            with cols[idx]:
+                is_selected = (sum_type == current_summary_type)
+                button_type = "primary" if is_selected else "secondary"
+                label = f"✓ {sum_type}" if is_selected else sum_type
 
-            if st.button(label, key=f"summary_{sum_type}", type=button_type, use_container_width=True):
-                # Replace with new summary from full data
-                st.session_state.trimmed_data['summaries'] = {sum_type: full_summaries[sum_type]}
-                st.rerun()
+                if st.button(label, key=f"summary_{sum_type}", type=button_type, use_container_width=True):
+                    # Replace with new summary from full data
+                    # Store in list format (the new standard)
+                    matching_summary = next((s for s in (full_summaries if isinstance(full_summaries, list) else []) if s.get('label') == sum_type), None)
+
+                    if matching_summary:
+                        st.session_state.trimmed_data['summaries'] = [matching_summary]
+                    else:
+                        # Fallback to dict format
+                        st.session_state.trimmed_data['summaries'] = [{
+                            "id": f"summary_{idx}",
+                            "label": sum_type,
+                            "text": full_summaries_dict.get(sum_type, '')
+                        }]
+                    st.rerun()
+    else:
+        st.info("No summary options available in resume data")
 
     # Editable summary text area - user can edit any selected summary
     if current_summary_type and current_summary_text:

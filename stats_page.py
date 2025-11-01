@@ -4,23 +4,30 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime, timedelta
 import math
+import config_manager
 
 
-# Path to applications tracking file
-APPLICATIONS_FILE = "applications_tracking.json"
+def get_applications_file():
+    """Get the path to applications tracking file for current user"""
+    user_paths = config_manager.get_current_user_paths()
+    if user_paths:
+        return user_paths['tracking_file']
+    return "applications_tracking.json"  # Fallback
 
 
 def load_applications():
     """Load applications from JSON file"""
-    if Path(APPLICATIONS_FILE).exists():
-        with open(APPLICATIONS_FILE, 'r', encoding='utf-8') as f:
+    applications_file = get_applications_file()
+    if Path(applications_file).exists():
+        with open(applications_file, 'r', encoding='utf-8') as f:
             return json.load(f)
     return []
 
 
 def save_applications(applications):
     """Save applications to JSON file"""
-    with open(APPLICATIONS_FILE, 'w', encoding='utf-8') as f:
+    applications_file = get_applications_file()
+    with open(applications_file, 'w', encoding='utf-8') as f:
         json.dump(applications, f, indent=2)
 
 

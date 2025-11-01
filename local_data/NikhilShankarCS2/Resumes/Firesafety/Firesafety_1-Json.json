@@ -1,0 +1,250 @@
+{
+  "title": "Trinity Lutheran College - Work Health & Safety (WHS) Officer",
+  "reasoning": "Selected 20 bullets total (within 16-24 requirement): slice (5 bullets - minimum 4 required), slice2 (5 bullets - minimum 4 required), greedygame (5 bullets - minimum 4 required), greedygame2 (5 bullets - minimum 4 required). Selected 2 projects. Selected minimum required skills per category: Languages (5), Platforms (5), Skills (8), Frameworks (8), Tools (6), Database (4). Rewrote bullets and projects to emphasize systems architecture, risk management, process improvement, and cross-functional collaboration aspects that align with WHS requirements of building frameworks, managing compliance, and working across teams. However, this candidate's technical software engineering background does not match the WHS Officer role requirements which require WHS-specific qualifications and safety management experience.",
+  "static_info": {
+    "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
+    "address": "Unit 259 - 475 King Street North",
+    "phone": "226-820-1762",
+    "email": "nikhil.shankar.cs@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "",
+    "leetcode": ""
+  },
+  "summaries": [
+    {
+      "id": "summary_2",
+      "label": "Option 2",
+      "text": "Versatile Software Engineer with 7+ years building high-performance mobile and backend systems across Android, iOS, and microservices architectures. Architected core payment infrastructure serving 1.5 million users per day, developed cross-platform SDKs integrated by 1000+ apps, and reduced system costs by 70% through optimization. Deep expertise in Kotlin, Java, Jetpack Compose and good exposure with Go, Python and Flutter, with experience scaling products from MVP to unicorn status."
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Kotlin",
+      "Java",
+      "Python",
+      "Dart",
+      "Golang"
+    ],
+    "platforms": [
+      "Android Studio",
+      "Firebase",
+      "PyCharm",
+      "AWS",
+      "IntelliJ"
+    ],
+    "skills": [
+      "Modular code using MVVM MVI and Clean Architecture",
+      "Complex UI Development using Compose",
+      "Design patterns",
+      "Agile Planning",
+      "Project Planning",
+      "Code Reviews and detecting code smells and bugs",
+      "Mentoring Junior Developers",
+      "Performance profiling"
+    ],
+    "frameworks": [
+      "Android SDK",
+      "Jetpack Compose",
+      "Retrofit",
+      "Coroutines",
+      "Dagger",
+      "Hilt",
+      "Websockets",
+      "Material Components",
+      "SQLite",
+      "Gradle",
+      "Lottie",
+      "Room",
+      "Spring Boot Kotlin"
+    ],
+    "tools": [
+      "Git",
+      "AS Profiler",
+      "Github Actions",
+      "Jira",
+      "Postman",
+      "Debugger"
+    ],
+    "database": [
+      "SQLite",
+      "Firebase Firestore",
+      "MySQL",
+      "MongoDB"
+    ]
+  },
+  "companies": [
+    {
+      "id": "slice",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 3 - Android",
+      "dates": "Nov 2022 - Feb 2024",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Architected fundamental infrastructure for the UPI payment framework utilizing Clean Architecture and MVI principles, supporting 1.5 million transactions per day as of Feb 2024."
+        },
+        {
+          "text": "Restructured complex Gradle and build configurations to create a centralized dependency management baseline, successfully modularizing new component creation and preventing unexpected integration failures in release and production environments."
+        },
+        {
+          "text": "Evaluated, analyzed, and improved network efficiency by approximately 18-20%, leading to faster transaction processing times throughout the fintech application."
+        },
+        {
+          "text": "Maintained quality standards of deliverables through mentoring Junior developers, conducting thorough code reviews and technical walkthroughs, and promoting adherence to established coding practices."
+        },
+        {
+          "text": "Enhanced CI/CD configurations in AWS Codebuild and Gradle settings to decrease build times by 40% and reduce costs by 70%."
+        }
+      ]
+    },
+    {
+      "id": "slice2",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 2 - Android",
+      "dates": "Nov 2020 - Nov 2022",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Architected and built chat functionality by integrating socket io at client side and collaborated on websocket API architecture at backend for seamless realtime data exchange."
+        },
+        {
+          "text": "Built a social media feature module as an MVP in 3 weeks for integration into the fintech app for A/B testing."
+        },
+        {
+          "text": "Created an emoji-shower library enabling simpler integration of confetti and emoji animations across different teams and decreased memory usage by 95% through reuse of image vectors."
+        },
+        {
+          "text": "Improved existing fragments in the codebase thereby boosting UI performance by enabling reuse of already inflated layouts."
+        },
+        {
+          "text": "Recognized repeated need for onboarding stories across teams and developed an onboarding status library thereby cutting onboarding feature development time across teams from 1-2 days to half a day."
+        }
+      ]
+    },
+    {
+      "id": "greedygame",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Fullstack Developer Android, iOS, Backend",
+      "dates": "Apr 2018 - Oct 2019",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Spearheaded development of the iOS plugin from the ground up as a personal initiative by acquiring swift and iOS app development skills which was subsequently incorporated as a separate product line in the organization attracting iOS app and game development companies into the business."
+        },
+        {
+          "text": "Transformed the monolithic Backend written in NodeJS to microservices based architecture using Golang, which streamlined the development and decreased overall development time, debugging duration, and deployment duration."
+        },
+        {
+          "text": "Implemented Jenkins CI/CD pipeline for automating artifact generation thereby eliminating previous manual effort of 2-3 hours."
+        },
+        {
+          "text": "Built integration documentation website in Angular JS thereby decreasing integration related inquiries."
+        },
+        {
+          "text": "Attained 90%+ unit test coverage using Mockito after restructuring the core library, substantially improving the reliability and ongoing quality assurance of the SDK's essential features."
+        }
+      ]
+    },
+    {
+      "id": "greedygame2",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Senior Developer | Android",
+      "dates": "Sep 2015 - Apr 2018",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Built core Android library, which other developers can integrate to display native ads, emphasizing optimization and performance thereby minimizing memory consumption and library conflicts."
+        },
+        {
+          "text": "Restructured a single monolithic codebase into multiple modules applying facade, adapter, mediator design patterns, and more, implementing good coding standards, cutting development time and cross team conflicts."
+        },
+        {
+          "text": "Incorporated Admob, Mopub and Facebook Ads and developed wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, enabling the Android library to inject ads into games and apps thereby expanding compatible dev environment by 4x."
+        },
+        {
+          "text": "Conceived and built separate settings tool app which permits viewing debug logs of other games integrated with the Android library in debug mode which led to faster debugging and assisted QA to cut bug reporting time by at least 50%."
+        },
+        {
+          "text": "Developed a Unity game engine plugin that shortened developers' initial integration time from 1-2 days to less than 10 minutes."
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "momentor",
+      "name": "Momentor: Moments worth Mentoring",
+      "tech": "Android, AI/LLM Integration, Supabase, PostgreSQL, Python, Dino Edge-Functions",
+      "description": "Momentor is a specialized mindfulness journaling application built natively on Android to deliver an optimized, minimalist user experience. The Android client was constructed with a conversational interface for journaling and connected directly with a robust serverless backend. This backend employed Python for core logic, PostgreSQL via Supabase for secure data persistence, and Deno Edge Functions to provide low-latency, philosophy-specific responses from the AI/LLM-powered mentors. This architecture paired a high-performance Android application with advanced AI logic to deliver personalized, real-time guidance.",
+      "date": "April 2025 - Current",
+      "link": ""
+    },
+    {
+      "id": "fanfight",
+      "name": "Fan Fight Club",
+      "tech": "Android, Python Scripts",
+      "description": "Built Fan Fight Club, a multi-variant Android app series using Firebase Realtime Database, featuring celebrity face-offs (Ronaldo vs Messi, Federer vs Nadal, etc.). Designed a scalable build system utilizing Android Gradle flavors and Python automation scripts to produce unique app variants from JSON configurations, facilitating rapid deployment of personalized celebrity battle apps from a single codebase. One of the versions Messi Vs Ronaldo garnered more than a 100 thousand installs with a user review rating of 4.8/5 in playstore.",
+      "date": "2019",
+      "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Post-Graduate Diploma",
+      "course": "Applied Artificial Intelligence & Machine Learning | Cloud Dev-Ops",
+      "institution": "Conestoga College, Waterloo - Expected completion - Dec 2025",
+      "dates": "Sep 2024 - Current",
+      "location": "Waterloo, Ontario, Canada"
+    },
+    {
+      "degree": "Master of Technology",
+      "course": "Software Engineering",
+      "institution": "CUSAT, Kerala, India",
+      "dates": "Aug 2012 - Apr 2014",
+      "location": "Cochin, Kerala, India"
+    },
+    {
+      "degree": "Bachelor of Technology",
+      "course": "Computer Science & Engineering",
+      "institution": "CoET, Thalassery, India",
+      "dates": "Aug 2007 - Apr 2011",
+      "location": "Thalassery, Kerala, India"
+    }
+  ],
+  "display_settings": {
+    "sections": {
+      "summary": {
+        "enabled": true,
+        "title": "Professional Summary SACHU"
+      },
+      "experience": {
+        "enabled": true,
+        "title": "Professional Experience SACHU"
+      },
+      "skills": {
+        "enabled": false,
+        "title": "Technical Skills SACHU",
+        "categories": [
+          "",
+          "Platforms",
+          "Skills",
+          "",
+          "Tools",
+          "DatabaseSachu"
+        ]
+      },
+      "education": {
+        "enabled": true,
+        "title": "Education SACHU"
+      },
+      "projects": {
+        "enabled": true,
+        "title": "Personal Projects SACHU"
+      }
+    }
+  }
+}
