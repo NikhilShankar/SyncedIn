@@ -1,0 +1,18 @@
+About the job
+Join Somewear Labs as a Senior Android Engineer and help build life-saving technology!
+
+At Somewear Labs, we create cutting-edge software and satellite-powered hardware that enable commercial and government teams to maintain real-time situational awareness during high-pressure, mission-critical operations—no matter the environment. Our platform is trusted by helicopter paramedics, backcountry explorers, firefighters, and the US Department of Defense to keep people connected, informed, and safe when it matters most.
+
+Why Somewear Labs?
+
+Mission-Driven Impact: You’ll directly contribute to a platform that saves lives, making a real difference across industries that rely on fast, accurate, and secure communication.
+Diverse Customer Base: Work with a wide range of users, from adventurers exploring the wilderness to first responders and defense operators performing critical missions.
+Innovative Tech Stack: Collaborate on a platform that integrates custom hardware, satellite technology, mesh networking, Bluetooth, sensors, 3rd-party integrations, and cloud services.
+
+What’s the role?
+
+We’re seeking a Senior Android Engineer to join our fully remote team! You’ll be responsible for designing and building intuitive, powerful features that our customers rely on in the field—whether it’s creating new capabilities or improving performance and reliability. At Somewear Labs, you won’t just build apps; you’ll craft experiences that users trust with their lives. Every line of code you write contributes to making the world a safer place.
+
+Solve Complex Problems: You’ll tackle unique challenges in satellite communication, mesh networking, and advanced mobile development.
+Learn and Grow: Gain exposure to cutting-edge tech like satellite-powered hardware and Bluetooth connectivity while working with a passionate and talented team.
+Remote Flexibility: Although we have offices in San Francisco and Chicago, this role is fully remote, giving you the freedom to work from anywhere.

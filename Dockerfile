@@ -59,8 +59,9 @@ COPY fonts/ ./fonts/
 # 2. Also copy individual font files to working directory for direct access
 COPY fonts/*.ttf ./
 
-# Make entrypoint script executable
-RUN chmod +x entrypoint.sh
+# Make entrypoint script executable and ensure Unix line endings
+RUN chmod +x entrypoint.sh && \
+    sed -i 's/\r$//' entrypoint.sh
 
 # Install custom fonts system-wide for fontconfig
 RUN mkdir -p /usr/share/fonts/truetype/lato && \

@@ -74,10 +74,13 @@
     "address": "Unit 259 - 475 King Street North",
     "phone": "226-820-1762",
     "email": "nikhil.shankar.cs@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "",
+    "leetcode": "",
     "links": [
       {
-        "title": "Youtube Sachu",
-        "url": "https://www.youtube.com/watch?v=H70uL5W20dE"
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/nikhilshankarcs"
       }
     ]
   },

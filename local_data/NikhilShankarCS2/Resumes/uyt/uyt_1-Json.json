@@ -1,0 +1,270 @@
+{
+  "title": "Somewear Labs - Senior Android Engineer",
+  "reasoning": "Selected 20 bullets total across all companies (requirement: 16-24). Company distribution: slice (5 bullets, min 4 required), slice2 (5 bullets, min 4 required), greedygame (5 bullets, min 4 required), greedygame2 (5 bullets, min 4 required). Selected 2 projects focusing on Android development and technical architecture. Selected skills emphasizing Android SDK, architecture patterns, real-time communication, and performance optimization relevant to mission-critical applications. Chose summary highlighting Android expertise, scalability, and system architecture. Rewrote bullets and project descriptions to align with satellite communication, real-time systems, and mission-critical application requirements while maintaining all original technical facts.",
+  "static_info": {
+    "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
+    "address": "Unit 259 - 475 King Street North",
+    "phone": "226-820-1762",
+    "email": "nikhil.shankar.cs@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "",
+    "leetcode": "",
+    "links": [
+      {
+        "title": "Youtube22",
+        "url": "https://www.youtube.com/watch?v=H70uL5W20dE"
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "id": "summary_1",
+      "label": "Option 1",
+      "text": "Senior Android Engineer with 7+ years of professional experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Kotlin",
+      "Java",
+      "Python",
+      "Dart",
+      "Golang",
+      "C++",
+      "C#"
+    ],
+    "platforms": [
+      "Android Studio",
+      "Firebase",
+      "AWS",
+      "GCM",
+      "IntelliJ",
+      "Goland",
+      "VSCode"
+    ],
+    "skills": [
+      "Modular code using MVVM MVI and Clean Architecture",
+      "Complex UI Development using Compose",
+      "Design patterns",
+      "Multi Module App Design",
+      "UI Optimizations",
+      "Designing Framework and Libraries",
+      "Performance profiling",
+      "Code Reviews and detecting code smells and bugs",
+      "Mentoring Junior Developers",
+      "OOP",
+      "Code refactoring",
+      "Deadlock detection"
+    ],
+    "frameworks": [
+      "Android SDK",
+      "Jetpack Compose",
+      "Retrofit",
+      "Coroutines",
+      "Dagger",
+      "Hilt",
+      "Websockets",
+      "Material Components",
+      "SQLite",
+      "Gradle",
+      "Lottie",
+      "Room",
+      "OkHttp",
+      "JUnit",
+      "NDK"
+    ],
+    "tools": [
+      "Git",
+      "AS Profiler",
+      "Github Actions",
+      "Leak Canary",
+      "Debugger",
+      "Network Profiler",
+      "Postman",
+      "Benchmark Library",
+      "Lint"
+    ],
+    "database": [
+      "SQLite",
+      "Firebase Firestore",
+      "MySQL",
+      "Firebase Realtime",
+      "MongoDB"
+    ]
+  },
+  "companies": [
+    {
+      "id": "slice",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 3 - Android",
+      "dates": "Nov 2022 - Feb 2024",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Architected core payment system infrastructure using Clean Architecture and MVI patterns, delivering real-time transaction capabilities to 1.5 million daily users with high reliability and performance requirements."
+        },
+        {
+          "text": "Optimized network communication layer, reducing latency by 18-20% through systematic profiling and analysis, ensuring faster transaction completion in time-sensitive operations."
+        },
+        {
+          "text": "Reduced CI/CD build times by 40% and infrastructure costs by 70% through strategic optimization of AWS Codebuild configurations and Gradle build processes."
+        },
+        {
+          "text": "Refactored Gradle dependency management system to create isolated, centralized baseline for dependencies, eliminating unexpected breaks in release and production builds."
+        },
+        {
+          "text": "Established comprehensive unit testing framework achieving 90% code coverage across critical payment system modules, ensuring reliability of mission-critical features."
+        }
+      ]
+    },
+    {
+      "id": "slice2",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 2 - Android",
+      "dates": "Nov 2020 - Nov 2022",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Engineered real-time chat system by integrating Socket.io client-side and collaborating on websocket API architecture, enabling seamless bidirectional data transfer for time-critical communications."
+        },
+        {
+          "text": "Designed multi-module architecture framework to enable scalable team development, eliminating tight coupling through Navigation Contract Interface pattern with Dependency Injection."
+        },
+        {
+          "text": "Developed reusable animation library optimizing memory consumption by 95% through efficient image vector reuse, enabling teams to integrate visual feedback mechanisms efficiently."
+        },
+        {
+          "text": "Refactored fragment-based UI components to enhance performance by reusing inflated layouts, reducing memory overhead in resource-constrained scenarios."
+        },
+        {
+          "text": "Created onboarding status library reducing cross-team feature development time from 1-2 days to half a day by identifying common patterns and building reusable components."
+        }
+      ]
+    },
+    {
+      "id": "greedygame",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Fullstack Developer Android, iOS, Backend",
+      "dates": "Apr 2018 - Oct 2019",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Spearheaded iOS SDK development from inception by learning Swift and iOS frameworks, establishing new product line and expanding platform compatibility for client integrations."
+        },
+        {
+          "text": "Re-architected monolithic NodeJS backend to microservices using Golang, streamlining development workflows and reducing debugging and deployment overhead."
+        },
+        {
+          "text": "Implemented Jenkins CI/CD automation pipeline, eliminating 2-3 hours of manual artifact creation effort per deployment cycle."
+        },
+        {
+          "text": "Built Angular-based integration documentation platform, reducing integration-related support queries by providing comprehensive self-service resources."
+        },
+        {
+          "text": "Established robust testing framework using Mockito after core library refactoring, achieving 90%+ unit test coverage to ensure SDK reliability across diverse integration scenarios."
+        }
+      ]
+    },
+    {
+      "id": "greedygame2",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Senior Developer | Android",
+      "dates": "Sep 2015 - Apr 2018",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Developed performance-optimized Android SDK library focused on minimizing memory consumption and preventing library conflicts for integration by external developers."
+        },
+        {
+          "text": "Refactored monolithic codebase into modular architecture applying facade, adapter, and mediator design patterns, reducing development time and inter-team dependencies."
+        },
+        {
+          "text": "Built cross-platform integration wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, expanding compatible development environments by 4x."
+        },
+        {
+          "text": "Designed companion debugging tool app enabling real-time log viewing from integrated applications, accelerating QA bug reporting and reducing debugging cycles by 50%."
+        },
+        {
+          "text": "Created Unity plugin reducing developer integration time from 1-2 days to under 10 minutes through streamlined implementation process."
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "momentor",
+      "name": "Momentor: Moments worth Mentoring",
+      "tech": "Android, AI/LLM Integration, Supabase, PostgreSQL, Python, Dino Edge-Functions",
+      "description": "Engineered native Android mindfulness journaling application with conversational interface, architecting serverless backend integration using Python core logic, PostgreSQL via Supabase for data persistence, and Deno Edge Functions for low-latency AI mentor responses. Designed high-performance Android client paired with real-time AI-powered guidance system.",
+      "date": "April 2025 - Current",
+      "link": ""
+    },
+    {
+      "id": "fanfight",
+      "name": "Fan Fight Club",
+      "tech": "Android, Python Scripts",
+      "description": "Built multi-variant Android application series using Firebase Realtime Database for real-time data synchronization. Architected scalable build system leveraging Android Gradle flavors with Python automation scripts to generate unique app variants from JSON configurations, enabling rapid deployment from single codebase. Achieved 100,000+ installs with 4.8/5 user rating.",
+      "date": "2019",
+      "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Post-Graduate Diploma",
+      "course": "Applied Artificial Intelligence & Machine Learning | Cloud Dev-Ops",
+      "institution": "Conestoga College, Waterloo - Expected completion - Dec 2025",
+      "dates": "Sep 2024 - Current",
+      "location": "Waterloo, Ontario, Canada"
+    },
+    {
+      "degree": "Master of Technology",
+      "course": "Software Engineering",
+      "institution": "CUSAT, Kerala, India",
+      "dates": "Aug 2012 - Apr 2014",
+      "location": "Cochin, Kerala, India"
+    },
+    {
+      "degree": "Bachelor of Technology",
+      "course": "Computer Science & Engineering",
+      "institution": "CoET, Thalassery, India",
+      "dates": "Aug 2007 - Apr 2011",
+      "location": "Thalassery, Kerala, India"
+    }
+  ],
+  "display_settings": {
+    "sections": {
+      "summary": {
+        "enabled": true,
+        "title": "Professional Summary SACHU"
+      },
+      "experience": {
+        "enabled": true,
+        "title": "Professional Experience SACHU"
+      },
+      "skills": {
+        "enabled": false,
+        "title": "Technical Skills SACHU",
+        "categories": [
+          "",
+          "Platforms",
+          "Skills",
+          "",
+          "Tools",
+          "DatabaseSachu"
+        ]
+      },
+      "education": {
+        "enabled": true,
+        "title": "Education SACHU"
+      },
+      "projects": {
+        "enabled": true,
+        "title": "Personal Projects SACHU"
+      }
+    }
+  }
+}

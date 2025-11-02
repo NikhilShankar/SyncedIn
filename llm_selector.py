@@ -237,9 +237,10 @@ Return ONLY a valid JSON object with this structure:
     "email": "exact email",
     "phone": "exact phone",
     "address": "exact address",
-    "linkedin": "exact linkedin URL",
-    "portfolio": "exact portfolio URL",
-    "leetcode": "exact leetcode URL"
+    "links": [
+      {{"title": "exact title", "url": "exact URL"}},
+      ...copy ALL links from resume data exactly as they appear
+    ]
   }},
   "summaries": [
     {{
@@ -420,9 +421,10 @@ Return ONLY a valid JSON object with this structure:
     "email": "exact email",
     "phone": "exact phone",
     "address": "exact address",
-    "linkedin": "exact linkedin URL",
-    "portfolio": "exact portfolio URL",
-    "leetcode": "exact leetcode URL"
+    "links": [
+      {{"title": "exact title", "url": "exact URL"}},
+      ...copy ALL links from resume data exactly as they appear
+    ]
   }},
   "summaries": [
     {{

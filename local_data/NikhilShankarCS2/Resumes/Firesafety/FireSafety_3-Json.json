@@ -1,0 +1,245 @@
+{
+  "title": "Somewear Labs - Senior Android Engineer",
+  "reasoning": "Selected 4 bullets for Slice SDE3 (minimum 4 required), 4 bullets for Slice SDE2 (minimum 4 required), 4 bullets for GreedyGame Fullstack (minimum 4 required), and 4 bullets for GreedyGame Senior Developer (minimum 4 required), totaling 16 bullets (requirement: 16-24). Chose 2 projects focused on Android development and API integrations. Selected skills emphasizing Android SDK, Jetpack Compose, Clean Architecture, performance optimization, and multi-module design - all highly relevant for building mission-critical satellite communication applications. Rewrote bullets and project descriptions to emphasize reliability, performance optimization, real-time communication capabilities, and architecture design - core requirements for life-saving technology platforms.",
+  "static_info": {
+    "name": "NIKHIL SHANKAR CHIRAKKAL SIVASANKARAN",
+    "email": "nikhil.shankar.cs@gmail.com",
+    "phone": "226-820-1762",
+    "address": "Unit 259 - 475 King Street North",
+    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
+    "portfolio": "",
+    "leetcode": ""
+  },
+  "summaries": [
+    {
+      "id": "summary_1",
+      "label": "Option 1",
+      "text": "Senior Android Engineer with 7+ years of professional experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Kotlin",
+      "Java",
+      "Python",
+      "C++",
+      "Dart",
+      "Golang"
+    ],
+    "platforms": [
+      "Android Studio",
+      "Firebase",
+      "AWS",
+      "PyCharm",
+      "IntelliJ",
+      "Goland"
+    ],
+    "skills": [
+      "Modular code using MVVM MVI and Clean Architecture",
+      "Complex UI Development using Compose",
+      "Design patterns",
+      "Multi Module App Design",
+      "UI Optimizations",
+      "Designing Framework and Libraries",
+      "Performance profiling",
+      "Code Reviews and detecting code smells and bugs",
+      "OOP",
+      "Deadlock detection"
+    ],
+    "frameworks": [
+      "Android SDK",
+      "Jetpack Compose",
+      "Retrofit",
+      "Coroutines",
+      "Dagger",
+      "Hilt",
+      "Websockets",
+      "Material Components",
+      "SQLite",
+      "Gradle",
+      "Lottie",
+      "Room",
+      "OkHttp",
+      "JUnit",
+      "NDK"
+    ],
+    "tools": [
+      "Git",
+      "AS Profiler",
+      "Github Actions",
+      "Leak Canary",
+      "Debugger",
+      "Postman",
+      "Network Profiler"
+    ],
+    "database": [
+      "SQLite",
+      "Firebase Firestore",
+      "Firebase Realtime",
+      "MySQL"
+    ]
+  },
+  "companies": [
+    {
+      "id": "slice",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 3 - Android",
+      "dates": "Nov 2022 - Feb 2024",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Architected mission-critical payment infrastructure using Clean Architecture and MVI patterns, handling 1.5 million transactions daily with focus on reliability and performance for time-sensitive financial operations."
+        },
+        {
+          "text": "Optimized network communication protocols, reducing latency by 18-20% to enable faster transaction processing in real-time payment scenarios."
+        },
+        {
+          "text": "Streamlined CI/CD pipeline and build configuration, cutting build times by 40% and infrastructure costs by 70% through AWS CodeBuild optimization and Gradle improvements."
+        },
+        {
+          "text": "Established quality assurance practices through code reviews, mentorship of junior developers, and enforcement of coding standards to maintain high reliability in production systems."
+        }
+      ]
+    },
+    {
+      "id": "slice2",
+      "mandatory": true,
+      "name": "Slice, Fintech",
+      "position": "Software Development Engineer 2 - Android",
+      "dates": "Nov 2020 - Nov 2022",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Built real-time messaging system by integrating Socket.IO for bidirectional communication, collaborating with backend team to architect WebSocket APIs for seamless data synchronization."
+        },
+        {
+          "text": "Created reusable animation library reducing memory footprint by 95% through efficient vector graphics reuse, enabling teams to integrate visual feedback without performance degradation."
+        },
+        {
+          "text": "Pioneered multi-module architecture adoption across the organization, enabling independent team scaling and reducing cross-module dependencies through well-defined interfaces."
+        },
+        {
+          "text": "Eliminated tight coupling in navigation by implementing Navigation Contract Interface with Dependency Injection, solving circular dependency challenges in scalable multi-module systems."
+        }
+      ]
+    },
+    {
+      "id": "greedygame",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Fullstack Developer Android, iOS, Backend",
+      "dates": "Apr 2018 - Oct 2019",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Spearheaded iOS SDK development from ground up by learning Swift and iOS frameworks, expanding platform capabilities and attracting new business partnerships."
+        },
+        {
+          "text": "Transformed monolithic NodeJS backend into microservices architecture using Golang, streamlining development workflows and accelerating debugging and deployment cycles."
+        },
+        {
+          "text": "Implemented Jenkins CI/CD automation for artifact generation, eliminating 2-3 hours of manual effort per deployment cycle."
+        },
+        {
+          "text": "Achieved 90%+ unit test coverage using Mockito after refactoring core SDK functionality, significantly enhancing reliability and quality assurance for critical library features."
+        }
+      ]
+    },
+    {
+      "id": "greedygame2",
+      "mandatory": true,
+      "name": "GreedyGame, Ad-Tech",
+      "position": "Senior Developer | Android",
+      "dates": "Sep 2015 - Apr 2018",
+      "location": "Bengaluru, India",
+      "bullets": [
+        {
+          "text": "Engineered high-performance Android SDK focusing on memory optimization and compatibility, enabling seamless third-party integration without conflicts."
+        },
+        {
+          "text": "Refactored monolithic codebase into modular architecture using Facade, Adapter, and Mediator design patterns, reducing development complexity and team conflicts."
+        },
+        {
+          "text": "Developed cross-platform wrappers using JNI, C#, and C++ for Unity and Cocos2d-x game engines, expanding SDK compatibility across multiple development environments."
+        },
+        {
+          "text": "Designed debugging utility application enabling real-time log inspection for integrated games, reducing QA bug reporting time by 50% and accelerating issue resolution."
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "momentor",
+      "name": "Momentor: Moments worth Mentoring",
+      "tech": "Android, AI/LLM Integration, Supabase, PostgreSQL, Python, Dino Edge-Functions",
+      "description": "Engineered Android application with conversational interface, integrating serverless backend architecture using Python logic, PostgreSQL database via Supabase, and Deno Edge Functions for low-latency AI responses, demonstrating full-stack mobile development capabilities.",
+      "date": "April 2025 - Current",
+      "link": ""
+    },
+    {
+      "id": "mmdb",
+      "name": "MMDB: My Movie Database",
+      "tech": "Android, TMDB API",
+      "description": "Built feature-rich Android application integrating TMDB API for movie data and Firebase Realtime Database for user-generated content, implementing custom movie lists, reviews, and social engagement features.",
+      "date": "July 2020",
+      "link": "https://bitbucket.org/nikhilshankarcs/mmdb"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Post-Graduate Diploma",
+      "course": "Applied Artificial Intelligence & Machine Learning | Cloud Dev-Ops",
+      "institution": "Conestoga College, Waterloo - Expected completion - Dec 2025",
+      "dates": "Sep 2024 - Current",
+      "location": "Waterloo, Ontario, Canada"
+    },
+    {
+      "degree": "Master of Technology",
+      "course": "Software Engineering",
+      "institution": "CUSAT, Kerala, India",
+      "dates": "Aug 2012 - Apr 2014",
+      "location": "Cochin, Kerala, India"
+    },
+    {
+      "degree": "Bachelor of Technology",
+      "course": "Computer Science & Engineering",
+      "institution": "CoET, Thalassery, India",
+      "dates": "Aug 2007 - Apr 2011",
+      "location": "Thalassery, Kerala, India"
+    }
+  ],
+  "display_settings": {
+    "sections": {
+      "summary": {
+        "enabled": true,
+        "title": "Professional Summary SACHU"
+      },
+      "experience": {
+        "enabled": true,
+        "title": "Professional Experience SACHU"
+      },
+      "skills": {
+        "enabled": false,
+        "title": "Technical Skills SACHU",
+        "categories": [
+          "",
+          "Platforms",
+          "Skills",
+          "",
+          "Tools",
+          "DatabaseSachu"
+        ]
+      },
+      "education": {
+        "enabled": true,
+        "title": "Education SACHU"
+      },
+      "projects": {
+        "enabled": true,
+        "title": "Personal Projects SACHU"
+      }
+    }
+  }
+}

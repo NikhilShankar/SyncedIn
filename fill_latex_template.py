@@ -47,9 +47,15 @@ def fill_latex_template(template_path, data, selected_summary_type, selected_com
     template = template.replace('{{ADDRESS}}', escape_latex_special_chars(static['address']))
     template = template.replace('{{PHONE}}', escape_latex_special_chars(static['phone']))
     template = template.replace('{{EMAIL}}', escape_latex_special_chars(static['email']))
-    template = template.replace('{{LINKEDIN}}', static['linkedin'])  # Keep raw for href
-    template = template.replace('{{PORTFOLIO}}', static['portfolio'])  # Keep raw for href
-    template = template.replace('{{LEETCODE}}', static['leetcode'])  # Keep raw for href
+
+    # Generate pipe-separated links from the links array
+    links_parts = []
+    for link in static.get('links', []):
+        title = escape_latex_special_chars(link['title'])
+        url = link['url']  # Keep raw for href
+        links_parts.append(f"\\href{{{url}}}{{{title}}}")
+    links_text = " | ".join(links_parts)
+    template = template.replace('{{LINKS}}', links_text)
 
     # Fill summary
     template = template.replace('{{SUMMARY}}', escape_latex_special_chars(data['summaries'][selected_summary_type]))

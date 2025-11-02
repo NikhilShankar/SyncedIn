@@ -4,9 +4,11 @@
     "address": "602-A 50 University Avenue East, Waterloo, Ontario - N2J-2V8",
     "phone": "226-820-1762",
     "email": "nikhil.shankar.cs@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/nikhilshankarcs",
-    "portfolio": "https://yourportfolio.com",
-    "leetcode": "https://leetcode.com/yourprofile"
+    "links": [
+      {"title": "LinkedIn", "url": "https://www.linkedin.com/in/nikhilshankarcs"},
+      {"title": "Portfolio", "url": "https://yourportfolio.com"},
+      {"title": "LeetCode", "url": "https://leetcode.com/yourprofile"}
+    ]
   },
 
   "summaries": {

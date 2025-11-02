@@ -257,13 +257,13 @@ def show():
                 links = []
 
                 if static_info.get('linkedin'):
-                    links.append({"name": "LinkedIn", "url": static_info['linkedin'], "icon": "linkedin"})
+                    links.append({"title": "LinkedIn", "url": static_info['linkedin']})
                 if static_info.get('github'):
-                    links.append({"name": "GitHub", "url": static_info['github'], "icon": "github"})
+                    links.append({"title": "GitHub", "url": static_info['github']})
                 if static_info.get('portfolio'):
-                    links.append({"name": "Portfolio", "url": static_info['portfolio'], "icon": "web"})
+                    links.append({"title": "Portfolio", "url": static_info['portfolio']})
                 if static_info.get('leetcode'):
-                    links.append({"name": "LeetCode", "url": static_info['leetcode'], "icon": "code"})
+                    links.append({"title": "LeetCode", "url": static_info['leetcode']})
 
                 static_info['links'] = links
                 resume_data['static_info'] = static_info
@@ -286,9 +286,9 @@ def show():
 
                     with col1:
                         st.text_input(
-                            "Name",
-                            value=link.get('name', ''),
-                            key=f"link_name_{idx}",
+                            "Title",
+                            value=link.get('title', ''),
+                            key=f"link_title_{idx}",
                             label_visibility="collapsed"
                         )
 
@@ -323,10 +323,10 @@ def show():
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    new_link_name = st.text_input(
-                        "Link Name",
+                    new_link_title = st.text_input(
+                        "Link Title",
                         placeholder="e.g., LinkedIn, GitHub, Portfolio",
-                        help="Display name for this link"
+                        help="Display title for this link"
                     )
 
                 with col2:
@@ -336,34 +336,18 @@ def show():
                         help="Full URL including https://"
                     )
 
-                icon_options = {
-                    "LinkedIn": "linkedin",
-                    "GitHub": "github",
-                    "Portfolio/Website": "web",
-                    "LeetCode": "code",
-                    "Twitter/X": "twitter",
-                    "Other": "link"
-                }
-
-                new_link_icon = st.selectbox(
-                    "Icon Type (optional)",
-                    options=list(icon_options.keys()),
-                    help="Choose an icon that matches your link type"
-                )
-
                 add_button = st.form_submit_button("➕ Add Link", use_container_width=True, type="primary")
 
                 if add_button:
-                    if not new_link_name or not new_link_url:
-                        st.error("❌ Please provide both name and URL")
+                    if not new_link_title or not new_link_url:
+                        st.error("❌ Please provide both title and URL")
                     elif not new_link_url.startswith(('http://', 'https://')):
                         st.error("❌ URL must start with http:// or https://")
                     else:
                         # Add new link
                         new_link = {
-                            "name": new_link_name.strip(),
-                            "url": new_link_url.strip(),
-                            "icon": icon_options[new_link_icon]
+                            "title": new_link_title.strip(),
+                            "url": new_link_url.strip()
                         }
 
                         links.append(new_link)
@@ -373,7 +357,7 @@ def show():
                         with open(resume_data_path, 'w', encoding='utf-8') as f:
                             json.dump(resume_data, f, indent=2, ensure_ascii=False)
 
-                        st.success(f"✅ Added {new_link_name}!")
+                        st.success(f"✅ Added {new_link_title}!")
                         st.rerun()
 
             # Save changes button
@@ -382,14 +366,13 @@ def show():
                 # Update links with current values from text inputs
                 updated_links = []
                 for idx in range(len(links)):
-                    name_key = f"link_name_{idx}"
+                    title_key = f"link_title_{idx}"
                     url_key = f"link_url_{idx}"
 
-                    if name_key in st.session_state and url_key in st.session_state:
+                    if title_key in st.session_state and url_key in st.session_state:
                         updated_links.append({
-                            "name": st.session_state[name_key],
-                            "url": st.session_state[url_key],
-                            "icon": links[idx].get('icon', 'link')
+                            "title": st.session_state[title_key],
+                            "url": st.session_state[url_key]
                         })
 
                 static_info['links'] = updated_links

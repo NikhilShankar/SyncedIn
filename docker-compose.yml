@@ -1,36 +1,59 @@
 version: '3.8'
 
 services:
-  resume-generator:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ai-resume-generator
+  syncedin-resume:
+    # Option 1: Use pre-built image from Docker Hub
+    image: niks1267/syncedin-resume:v2Nov1
+
+    # Option 2: Build locally (uncomment to use)
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+
+    container_name: syncedin-resume-app
+
     ports:
       - "8765:8765"
+
     volumes:
-      # Mount the output directories to persist generated PDFs on host
+      # NEW: Single volume mount for all user data
+      # This maps your local_data directory to the container's /data
+      # All user profiles, resumes, and settings are stored here
+      - ./local_data:/data
+
+      # Optional: Mount generated directory for temporary PDF files
       - ./generated:/app/generated
-      - ./output:/app/output
-      # Mount resume data files to persist changes across container restarts
-      - ./resume_data_enhanced.json:/app/resume_data_enhanced.json
-      - ./resume_data_enhanced_DEFAULT.json:/app/resume_data_enhanced_DEFAULT.json
-      - ./resume_backups:/app/resume_backups
-      # Mount applications tracking to persist stats
-      - ./applications_tracking.json:/app/applications_tracking.json
-      # Optional: Mount .env file for API keys (if you prefer file-based config)
-      - ./.env:/app/.env:ro
+
     environment:
       # Optional: Set API key via environment variable
-      # Uncomment and set your key, or use .env file
+      # You can also configure it via the Settings page in the app
       # - ANTHROPIC_API_KEY=your_api_key_here
-      - STREAMLIT_SERVER_PORT=8765
-      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
-      - STREAMLIT_SERVER_HEADLESS=true
+
+      # Optional: Set timezone (change to your timezone)
+      - TZ=America/New_York
+
+      # Streamlit configuration (already set in Dockerfile CMD, but can override here)
+      # - STREAMLIT_SERVER_PORT=8765
+      # - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      # - STREAMLIT_SERVER_HEADLESS=true
+
+    # Restart policy - automatically restart if container crashes
     restart: unless-stopped
+
+    # Health check to ensure app is running
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8765/_stcore/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8765/_stcore/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
+
+    # Optional: Resource limits (uncomment to enable)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 1G

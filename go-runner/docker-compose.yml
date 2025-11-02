@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Example web service
+  web:
+    image: nginx:alpine
+    container_name: my-web-app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    restart: unless-stopped
+
+  # Example database service
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: my-database
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #     POSTGRES_USER: admin
+  #     POSTGRES_DB: myapp
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+# volumes:
+#   postgres_data:

@@ -14,9 +14,9 @@ New format:
 {
   "static_info": {
     "links": [
-      {"name": "LinkedIn", "url": "url", "icon": "linkedin"},
-      {"name": "Portfolio", "url": "url", "icon": "web"},
-      {"name": "LeetCode", "url": "url", "icon": "code"}
+      {"title": "LinkedIn", "url": "url"},
+      {"title": "Portfolio", "url": "url"},
+      {"title": "LeetCode", "url": "url"}
     ]
   }
 }
@@ -38,7 +38,7 @@ def migrate_links_format(data):
 
     # Check if already in new format
     if 'links' in static_info and isinstance(static_info['links'], list):
-        print("✅ Already using new links format")
+        print("[OK] Already using new links format")
         return data
 
     # Convert old format to new
@@ -46,30 +46,26 @@ def migrate_links_format(data):
 
     if static_info.get('linkedin'):
         links.append({
-            "name": "LinkedIn",
-            "url": static_info['linkedin'],
-            "icon": "linkedin"
+            "title": "LinkedIn",
+            "url": static_info['linkedin']
         })
 
     if static_info.get('github'):
         links.append({
-            "name": "GitHub",
-            "url": static_info['github'],
-            "icon": "github"
+            "title": "GitHub",
+            "url": static_info['github']
         })
 
     if static_info.get('portfolio'):
         links.append({
-            "name": "Portfolio",
-            "url": static_info['portfolio'],
-            "icon": "web"
+            "title": "Portfolio",
+            "url": static_info['portfolio']
         })
 
     if static_info.get('leetcode'):
         links.append({
-            "name": "LeetCode",
-            "url": static_info['leetcode'],
-            "icon": "code"
+            "title": "LeetCode",
+            "url": static_info['leetcode']
         })
 
     # Add the new links array
@@ -84,21 +80,21 @@ def migrate_links_format(data):
     # if 'leetcode' in static_info:
     #     del static_info['leetcode']
 
-    print(f"✅ Migrated {len(links)} links to new format")
+    print(f"[OK] Migrated {len(links)} links to new format")
     return data
 
 
 def migrate_file(file_path):
     """Migrate a single JSON file."""
 
-    print(f"\n📄 Processing: {file_path}")
+    print(f"\n[FILE] Processing: {file_path}")
 
     # Read file
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except Exception as e:
-        print(f"❌ Error reading file: {e}")
+        print(f"[ERROR] Error reading file: {e}")
         return False
 
     # Migrate
@@ -109,18 +105,18 @@ def migrate_file(file_path):
     try:
         with open(backup_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"💾 Backup saved: {backup_path}")
+        print(f"[BACKUP] Backup saved: {backup_path}")
     except Exception as e:
-        print(f"⚠️  Warning: Could not create backup: {e}")
+        print(f"[WARNING] Could not create backup: {e}")
 
     # Save migrated file
     try:
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"✅ File updated: {file_path}")
+        print(f"[OK] File updated: {file_path}")
         return True
     except Exception as e:
-        print(f"❌ Error saving file: {e}")
+        print(f"[ERROR] Error saving file: {e}")
         return False
 
 
@@ -131,7 +127,7 @@ if __name__ == "__main__":
         migrate_file(file_path)
     else:
         # Migrate common files
-        print("🔄 Migrating resume data files to new links format...")
+        print("[INFO] Migrating resume data files to new links format...")
 
         files_to_migrate = [
             "resume_data_enhanced.json",
@@ -142,8 +138,8 @@ if __name__ == "__main__":
             if Path(file_name).exists():
                 migrate_file(file_name)
             else:
-                print(f"⏭️  Skipping {file_name} (not found)")
+                print(f"[SKIP] Skipping {file_name} (not found)")
 
-        print("\n✅ Migration complete!")
+        print("\n[OK] Migration complete!")
         print("\nThe new format allows you to add/remove links dynamically.")
         print("You can edit them in the Settings page or directly in the JSON file.")

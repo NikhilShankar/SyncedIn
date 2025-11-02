@@ -4,76 +4,86 @@ AI-powered resume generation system with multi-user support, built with Claude A
 
 ---
 
-## For Publishers (Publishing to Docker Hub)
-
-### Prerequisites
-- Docker installed
-- Docker Hub account ([sign up here](https://hub.docker.com/signup))
-
-### Steps to Publish
-
-1. **Login to Docker Hub**
-   ```bash
-   docker login
-   ```
-
-2. **Build the Image** (replace `yourusername` with your Docker Hub username)
-   ```bash
-   docker build -t yourusername/syncedin-resume:latest .
-   ```
-
-3. **Test Locally** (optional but recommended)
-   ```bash
-   docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data yourusername/syncedin-resume:latest
-   ```
-   Visit `http://localhost:8765` to test.
-
-4. **Push to Docker Hub**
-   ```bash
-   docker push yourusername/syncedin-resume:latest
-   ```
-
-5. **Share the Image Name**
-   ```
-   yourusername/syncedin-resume:latest
-   ```
-
-### Updating the Image
-```bash
-# Make your code changes, then rebuild and push
-docker build -t yourusername/syncedin-resume:latest .
-docker push yourusername/syncedin-resume:latest
-```
+## Table of Contents
+- [Quick Start for End Users](#for-end-users)
+- [Publishing to Docker Hub](#for-publishers-publishing-to-docker-hub)
+- [Features](#features)
+- [Configuration](#configuration)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
 ## For End Users
 
-### Quick Start (3 Simple Steps)
+### Quick Start (Recommended: Docker Compose)
 
-#### Step 1: Pull the Docker Image
+**Prerequisites:**
+- Docker Desktop installed ([Download here](https://www.docker.com/products/docker-desktop))
+- Text editor (to customize docker-compose.yml if needed)
+
+#### Method 1: Using Docker Compose (Easiest)
+
+1. **Download the docker-compose.yml file**
+   ```bash
+   # Create a project folder
+   mkdir syncedin-resume
+   cd syncedin-resume
+
+   # Download docker-compose.yml
+   curl -O https://raw.githubusercontent.com/your-repo/syncedin-resume/main/docker-compose.yml
+   ```
+
+2. **Start the application**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Open the app**
+   - Visit: **http://localhost:8765**
+   - Complete the setup wizard:
+     - Enter your Anthropic API Key ([get one here](https://console.anthropic.com/))
+     - Select AI model (Claude Sonnet 4.5 recommended)
+     - Enter your name
+
+**That's it!** 🎉
+
+**Manage the app:**
 ```bash
-docker pull yourusername/syncedin-resume:latest
+# View logs
+docker-compose logs -f
+
+# Stop the app
+docker-compose down
+
+# Restart the app
+docker-compose restart
+
+# Update to latest version
+docker-compose pull
+docker-compose up -d
 ```
 
-#### Step 2: Run the Container
+---
+
+#### Method 2: Using Docker Run (Manual)
+
+**Step 1: Pull the Docker Image**
+```bash
+docker pull niks1267/syncedin-resume:v2Nov1
+```
+
+**Step 2: Run the Container**
 ```bash
 # Windows (PowerShell)
-docker run -d -p 8765:8765 -v $env:USERPROFILE\Documents\SyncedIn:/data --name resume-generator yourusername/syncedin-resume:latest
+docker run -d -p 8765:8765 -v $env:USERPROFILE\Documents\SyncedIn:/data --name resume-generator niks1267/syncedin-resume:v2Nov1
 
 # Linux/Mac
-docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data --name resume-generator yourusername/syncedin-resume:latest
+docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data --name resume-generator niks1267/syncedin-resume:v2Nov1
 ```
 
-#### Step 3: Open the App
-Open your browser and go to: **http://localhost:8765**
-
-You'll see a setup wizard on first run. Enter:
-- Your Anthropic API Key ([get one here](https://console.anthropic.com/))
-- Your preferred AI model (Claude Sonnet 4.5 recommended)
-- Your name
-
-That's it! 🎉
+**Step 3: Open the App**
+- Visit: **http://localhost:8765**
+- Complete the setup wizard
 
 ---
 
@@ -126,46 +136,83 @@ All resume data, PDFs, and application tracking are kept separate per user!
 
 ## Managing the Container
 
-### View Logs
+### Using Docker Compose (Recommended)
+
+**View Logs:**
+```bash
+docker-compose logs -f
+```
+
+**Stop the App:**
+```bash
+docker-compose down
+```
+
+**Start the App:**
+```bash
+docker-compose up -d
+```
+
+**Restart the App:**
+```bash
+docker-compose restart
+```
+
+**Update to Latest Version:**
+```bash
+docker-compose pull
+docker-compose up -d
+```
+
+**Rebuild After Code Changes:**
+```bash
+docker-compose up --build
+```
+
+---
+
+### Using Docker Run (Manual)
+
+**View Logs:**
 ```bash
 docker logs resume-generator
 ```
 
-### Stop the Container
+**Stop the Container:**
 ```bash
 docker stop resume-generator
 ```
 
-### Start the Container
+**Start the Container:**
 ```bash
 docker start resume-generator
 ```
 
-### Restart the Container
+**Restart the Container:**
 ```bash
 docker restart resume-generator
 ```
 
-### Remove the Container
+**Remove the Container:**
 ```bash
 docker stop resume-generator
 docker rm resume-generator
 ```
 
-### Update to Latest Version
+**Update to Latest Version:**
 ```bash
 # Stop and remove old container
 docker stop resume-generator
 docker rm resume-generator
 
 # Pull latest image
-docker pull yourusername/syncedin-resume:latest
+docker pull niks1267/syncedin-resume:v2Nov1
 
-# Run new container (use same command from Step 2 above)
-docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data --name resume-generator yourusername/syncedin-resume:latest
+# Run new container
+docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data --name resume-generator niks1267/syncedin-resume:v2Nov1
 ```
 
-**Note:** Your data in `Documents/SyncedIn` is preserved!
+**Note:** Your data in `Documents/SyncedIn` (or `local_data` if using Docker Compose) is preserved across updates!
 
 ---
 
@@ -260,13 +307,27 @@ docker run -d -p 8765:8765 -v ~/Documents/SyncedIn:/data --name resume-generator
 
 ## Features
 
-- **AI-Powered Resume Generation**: Uses Claude AI to tailor resumes to job descriptions
-- **Multi-User Support**: Multiple people can use the same installation
-- **Professional PDF Output**: LaTeX-based PDF generation
-- **Application Tracking**: Track which companies you've applied to
-- **Statistics Dashboard**: View application insights
-- **Edit & Regenerate**: Fine-tune generated resumes
-- **Version Control**: Automatic versioning of resume PDFs
+### Core Features
+- **AI-Powered Resume Generation**: Uses Claude AI to intelligently tailor resumes to job descriptions
+- **Multi-User Support**: Multiple people can use the same installation with isolated data
+- **Professional PDF Output**: LaTeX-based PDF generation for polished, ATS-friendly resumes
+- **Application Tracking**: Track which companies you've applied to and their status
+- **Statistics Dashboard**: View application insights and analytics
+- **Edit & Regenerate**: Fine-tune generated resumes with manual edits
+- **Version Control**: Automatic versioning of resume PDFs (v1, v2, v3...)
+
+### New Features
+- **Dynamic Profile Links**: Add any social/professional links (LinkedIn, GitHub, Portfolio, YouTube, etc.)
+  - No more hardcoded fields - add what you need!
+  - Links appear as clickable hyperlinks in PDF, separated by pipes
+  - Manage via Settings page or Edit Resume page
+
+- **Customizable Display Settings**:
+  - Toggle sections on/off (Summary, Experience, Skills, Projects, Education)
+  - Rename section titles to match your style
+  - Customize skill category names
+
+- **Docker Compose Support**: Simplified deployment with single-command setup
 
 ## System Requirements
 
@@ -286,31 +347,249 @@ For issues:
 
 ## Example Workflow
 
-1. **First Time Setup**
-   - Run the Docker container
-   - Complete the setup wizard (API key + name)
+### First Time Setup
 
-2. **Generate a Resume**
-   - Go to **Generate Resume** tab
-   - Enter company name and job description
-   - Click **Generate**
-   - Your tailored resume PDF is created!
+1. **Launch the App**
+   ```bash
+   docker-compose up -d
+   ```
+   Visit: http://localhost:8765
 
-3. **Fine-Tune**
-   - Go to **Edit & Regenerate** tab
-   - Select/deselect experience bullets
-   - Choose different skills
-   - Click **Regenerate PDF**
+2. **Complete Setup Wizard**
+   - Enter your Anthropic API key
+   - Select Claude Sonnet 4.5 (recommended)
+   - Enter your name
 
-4. **Track Applications**
-   - Go to **Application Stats** tab
-   - View all companies you've applied to
-   - Mark when you hear back
+3. **Configure Your Profile Links** (New!)
+   - Go to **Settings** → **Profile Links** tab
+   - Add your professional links:
+     - LinkedIn: `https://linkedin.com/in/yourprofile`
+     - GitHub: `https://github.com/yourusername`
+     - Portfolio: `https://yourportfolio.com`
+     - Any other links you want on your resume!
+   - Click **Add Link** for each one
 
-5. **Find Your PDFs**
-   - Open `Documents/SyncedIn/YourName/Resumes/`
-   - PDFs are organized by company name
-   - Copy and send to employers!
+4. **Edit Your Resume Data**
+   - Go to **Edit Resume Data** page
+   - Add your work experience, skills, projects, education
+   - Save changes
+
+---
+
+### Generating a Resume
+
+1. **Go to "Generate Resume" Tab**
+   - Enter **Company Name** (e.g., "Google")
+   - Paste the **Job Description**
+
+2. **Choose Options**
+   - **Rewrite Mode**: AI rewrites bullets to match job description
+   - **Exact Mode**: Uses your original bullet points
+
+3. **Click "Generate Resume"**
+   - AI selects best content for the job
+   - PDF is generated with LaTeX
+   - Opens automatically when ready
+
+4. **Find Your PDF**
+   - Saved in: `Documents/SyncedIn/YourName/Resumes/Google/`
+   - Filename: `Google_1.pdf` (version numbers auto-increment)
+
+---
+
+### Fine-Tuning a Resume
+
+1. **Go to "Edit & Regenerate" Tab**
+   - Select the company/resume you want to edit
+   - View the AI's selections
+
+2. **Make Manual Changes**
+   - Check/uncheck experience bullets
+   - Add/remove skills
+   - Select different projects
+   - Edit summary
+
+3. **Click "Regenerate PDF"**
+   - New version created: `Google_2.pdf`
+   - Previous versions preserved
+
+---
+
+### Managing Profile Links
+
+**Option 1: Settings Page**
+1. Go to **Settings** → **Profile Links**
+2. See all current links
+3. Edit titles/URLs inline
+4. Delete unwanted links with 🗑️ button
+5. Add new links with the form at bottom
+6. Click **Save All Changes**
+
+**Option 2: Edit Resume Page**
+1. Go to **Edit Resume Data** → **Static Info** section
+2. Scroll to **Profile Links** area
+3. Edit, add, or delete links
+4. Click **Save Links**
+
+**Your links appear in PDFs like this:**
+```
+LinkedIn | GitHub | Portfolio
+```
+(All clickable hyperlinks, separated by pipes)
+
+---
+
+### Tracking Applications
+
+1. **Go to "Application Stats" Tab**
+2. View all companies you've generated resumes for
+3. Track:
+   - Number of resume versions
+   - Application dates
+   - Response status
+4. Export to CSV for external tracking
+
+---
+
+### Multi-User Features
+
+**Create Additional Users:**
+1. **Settings** → **User Management**
+2. Click **+ Create New User**
+3. Enter name and click **Create**
+
+**Switch Between Users:**
+1. **Settings** → **User Management**
+2. Select user from dropdown
+3. Click **Switch**
+
+Each user has completely isolated:
+- Resume data
+- Generated PDFs
+- Profile links
+- Application tracking
+- Settings
+
+---
+
+## Advanced Usage
+
+### Customizing Display Settings
+
+1. Go to **Edit Resume Data** → **Display Settings**
+2. Toggle sections on/off:
+   - ☑️ Professional Summary
+   - ☑️ Experience
+   - ☐ Skills (hide if not relevant)
+   - ☑️ Education
+   - ☑️ Projects
+
+3. Rename section titles:
+   - "Professional Summary" → "About Me"
+   - "Professional Experience" → "Work History"
+   - "Personal Projects" → "Key Projects"
+
+4. Customize skill categories:
+   - Default: Languages, Platforms, Skills, Frameworks, Tools, Database
+   - Change to whatever you need!
+
+---
+
+## For Publishers (Publishing to Docker Hub)
+
+### Prerequisites
+- Docker installed
+- Docker Hub account ([sign up here](https://hub.docker.com/signup))
+- Git Bash or Linux terminal (for line ending conversion)
+
+### Steps to Publish
+
+1. **Fix Line Endings (Important!)**
+   ```bash
+   # Convert entrypoint.sh to Unix line endings
+   dos2unix entrypoint.sh
+   # Or if dos2unix not available:
+   sed -i 's/\r$//' entrypoint.sh
+   ```
+
+2. **Login to Docker Hub**
+   ```bash
+   docker login
+   ```
+
+3. **Build the Image**
+   ```bash
+   # Replace with your Docker Hub username and version
+   docker build -t yourusername/syncedin-resume:v2Nov1 .
+   docker build -t yourusername/syncedin-resume:latest .
+   ```
+
+4. **Test Locally**
+   ```bash
+   # Test with docker-compose
+   docker-compose up
+
+   # Or test with docker run
+   docker run -d -p 8765:8765 -v ./local_data:/data yourusername/syncedin-resume:latest
+   ```
+   Visit `http://localhost:8765` to verify everything works.
+
+5. **Push to Docker Hub**
+   ```bash
+   docker push yourusername/syncedin-resume:v2Nov1
+   docker push yourusername/syncedin-resume:latest
+   ```
+
+6. **Update docker-compose.yml**
+   - Edit `docker-compose.yml`
+   - Change `image: niks1267/syncedin-resume:v2Nov1` to your image name
+   - Commit and push to your repository
+
+### Updating the Image
+
+```bash
+# Make your code changes
+
+# Fix line endings
+dos2unix entrypoint.sh
+
+# Rebuild
+docker build -t yourusername/syncedin-resume:v2Nov2 .
+docker build -t yourusername/syncedin-resume:latest .
+
+# Test
+docker-compose up
+
+# Push
+docker push yourusername/syncedin-resume:v2Nov2
+docker push yourusername/syncedin-resume:latest
+```
+
+### Publishing Checklist
+
+- [ ] Line endings fixed in `entrypoint.sh`
+- [ ] All new features tested locally
+- [ ] Docker image builds successfully
+- [ ] docker-compose.yml updated with new image tag
+- [ ] Usage.md updated with new features
+- [ ] Pushed to Docker Hub
+- [ ] README updated with new image name
+
+---
+
+## Support & Contributing
+
+**Issues or Questions?**
+- Check the [Troubleshooting](#troubleshooting) section
+- Review container logs: `docker-compose logs -f`
+- Verify your API key is valid
+- Make sure Documents/SyncedIn folder is accessible
+
+**Want to Contribute?**
+- Fork the repository
+- Make your changes
+- Test with docker-compose
+- Submit a pull request
 
 ---
 

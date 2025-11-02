@@ -71,17 +71,28 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     # Handle links - support both old format (linkedin, leetcode fields) and new format (links array)
     if 'links' in static and isinstance(static['links'], list):
         # New format: links array
+        # Generate pipe-separated links for new template format
+        links_parts = []
+        for link in static['links']:
+            title = escape_latex_special_chars(link.get('title', ''))
+            url = link.get('url', '')  # Keep raw for href
+            if title and url:
+                links_parts.append(f"\\href{{{url}}}{{{title}}}")
+        links_text = " | ".join(links_parts)
+        template = template.replace('{{LINKS}}', links_text)
+
+        # Also support old template format for backwards compatibility
         linkedin_url = ""
         leetcode_url = ""
         portfolio_url = ""
 
         for link in static['links']:
-            link_name = link.get('name', '').lower()
-            if 'linkedin' in link_name:
+            link_title = link.get('title', '').lower()
+            if 'linkedin' in link_title:
                 linkedin_url = link.get('url', '')
-            elif 'leetcode' in link_name:
+            elif 'leetcode' in link_title:
                 leetcode_url = link.get('url', '')
-            elif 'portfolio' in link_name or 'website' in link_name:
+            elif 'portfolio' in link_title or 'website' in link_title:
                 portfolio_url = link.get('url', '')
 
         template = template.replace('{{LINKEDIN}}', linkedin_url)
@@ -92,6 +103,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
         template = template.replace('{{LINKEDIN}}', static.get('linkedin', ''))
         template = template.replace('{{LEETCODE}}', static.get('leetcode', ''))
         template = template.replace('{{PORTFOLIO}}', static.get('portfolio', ''))
+        template = template.replace('{{LINKS}}', '')
 
     # --- 2. Build Summary Section ---
     summary_section = ""

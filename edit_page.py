@@ -3,6 +3,7 @@ import json
 import shutil
 from pathlib import Path
 from datetime import datetime
+import config_manager
 
 
 def show():
@@ -12,9 +13,17 @@ def show():
     st.markdown("<h1 class='main-header'>✏️ Edit Resume Data</h1>", unsafe_allow_html=True)
     st.markdown("Manage your resume data with an easy-to-use interface")
 
-    # File paths
-    resume_data_path = Path("resume_data_enhanced.json")
-    default_backup_path = Path("resume_data_enhanced_DEFAULT.json")
+    # Get current user paths
+    user_paths = config_manager.get_current_user_paths()
+    if not user_paths:
+        st.error("❌ No user configured. Please go to Settings to set up your profile.")
+        st.stop()
+
+    # File paths - use user-specific paths
+    resume_data_path = Path(user_paths['resume_data'])
+    backup_dir = Path(user_paths['content_dir']) / 'backups'
+    backup_dir.mkdir(exist_ok=True)
+    default_backup_path = backup_dir / "resume_data_enhanced_DEFAULT.json"
 
     # Initialize session state
     if 'resume_data' not in st.session_state:
@@ -50,7 +59,7 @@ def show():
                 try:
                     # Create backup before saving
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    backup_path = Path(f"./resume_backups/resume_data_enhanced_backup_{timestamp}.json")
+                    backup_path = backup_dir / f"resume_data_enhanced_backup_{timestamp}.json"
                     shutil.copy(resume_data_path, backup_path)
 
                     # Save changes
@@ -125,24 +134,96 @@ def show():
 
         with col2:
             new_address = st.text_input("Address", value=static.get('address', ''))
-            new_linkedin = st.text_input("LinkedIn URL", value=static.get('linkedin', ''))
-            new_portfolio = st.text_input("Portfolio URL", value=static.get('portfolio', ''))
 
-        new_leetcode = st.text_input("LeetCode URL", value=static.get('leetcode', ''))
-
-        # Update button
-        if st.button("💾 Update Static Info", type="primary"):
-            data['static_info'] = {
+        # Update button for basic info
+        if st.button("💾 Update Basic Info", type="primary"):
+            # Preserve existing links if present
+            updated_static = {
                 'name': new_name,
                 'address': new_address,
                 'phone': new_phone,
-                'email': new_email,
-                'linkedin': new_linkedin,
-                'portfolio': new_portfolio,
-                'leetcode': new_leetcode
+                'email': new_email
             }
+
+            # Keep links if they exist
+            if 'links' in static:
+                updated_static['links'] = static['links']
+
+            data['static_info'] = updated_static
             st.session_state.modified = True
-            st.success("✅ Static info updated! Remember to save changes.")
+            st.success("✅ Basic info updated! Remember to save changes.")
+
+        st.markdown("---")
+        st.markdown("### 🔗 Profile Links")
+        st.markdown("Manage links that appear on your resume (LinkedIn, GitHub, Portfolio, etc.)")
+
+        # Get or initialize links
+        links = static.get('links', [])
+
+        # Display existing links
+        if links:
+            st.markdown("#### Current Links")
+            links_to_delete = []
+
+            for idx, link in enumerate(links):
+                col1, col2, col3 = st.columns([2, 4, 1])
+
+                with col1:
+                    link['title'] = st.text_input(
+                        "Title",
+                        value=link.get('title', ''),
+                        key=f"link_title_{idx}",
+                        label_visibility="collapsed",
+                        placeholder="e.g., LinkedIn"
+                    )
+
+                with col2:
+                    link['url'] = st.text_input(
+                        "URL",
+                        value=link.get('url', ''),
+                        key=f"link_url_{idx}",
+                        label_visibility="collapsed",
+                        placeholder="https://..."
+                    )
+
+                with col3:
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    if st.button("🗑️", key=f"delete_link_{idx}", help="Delete link"):
+                        links_to_delete.append(idx)
+
+            # Delete marked links
+            for idx in sorted(links_to_delete, reverse=True):
+                links.pop(idx)
+                st.session_state.modified = True
+                st.rerun()
+
+        # Add new link
+        st.markdown("#### Add New Link")
+        col1, col2, col3 = st.columns([2, 4, 1])
+
+        with col1:
+            new_link_title = st.text_input("Title", key="new_link_title", placeholder="e.g., GitHub")
+
+        with col2:
+            new_link_url = st.text_input("URL", key="new_link_url", placeholder="https://...")
+
+        with col3:
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("➕ Add", key="add_link"):
+                if new_link_title and new_link_url:
+                    links.append({'title': new_link_title, 'url': new_link_url})
+                    static['links'] = links
+                    st.session_state.modified = True
+                    st.rerun()
+                else:
+                    st.error("Both title and URL required")
+
+        # Save links button
+        if st.button("💾 Save Links", type="secondary"):
+            static['links'] = links
+            data['static_info'] = static
+            st.session_state.modified = True
+            st.success("✅ Links saved! Remember to save all changes.")
 
     # Section: Summaries
     elif section == "Summaries":
