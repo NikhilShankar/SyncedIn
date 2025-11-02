@@ -1,8 +1,13 @@
 # Docker Desktop Manager
 
-A Go application that automatically manages Docker Desktop installation and runs docker-compose files.
+A standalone Go application that automatically manages Docker Desktop installation and runs an embedded docker-compose configuration.
 
 ## Features
+
+✅ **Standalone Executable**
+- Docker-compose.yml is embedded directly into the .exe file
+- No external files needed - just run the executable!
+- Automatically extracts and uses the embedded configuration
 
 ✅ **Checks if Docker Desktop is installed**
 - Detects Docker Desktop on Windows, macOS, and Linux
@@ -66,17 +71,32 @@ GOOS=linux GOARCH=amd64 go build -o docker-manager docker-manager.go
 
 ## Usage
 
-1. Place your `docker-compose.yml` file in the same directory as the executable
-2. Run the executable:
-   - **Windows**: Double-click `docker-manager.exe` or run from command prompt
-   - **macOS/Linux**: Run `./docker-manager` from terminal
+Simply run the executable - that's it! The docker-compose configuration is embedded inside.
 
-### Example Directory Structure
+**Windows**: 
+- Double-click `docker-manager.exe` 
+- Or run from command prompt: `docker-manager.exe`
+
+**macOS/Linux**: 
+- Run from terminal: `./docker-manager`
+
+The executable will:
+1. Check/install/start Docker Desktop automatically
+2. Extract the embedded docker-compose.yml to the current directory
+3. Run `docker-compose up -d`
+
+### Example - Just One File!
 
 ```
 my-project/
-├── docker-manager.exe        # The executable
-└── docker-compose.yml         # Your docker-compose file
+└── docker-manager.exe        # Everything you need in one file!
+```
+
+After running, you'll also see:
+```
+my-project/
+├── docker-manager.exe
+└── docker-compose.yml         # Auto-extracted (for reference/modification)
 ```
 
 ## What It Does
@@ -95,7 +115,17 @@ my-project/
 
 ## Customization
 
-You can modify the `runDockerCompose()` function to change the docker-compose behavior:
+### Modifying the Embedded Docker Compose
+
+To change the docker-compose configuration that's embedded in the executable:
+
+1. Edit `docker-compose.yml` in your source directory
+2. Rebuild the executable using `build.bat` or `build.sh`
+3. The new docker-compose configuration will be embedded in the new .exe
+
+### Changing Docker Compose Behavior
+
+You can modify the `runDockerCompose()` function to change behavior:
 
 ```go
 // Example: Run docker-compose with different flags
@@ -141,10 +171,6 @@ cmd := exec.Command("docker-compose", "-f", "custom-compose.yml", "up", "-d")
 - Docker Desktop may be taking longer to start
 - Check if Docker Desktop is opening properly
 - Try starting Docker Desktop manually first
-
-**"docker-compose.yml not found"**
-- Ensure the docker-compose file is in the same directory as the executable
-- File must be named `docker-compose.yml` or `docker-compose.yaml`
 
 ## License
 

@@ -1,29 +1,59 @@
 version: '3.8'
 
 services:
-  # Example web service
-  web:
-    image: nginx:alpine
-    container_name: my-web-app
+  syncedin-resume:
+    # Option 1: Use pre-built image from Docker Hub
+    image: niks1267/syncedin-resume:v2Nov1
+
+    # Option 2: Build locally (uncomment to use)
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+
+    container_name: syncedin-resume-app
+
     ports:
-      - "8080:80"
+      - "8765:8765"
+
     volumes:
-      - ./html:/usr/share/nginx/html
+      # NEW: Single volume mount for all user data
+      # This maps your local_data directory to the container's /data
+      # All user profiles, resumes, and settings are stored here
+      - ./local_data:/data
+
+      # Optional: Mount generated directory for temporary PDF files
+      - ./generated:/app/generated
+
+    environment:
+      # Optional: Set API key via environment variable
+      # You can also configure it via the Settings page in the app
+      # - ANTHROPIC_API_KEY=your_api_key_here
+
+      # Optional: Set timezone (change to your timezone)
+      - TZ=America/New_York
+
+      # Streamlit configuration (already set in Dockerfile CMD, but can override here)
+      # - STREAMLIT_SERVER_PORT=8765
+      # - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      # - STREAMLIT_SERVER_HEADLESS=true
+
+    # Restart policy - automatically restart if container crashes
     restart: unless-stopped
 
-  # Example database service
-  # db:
-  #   image: postgres:15-alpine
-  #   container_name: my-database
-  #   environment:
-  #     POSTGRES_PASSWORD: example
-  #     POSTGRES_USER: admin
-  #     POSTGRES_DB: myapp
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   restart: unless-stopped
+    # Health check to ensure app is running
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8765/_stcore/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
-# volumes:
-#   postgres_data:
+    # Optional: Resource limits (uncomment to enable)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 1G

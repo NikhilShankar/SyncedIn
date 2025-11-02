@@ -13,6 +13,13 @@ fi
 echo "Go is installed"
 echo ""
 
+# Initialize Go module if go.mod doesn't exist
+if [ ! -f go.mod ]; then
+    echo "Initializing Go module..."
+    go mod init docker-manager
+    echo ""
+fi
+
 # Build the executable
 echo "Building executable..."
 go build -ldflags="-s -w" -o docker-manager docker-manager.go

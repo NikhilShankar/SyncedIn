@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,6 +12,9 @@ import (
 	"strings"
 	"time"
 )
+
+//go:embed docker-compose.yml
+var embeddedDockerCompose []byte
 
 const (
 	dockerDesktopURL = "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe"
@@ -228,7 +232,7 @@ func installDockerDesktop() error {
 	return nil
 }
 
-// runDockerCompose runs docker-compose up
+// runDockerCompose extracts embedded docker-compose and runs it
 func runDockerCompose() error {
 	// Get the directory where the executable is located
 	exePath, err := os.Executable()
@@ -237,14 +241,13 @@ func runDockerCompose() error {
 	}
 	exeDir := filepath.Dir(exePath)
 
-	// Check if docker-compose.yml exists in the same directory
+	// Create docker-compose.yml from embedded content
 	composePath := filepath.Join(exeDir, "docker-compose.yml")
-	if _, err := os.Stat(composePath); os.IsNotExist(err) {
-		// Try docker-compose.yaml
-		composePath = filepath.Join(exeDir, "docker-compose.yaml")
-		if _, err := os.Stat(composePath); os.IsNotExist(err) {
-			return fmt.Errorf("docker-compose.yml or docker-compose.yaml not found in %s", exeDir)
-		}
+	
+	// Write the embedded docker-compose file
+	fmt.Println("Extracting docker-compose configuration...")
+	if err := os.WriteFile(composePath, embeddedDockerCompose, 0644); err != nil {
+		return fmt.Errorf("failed to write docker-compose.yml: %v", err)
 	}
 
 	fmt.Printf("Using docker-compose file: %s\n", composePath)

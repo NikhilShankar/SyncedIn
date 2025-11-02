@@ -14,6 +14,13 @@ if errorlevel 1 (
 echo Go is installed
 echo.
 
+REM Initialize Go module if go.mod doesn't exist
+if not exist go.mod (
+    echo Initializing Go module...
+    go mod init docker-manager
+    echo.
+)
+
 REM Build the executable
 echo Building executable...
 go build -ldflags="-s -w" -o docker-manager.exe docker-manager.go
