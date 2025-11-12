@@ -41,31 +41,31 @@
     "sections": {
       "summary": {
         "enabled": true,
-        "title": "Professional Summary SACHU"
+        "title": "Professional Summary"
       },
       "experience": {
         "enabled": true,
-        "title": "Professional Experience SACHU"
+        "title": "Professional Experience"
       },
       "skills": {
-        "enabled": false,
-        "title": "Technical Skills SACHU",
+        "enabled": true,
+        "title": "Technical Skills",
         "categories": [
-          "",
+          "Languages",
           "Platforms",
           "Skills",
-          "",
+          "Frameworks",
           "Tools",
-          "DatabaseSachu"
+          "Database"
         ]
       },
       "education": {
         "enabled": true,
-        "title": "Education SACHU"
+        "title": "Education"
       },
       "projects": {
         "enabled": true,
-        "title": "Personal Projects SACHU"
+        "title": "Personal Projects"
       }
     }
   },
@@ -79,8 +79,16 @@
     "leetcode": "",
     "links": [
       {
-        "title": "Youtube22",
-        "url": "https://www.youtube.com/watch?v=H70uL5W20dE"
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/nikhilshankarcs/"
+      },
+      {
+        "title": "GitHub",
+        "url": "https://github.com/NikhilShankar"
+      },
+      {
+        "title": "LeetCode",
+        "url": "https://leetcode.com/u/user2137S/"
       }
     ]
   },

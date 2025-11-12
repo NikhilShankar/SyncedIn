@@ -210,3 +210,5 @@ __marimo__/
 /resume_backups
 resume_data_enhanced_backup_old.json
 local_data/global_config.json
+/local_data
+/local_data/*
