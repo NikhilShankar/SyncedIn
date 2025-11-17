@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python migrate_resume_json.py:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

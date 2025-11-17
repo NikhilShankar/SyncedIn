@@ -101,6 +101,70 @@ class ResumeSelector:
             print(f"Error calling Claude API: {e}")
             raise
 
+    def _build_skills_constraints(self, full_resume_data, config):
+        """Build skills constraints dynamically from resume data structure."""
+        skills_data = full_resume_data.get('skills', [])
+        skills_config = config.get('skills_per_category', {})
+
+        # Handle both old dict format and new array format
+        if isinstance(skills_data, list):
+            # New v2.0 format - array of skill sections with embedded min/max
+            constraints = []
+            for skill_section in skills_data:
+                title = skill_section.get('title', '')
+                # Try to get min/max from section itself, fall back to config
+                min_val = skill_section.get('min')
+                max_val = skill_section.get('max')
+
+                if min_val is None or max_val is None:
+                    # Fall back to config if not in section
+                    title_key = title.lower()
+                    min_val = min_val or skills_config.get(title_key, {}).get('min', 5)
+                    max_val = max_val or skills_config.get(title_key, {}).get('max', 10)
+
+                constraints.append(f"   - {title}: SELECT AT LEAST {min_val} items (max {max_val})")
+            return '\n'.join(constraints)
+        else:
+            # Old v1.0 format - dict with hardcoded categories (backward compatibility)
+            constraints = []
+            for category_key in ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']:
+                if category_key in skills_data:
+                    min_val = skills_config.get(category_key, {}).get('min', 5)
+                    max_val = skills_config.get(category_key, {}).get('max', 10)
+                    constraints.append(f"   - {category_key.title()}: SELECT AT LEAST {min_val} items (max {max_val})")
+            return '\n'.join(constraints)
+
+    def _build_skills_json_schema(self, full_resume_data):
+        """Build the skills section of the JSON schema dynamically."""
+        skills_data = full_resume_data.get('skills', [])
+
+        # Handle both old dict format and new array format
+        if isinstance(skills_data, list):
+            # New v2.0 format - return array schema
+            schema_items = []
+            for skill_section in skills_data:
+                title = skill_section.get('title', '')
+                min_val = skill_section.get('min', 5)
+                max_val = skill_section.get('max', 10)
+                schema_items.append(f'''    {{
+      "title": "{title}",
+      "items": ["exact skill names"],
+      "mandatoryItems": ["exact mandatory skill names"],
+      "min": {min_val},
+      "max": {max_val}
+    }}''')
+            return '  "skills": [\n' + ',\n'.join(schema_items) + '\n  ]'
+        else:
+            # Old v1.0 format - dict schema (backward compatibility)
+            return '''  "skills": {
+    "languages": ["exact skill names"],
+    "platforms": ["exact platform names"],
+    "skills": ["exact skill names"],
+    "frameworks": ["exact framework names"],
+    "tools": ["exact tool names"],
+    "database": ["exact database names"]
+  }'''
+
     def _build_prompt(self, full_resume_data, job_description, should_rewrite_selected=False):
         """Build the prompt for Claude with instructions and data."""
 
@@ -193,13 +257,8 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
    - Each company's bullets must come from THAT company's bullet list only
 
 2. **Skills - MANDATORY COUNTS (Must meet MINIMUM in each category):**
-   - Languages: SELECT AT LEAST {config.get('skills_per_category', {}).get('languages', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('languages', {}).get('max', 8)})
-   - Platforms: SELECT AT LEAST {config.get('skills_per_category', {}).get('platforms', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('platforms', {}).get('max', 8)})
-   - Skills: SELECT AT LEAST {config.get('skills_per_category', {}).get('skills', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('skills', {}).get('max', 12)})
-   - Frameworks: SELECT AT LEAST {config.get('skills_per_category', {}).get('frameworks', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('frameworks', {}).get('max', 15)})
-   - Tools: SELECT AT LEAST {config.get('skills_per_category', {}).get('tools', {}).get('min', 6)} items (max {config.get('skills_per_category', {}).get('tools', {}).get('max', 10)})
-   - Database: SELECT AT LEAST {config.get('skills_per_category', {}).get('database', {}).get('min', 4)} items (max {config.get('skills_per_category', {}).get('database', {}).get('max', 6)})
-   - ALWAYS include ALL items from "*_mandatory" arrays FIRST
+{self._build_skills_constraints(full_resume_data, config)}
+   - ALWAYS include ALL items from "mandatoryItems" arrays FIRST
 
 3. **Projects - MANDATORY COUNT:**
    - MUST select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
@@ -249,14 +308,7 @@ Return ONLY a valid JSON object with this structure:
       "text": "exact text from selected summary"
     }}
   ],
-  "skills": {{
-    "languages": ["exact skill names"],
-    "platforms": ["exact platform names"],
-    "skills": ["exact skill names"],
-    "frameworks": ["exact framework names"],
-    "tools": ["exact tool names"],
-    "database": ["exact database names"]
-  }},
+{self._build_skills_json_schema(full_resume_data)},
   "companies": [
     {{
       "id": "exact company id",
@@ -377,13 +429,8 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
    - Each company's bullets must come from THAT company's bullet list only
 
 2. **Skills - MANDATORY COUNTS (Must meet MINIMUM in each category):**
-   - Languages: SELECT AT LEAST {config.get('skills_per_category', {}).get('languages', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('languages', {}).get('max', 8)})
-   - Platforms: SELECT AT LEAST {config.get('skills_per_category', {}).get('platforms', {}).get('min', 5)} items (max {config.get('skills_per_category', {}).get('platforms', {}).get('max', 8)})
-   - Skills: SELECT AT LEAST {config.get('skills_per_category', {}).get('skills', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('skills', {}).get('max', 12)})
-   - Frameworks: SELECT AT LEAST {config.get('skills_per_category', {}).get('frameworks', {}).get('min', 8)} items (max {config.get('skills_per_category', {}).get('frameworks', {}).get('max', 15)})
-   - Tools: SELECT AT LEAST {config.get('skills_per_category', {}).get('tools', {}).get('min', 6)} items (max {config.get('skills_per_category', {}).get('tools', {}).get('max', 10)})
-   - Database: SELECT AT LEAST {config.get('skills_per_category', {}).get('database', {}).get('min', 4)} items (max {config.get('skills_per_category', {}).get('database', {}).get('max', 6)})
-   - ALWAYS include ALL items from "*_mandatory" arrays FIRST
+{self._build_skills_constraints(full_resume_data, config)}
+   - ALWAYS include ALL items from "mandatoryItems" arrays FIRST
 
 3. **Projects - MANDATORY COUNT:**
    - MUST select {config.get('projects', {}).get('min', 2)}-{config.get('projects', {}).get('max', 3)} projects
@@ -433,14 +480,7 @@ Return ONLY a valid JSON object with this structure:
       "text": "exact text from selected summary"
     }}
   ],
-  "skills": {{
-    "languages": ["exact skill names"],
-    "platforms": ["exact platform names"],
-    "skills": ["exact skill names"],
-    "frameworks": ["exact framework names"],
-    "tools": ["exact tool names"],
-    "database": ["exact database names"]
-  }},
+{self._build_skills_json_schema(full_resume_data)},
   "companies": [
     {{
       "id": "exact company id",

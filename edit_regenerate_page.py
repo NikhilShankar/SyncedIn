@@ -153,15 +153,51 @@ def show():
     st.markdown("---")
     st.markdown("#### 🛠️ Technical Skills")
 
-    skills = data.get('skills', {})
-    full_skills = full_resume_data.get('skills', {})
-    skill_categories = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
+    skills = data.get('skills', [])
+    full_skills = full_resume_data.get('skills', [])
 
-    for category in skill_categories:
-        st.markdown(f"**{category.title()}:**")
+    # Handle both v1.0 (dict) and v2.0 (array) formats
+    if isinstance(skills, dict) or isinstance(full_skills, dict):
+        st.warning("⚠️ Resume data is using the old v1.0 format. Please migrate to v2.0 format.")
 
-        current_skills = skills.get(category, [])
-        full_category_skills = full_skills.get(category, [])
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            st.info("💡 **What will migration do?**\n\n- Convert hardcoded categories to flexible sections\n- Add min/max constraints per section\n- Create a backup file with `_v1.0_backup` suffix")
+
+        with col2:
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("🔄 Migrate to v2.0", type="primary", use_container_width=True):
+                with st.spinner("Migrating..."):
+                    from migrate_resume_json import migrate_with_backup
+
+                    success, message, backup_path = migrate_with_backup(resume_data_path, '_v1.0_backup')
+
+                    if success:
+                        st.success(f"✅ {message}")
+                        if backup_path:
+                            st.info(f"📁 Backup saved: `{backup_path}`")
+
+                        # Reload full resume data
+                        with open(resume_data_path, 'r', encoding='utf-8') as f:
+                            full_resume_data = json.load(f)
+
+                        st.success("✅ Migration complete! Please go back to Generate page and regenerate the resume.")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ {message}")
+        st.stop()
+
+    # New v2.0 format - array of skill sections
+    for idx, skill_section in enumerate(skills):
+        section_title = skill_section.get('title', f'Section {idx+1}')
+        st.markdown(f"**{section_title}:**")
+
+        # Get current selected items
+        current_skills = skill_section.get('items', [])
+
+        # Get full list from original data
+        full_section = full_skills[idx] if idx < len(full_skills) else skill_section
+        full_category_skills = full_section.get('items', [])
 
         # Combine and deduplicate
         all_skills = []
@@ -189,41 +225,42 @@ def show():
                     button_type = "primary" if is_selected else "secondary"
                     label = f"✓ {skill}" if is_selected else skill
 
-                    if st.button(label, key=f"skill_{category}_{i}_{j}_{skill.replace(' ', '_')[:20]}",
+                    if st.button(label, key=f"skill_{idx}_{i}_{j}_{skill.replace(' ', '_')[:20]}",
                                type=button_type, use_container_width=True):
                         # Toggle selection
                         if is_selected:
-                            st.session_state.trimmed_data['skills'][category].remove(skill)
+                            st.session_state.trimmed_data['skills'][idx]['items'].remove(skill)
                         else:
-                            if category not in st.session_state.trimmed_data['skills']:
-                                st.session_state.trimmed_data['skills'][category] = []
-                            st.session_state.trimmed_data['skills'][category].append(skill)
+                            if 'items' not in st.session_state.trimmed_data['skills'][idx]:
+                                st.session_state.trimmed_data['skills'][idx]['items'] = []
+                            st.session_state.trimmed_data['skills'][idx]['items'].append(skill)
                         st.rerun()
 
         # Custom skills button
-        if st.button(f"✏️ Add Custom {category.title()}", key=f"custom_{category}_btn"):
-            st.session_state[f'show_custom_{category}'] = True
+        if st.button(f"✏️ Add Custom {section_title}", key=f"custom_skill_{idx}_btn"):
+            st.session_state[f'show_custom_skill_{idx}'] = True
 
-        if st.session_state.get(f'show_custom_{category}', False):
+        if st.session_state.get(f'show_custom_skill_{idx}', False):
             custom_input = st.text_input(
-                f"Add custom {category} (comma-separated)",
-                key=f"custom_{category}_input",
+                f"Add custom {section_title} (comma-separated)",
+                key=f"custom_skill_{idx}_input",
                 placeholder="e.g., React, Vue.js, Angular"
             )
             col1, col2 = st.columns(2)
             with col1:
-                if st.button("✅ Add", key=f"save_custom_{category}"):
+                if st.button("✅ Add", key=f"save_custom_skill_{idx}"):
                     if custom_input.strip():
                         new_items = [s.strip() for s in custom_input.split(',') if s.strip()]
-                        if category not in st.session_state.trimmed_data['skills']:
-                            st.session_state.trimmed_data['skills'][category] = []
-                        st.session_state.trimmed_data['skills'][category].extend(new_items)
-                        st.session_state.trimmed_data['skills'][category] = list(set(st.session_state.trimmed_data['skills'][category]))
-                        st.session_state[f'show_custom_{category}'] = False
+                        if 'items' not in st.session_state.trimmed_data['skills'][idx]:
+                            st.session_state.trimmed_data['skills'][idx]['items'] = []
+                        st.session_state.trimmed_data['skills'][idx]['items'].extend(new_items)
+                        # Deduplicate
+                        st.session_state.trimmed_data['skills'][idx]['items'] = list(set(st.session_state.trimmed_data['skills'][idx]['items']))
+                        st.session_state[f'show_custom_skill_{idx}'] = False
                         st.rerun()
             with col2:
-                if st.button("❌ Cancel", key=f"cancel_custom_{category}"):
-                    st.session_state[f'show_custom_{category}'] = False
+                if st.button("❌ Cancel", key=f"cancel_custom_skill_{idx}"):
+                    st.session_state[f'show_custom_skill_{idx}'] = False
                     st.rerun()
 
     # --- SECTION 3: Professional Experience ---

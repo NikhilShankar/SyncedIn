@@ -103,160 +103,190 @@
       "text": "Senior Android Engineer with 7+ years of experience building high-performance mobile applications across fintech and ad-tech domains. Architected core UPI payment systems at a fintech startup and developed SDK libraries at an ad-tech company integrated by 1000+ applications, with expertise in designing scalable architectures, optimizing app performance, and leading cross-functional initiatives. Proficient in Clean Architecture, MVI patterns, and Jetpack Compose with strong capabilities in code reviews, mentoring developers, and establishing engineering standards. Contributed to taking a startup from early stage to unicorn status through technical excellence and systematic problem-solving."
     }
   ],
-  "skills": {
-    "languages": [
-      "Kotlin",
-      "Java",
-      "Dart",
-      "Python",
-      "Golang",
-      "C++",
-      "C#",
-      "Swift",
-      "Objective-C",
-      "Solidity"
-    ],
-    "languages_mandatory": [
-      "Kotlin",
-      "Java",
-      "Python"
-    ],
-    "platforms": [
-      "Android Studio",
-      "Firebase",
-      "AWS",
-      "GCM",
-      "IntelliJ",
-      "Goland",
-      "VSCode",
-      "Figma",
-      "PyCharm",
-      "DataGrip"
-    ],
-    "platforms_mandatory": [
-      "Android Studio",
-      "Firebase",
-      "PyCharm"
-    ],
-    "skills": [
-      "Modular code using MVVM MVI and Clean Architecture",
-      "Multi Module App Design",
-      "Complex UI Development using Compose",
-      "UI Optimizations",
-      "Designing Framework and Libraries",
-      "Agile Planning",
-      "OOP",
-      "Design patterns",
-      "Code Reviews and detecting code smells and bugs",
-      "Code refactoring",
-      "Deadlock detection",
-      "Performance profiling",
-      "Google Play Store Management",
-      "Project Planning",
-      "UML Diagrams",
-      "Mentoring Junior Developers",
-      "Flowcharts",
-      "Use case diagrams",
-      "Sequence diagrams",
-      "Spring-boot Kotlin",
-      "NLP",
-      "LLMs",
-      "Model Training"
-    ],
-    "skills_mandatory": [
-      "Modular code using MVVM MVI and Clean Architecture",
-      "Complex UI Development using Compose",
-      "Design patterns"
-    ],
-    "frameworks": [
-      "Android SDK",
-      "NDK",
-      "Jetpack Compose",
-      "Retrofit",
-      "OkHttp",
-      "Dagger",
-      "Hilt",
-      "Picasso",
-      "Room",
-      "SQLite",
-      "Coroutines",
-      "Livedata",
-      "Lottie",
-      "Motion Layout",
-      "JUnit",
-      "Material Components",
-      "Jetpack Libraries",
-      "NDK",
-      "Flutter",
-      "Unity",
-      "Gradle",
-      "Glide",
-      "Detekt",
-      "Websockets",
-      "Javadoc",
-      "JNI",
-      "Llama",
-      "OLlama",
-      "Langchain",
-      "Langgraph",
-      "HuggingFace Transformers",
-      "Spring Boot Kotlin",
-      "Kotlin Multiplatform",
-      "Spotless"
-    ],
-    "frameworks_mandatory": [
-      "Android SDK",
-      "Jetpack Compose",
-      "Retrofit",
-      "Coroutines",
-      "Dagger",
-      "Hilt",
-      "Websockets",
-      "Material",
-      "SQLite",
-      "Components",
-      "Gradle",
-      "Lottie",
-      "Room"
-    ],
-    "tools": [
-      "Leak Canary",
-      "AS Profiler",
-      "Git",
-      "Debugger",
-      "Stetho",
-      "Postman",
-      "GPU Profiler",
-      "Network Profiler",
-      "Charles",
-      "Benchmark Library",
-      "Lint",
-      "Github Actions",
-      "Jira",
-      "Trello",
-      "Confluence",
-      "Bitbucket",
-      "Groq",
-      "Llama"
-    ],
-    "tools_mandatory": [
-      "Git",
-      "AS Profiler",
-      "Github Actions"
-    ],
-    "database": [
-      "MySQL",
-      "SQLite",
-      "MongoDB",
-      "Firebase Realtime",
-      "Firebase Firestore",
-      "Weaviate-Vector DB"
-    ],
-    "database_mandatory": [
-      "SQLite",
-      "Firebase Firestore"
-    ]
-  },
+  "skills": [
+    {
+      "title": "Languages",
+      "items": [
+        "Kotlin",
+        "Java",
+        "Dart",
+        "Python",
+        "Golang",
+        "C++",
+        "C#",
+        "Swift",
+        "Objective-C",
+        "Solidity"
+      ],
+      "mandatoryItems": [
+        "Kotlin",
+        "Java",
+        "Python"
+      ],
+      "min": 5,
+      "max": 8
+    },
+    {
+      "title": "Platforms",
+      "items": [
+        "Android Studio",
+        "Firebase",
+        "AWS",
+        "GCM",
+        "IntelliJ",
+        "Goland",
+        "VSCode",
+        "Figma",
+        "PyCharm",
+        "DataGrip"
+      ],
+      "mandatoryItems": [
+        "Android Studio",
+        "Firebase",
+        "PyCharm"
+      ],
+      "min": 5,
+      "max": 8
+    },
+    {
+      "title": "Skills",
+      "items": [
+        "Modular code using MVVM MVI and Clean Architecture",
+        "Multi Module App Design",
+        "Complex UI Development using Compose",
+        "UI Optimizations",
+        "Designing Framework and Libraries",
+        "Agile Planning",
+        "OOP",
+        "Design patterns",
+        "Code Reviews and detecting code smells and bugs",
+        "Code refactoring",
+        "Deadlock detection",
+        "Performance profiling",
+        "Google Play Store Management",
+        "Project Planning",
+        "UML Diagrams",
+        "Mentoring Junior Developers",
+        "Flowcharts",
+        "Use case diagrams",
+        "Sequence diagrams",
+        "Spring-boot Kotlin",
+        "NLP",
+        "LLMs",
+        "Model Training"
+      ],
+      "mandatoryItems": [
+        "Modular code using MVVM MVI and Clean Architecture",
+        "Complex UI Development using Compose",
+        "Design patterns"
+      ],
+      "min": 8,
+      "max": 12
+    },
+    {
+      "title": "Frameworks",
+      "items": [
+        "Android SDK",
+        "NDK",
+        "Jetpack Compose",
+        "Retrofit",
+        "OkHttp",
+        "Dagger",
+        "Hilt",
+        "Picasso",
+        "Room",
+        "SQLite",
+        "Coroutines",
+        "Livedata",
+        "Lottie",
+        "Motion Layout",
+        "JUnit",
+        "Material Components",
+        "Jetpack Libraries",
+        "NDK",
+        "Flutter",
+        "Unity",
+        "Gradle",
+        "Glide",
+        "Detekt",
+        "Websockets",
+        "Javadoc",
+        "JNI",
+        "Llama",
+        "OLlama",
+        "Langchain",
+        "Langgraph",
+        "HuggingFace Transformers",
+        "Spring Boot Kotlin",
+        "Kotlin Multiplatform",
+        "Spotless"
+      ],
+      "mandatoryItems": [
+        "Android SDK",
+        "Jetpack Compose",
+        "Retrofit",
+        "Coroutines",
+        "Dagger",
+        "Hilt",
+        "Websockets",
+        "Material",
+        "SQLite",
+        "Components",
+        "Gradle",
+        "Lottie",
+        "Room"
+      ],
+      "min": 8,
+      "max": 15
+    },
+    {
+      "title": "Tools",
+      "items": [
+        "Leak Canary",
+        "AS Profiler",
+        "Git",
+        "Debugger",
+        "Stetho",
+        "Postman",
+        "GPU Profiler",
+        "Network Profiler",
+        "Charles",
+        "Benchmark Library",
+        "Lint",
+        "Github Actions",
+        "Jira",
+        "Trello",
+        "Confluence",
+        "Bitbucket",
+        "Groq",
+        "Llama"
+      ],
+      "mandatoryItems": [
+        "Git",
+        "AS Profiler",
+        "Github Actions"
+      ],
+      "min": 6,
+      "max": 10
+    },
+    {
+      "title": "Database",
+      "items": [
+        "MySQL",
+        "SQLite",
+        "MongoDB",
+        "Firebase Realtime",
+        "Firebase Firestore",
+        "Weaviate-Vector DB"
+      ],
+      "mandatoryItems": [
+        "SQLite",
+        "Firebase Firestore"
+      ],
+      "min": 4,
+      "max": 6
+    }
+  ],
   "companies": [
     {
       "id": "slice",
@@ -493,5 +523,6 @@
       "dates": "Aug 2007 - Apr 2011",
       "location": "Thalassery, Kerala, India"
     }
-  ]
+  ],
+  "version": "2.0"
 }

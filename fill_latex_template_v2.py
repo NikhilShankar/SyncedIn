@@ -162,11 +162,6 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
         skills_content = trimmed_resume_data.get('skills', {})
         if skills_content:
             skills_title = sections['skills'].get('title', 'Technical Skills')
-            categories = sections['skills'].get('categories',
-                ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"])
-
-            # Skill keys in order (must match the categories array order)
-            skill_keys = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
 
             skills_section = f"%----------{skills_title.upper()}----------\n"
             skills_section += f"\\section{{{skills_title}}}\n"
@@ -175,16 +170,36 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
 
             # Build skill category lines dynamically
             skill_lines = []
-            for i, key in enumerate(skill_keys):
-                if i < len(categories):  # Only if we have a title for this category
-                    value = skills_content.get(key, [])
-                    if value:  # Only add if there's content
-                        if isinstance(value, list):
-                            value_str = ", ".join(value)
+
+            # Handle both v1.0 (dict) and v2.0 (array) formats
+            if isinstance(skills_content, list):
+                # New v2.0 format - array of skill sections
+                for skill_section_data in skills_content:
+                    title = skill_section_data.get('title', '')
+                    items = skill_section_data.get('items', [])
+
+                    if items:  # Only add if there's content
+                        if isinstance(items, list):
+                            value_str = ", ".join(items)
                         else:
-                            value_str = value
-                        category_title = categories[i]
-                        skill_lines.append(f"     \\textbf{{{category_title}: }}{{{escape_latex_special_chars(value_str)}}}")
+                            value_str = items
+                        skill_lines.append(f"     \\textbf{{{title}: }}{{{escape_latex_special_chars(value_str)}}}")
+            else:
+                # Old v1.0 format - dict with hardcoded categories (backward compatibility)
+                categories = sections['skills'].get('categories',
+                    ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"])
+                skill_keys = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
+
+                for i, key in enumerate(skill_keys):
+                    if i < len(categories):  # Only if we have a title for this category
+                        value = skills_content.get(key, [])
+                        if value:  # Only add if there's content
+                            if isinstance(value, list):
+                                value_str = ", ".join(value)
+                            else:
+                                value_str = value
+                            category_title = categories[i]
+                            skill_lines.append(f"     \\textbf{{{category_title}: }}{{{escape_latex_special_chars(value_str)}}}")
 
             # Join with \\ and add final line
             skills_section += " \\\\\n".join(skill_lines)

@@ -430,41 +430,129 @@ def show():
     elif section == "Skills":
         st.header("🛠️ Technical Skills")
 
-        skills = data.get('skills', {})
+        skills = data.get('skills', [])
 
-        skill_categories = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
+        # Handle both v1.0 (dict) and v2.0 (array) formats
+        if isinstance(skills, dict):
+            st.warning("⚠️ Your resume JSON is using the old v1.0 format. Please migrate to v2.0 format for flexible skill management.")
 
-        for category in skill_categories:
-            st.markdown(f"### {category.title()}")
-
-            # Get current skills
-            current_skills = skills.get(category, [])
-            mandatory_skills = skills.get(f"{category}_mandatory", [])
-
-            col1, col2 = st.columns([3, 1])
-
+            col1, col2 = st.columns([2, 1])
             with col1:
-                # Text area for skills (comma-separated)
-                skills_text = st.text_area(
-                    f"{category.title()} (comma-separated)",
-                    value=", ".join(current_skills),
-                    height=100,
-                    key=f"skills_{category}"
-                )
-                # Update skills
-                skills[category] = [s.strip() for s in skills_text.split(',') if s.strip()]
+                st.info("💡 **What will migration do?**\n\n- Convert hardcoded categories to flexible sections\n- Add min/max constraints per section\n- Create a backup file: `resume_data_enhanced_v1.0_backup.json`")
 
             with col2:
-                # Mandatory skills
-                mandatory_text = st.text_area(
-                    "Mandatory",
-                    value=", ".join(mandatory_skills),
-                    height=100,
-                    key=f"mandatory_{category}"
-                )
-                skills[f"{category}_mandatory"] = [s.strip() for s in mandatory_text.split(',') if s.strip()]
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("🔄 Migrate to v2.0", type="primary", use_container_width=True):
+                    with st.spinner("Migrating..."):
+                        from migrate_resume_json import migrate_with_backup
 
-        if st.button("💾 Update Skills", type="primary"):
+                        success, message, backup_path = migrate_with_backup(resume_data_path, '_v1.0_backup')
+
+                        if success:
+                            st.success(f"✅ {message}")
+                            if backup_path:
+                                st.info(f"📁 Backup saved: `{backup_path}`")
+
+                            # Reload data
+                            with open(resume_data_path, 'r') as f:
+                                st.session_state.resume_data = json.load(f)
+                            st.session_state.modified = False
+                            st.success("✅ Data reloaded. Refresh the page to see changes!")
+                            st.rerun()
+                        else:
+                            st.error(f"❌ {message}")
+            st.stop()
+
+        # New v2.0 format - array of skill sections
+        if not skills:
+            st.info("No skill sections found. Add your first skill section below.")
+
+        # Display existing skill sections
+        for idx, skill_section in enumerate(skills):
+            with st.expander(f"📁 {skill_section.get('title', f'Section {idx+1}')}", expanded=True):
+                col1, col2 = st.columns([2, 1])
+
+                with col1:
+                    # Title
+                    title = st.text_input(
+                        "Section Title",
+                        value=skill_section.get('title', ''),
+                        key=f"skill_title_{idx}"
+                    )
+                    skills[idx]['title'] = title
+
+                    # Items
+                    items_text = st.text_area(
+                        "Items (comma-separated)",
+                        value=", ".join(skill_section.get('items', [])),
+                        height=100,
+                        key=f"skill_items_{idx}"
+                    )
+                    skills[idx]['items'] = [s.strip() for s in items_text.split(',') if s.strip()]
+
+                with col2:
+                    # Min/Max
+                    min_val = st.number_input(
+                        "Min",
+                        min_value=0,
+                        value=skill_section.get('min', 5),
+                        key=f"skill_min_{idx}"
+                    )
+                    skills[idx]['min'] = min_val
+
+                    max_val = st.number_input(
+                        "Max",
+                        min_value=min_val,
+                        value=skill_section.get('max', 10),
+                        key=f"skill_max_{idx}"
+                    )
+                    skills[idx]['max'] = max_val
+
+                    # Mandatory items
+                    mandatory_text = st.text_area(
+                        "Mandatory Items",
+                        value=", ".join(skill_section.get('mandatoryItems', [])),
+                        height=100,
+                        key=f"skill_mandatory_{idx}"
+                    )
+                    skills[idx]['mandatoryItems'] = [s.strip() for s in mandatory_text.split(',') if s.strip()]
+
+                # Remove button
+                if st.button(f"🗑️ Remove {title}", key=f"remove_skill_{idx}"):
+                    skills.pop(idx)
+                    st.session_state.modified = True
+                    st.rerun()
+
+        # Add new skill section
+        st.markdown("---")
+        with st.expander("➕ Add New Skill Section"):
+            new_title = st.text_input("Section Title", key="new_skill_title")
+            new_items = st.text_area("Items (comma-separated)", key="new_skill_items")
+            col1, col2 = st.columns(2)
+            with col1:
+                new_min = st.number_input("Min", min_value=0, value=5, key="new_skill_min")
+            with col2:
+                new_max = st.number_input("Max", min_value=new_min, value=10, key="new_skill_max")
+            new_mandatory = st.text_area("Mandatory Items (comma-separated)", key="new_skill_mandatory")
+
+            if st.button("➕ Add Skill Section", type="primary"):
+                if new_title and new_items:
+                    new_section = {
+                        "title": new_title,
+                        "items": [s.strip() for s in new_items.split(',') if s.strip()],
+                        "mandatoryItems": [s.strip() for s in new_mandatory.split(',') if s.strip()],
+                        "min": new_min,
+                        "max": new_max
+                    }
+                    skills.append(new_section)
+                    data['skills'] = skills
+                    st.session_state.modified = True
+                    st.success(f"✅ Added new skill section: {new_title}")
+                    st.rerun()
+                else:
+                    st.error("Please provide a title and at least one item.")
+
+        if st.button("💾 Update Skills", type="primary", key="update_skills_btn"):
             data['skills'] = skills
             st.session_state.modified = True
             st.success("✅ Skills updated! Remember to save changes.")
