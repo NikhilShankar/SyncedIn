@@ -133,7 +133,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
             experience_title = sections['experience'].get('title', 'Professional Experience')
             experience_section = f"%----------{experience_title.upper()}----------\n"
             experience_section += f"\\section{{{experience_title}}}\n"
-            experience_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+            experience_section += "\\begin{itemize}[leftmargin=0.0in, label={}]\n"
 
             for company in companies:
                 title = escape_latex_special_chars(company['position'])
@@ -144,7 +144,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
                 experience_section += f"\\resumeSubheading\n"
                 experience_section += f"  {{{title}}}{{{dates}}}\n"
                 experience_section += f"  {{{company_name}}}{{{location}}}\n"
-                experience_section += f"\\begin{{itemize}}[leftmargin=0.3in]\n"
+                experience_section += f"\\begin{{itemize}}[leftmargin=0.15in]\n"
 
                 for bullet in company.get('bullets', []):
                     escaped_bullet = escape_latex_special_chars(bullet['text'])
@@ -170,7 +170,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
 
             skills_section = f"%----------{skills_title.upper()}----------\n"
             skills_section += f"\\section{{{skills_title}}}\n"
-            skills_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+            skills_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
             skills_section += "    \\normalfont{\\item{\n"
 
             # Build skill category lines dynamically
@@ -200,7 +200,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
             education_title = sections['education'].get('title', 'Education')
             education_section = f"%----------{education_title.upper()}----------\n"
             education_section += f"\\section{{{education_title}}}\n"
-            education_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+            education_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
 
             for edu in education_data:
                 degree = escape_latex_special_chars(edu['degree'])
@@ -229,7 +229,7 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
             projects_title = sections['projects'].get('title', 'Personal Projects')
             projects_section = f"%----------{projects_title.upper()}----------\n"
             projects_section += f"\\section{{{projects_title}}}\n"
-            projects_section += "\\begin{itemize}[leftmargin=0.15in, label={}]\n"
+            projects_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
 
             for project in projects:
                 projects_section += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
