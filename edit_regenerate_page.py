@@ -69,6 +69,53 @@ def show():
         st.info("⚠️ No PDF available. Make changes below and click 'Generate New PDF'")
 
     st.markdown("---")
+    st.markdown("### 🎛️ Section Visibility Controls")
+    st.markdown("**Control which sections appear in your resume**")
+
+    # Initialize section visibility in session state if not present
+    if 'section_visibility' not in st.session_state:
+        st.session_state.section_visibility = {
+            'summary': True,
+            'skills': True,
+            'experience': True,
+            'projects': True,
+            'education': True
+        }
+
+    # Main section checkboxes
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.session_state.section_visibility['summary'] = st.checkbox(
+            "📋 Summary",
+            value=st.session_state.section_visibility.get('summary', True),
+            key="visibility_summary"
+        )
+    with col2:
+        st.session_state.section_visibility['skills'] = st.checkbox(
+            "🛠️ Skills",
+            value=st.session_state.section_visibility.get('skills', True),
+            key="visibility_skills"
+        )
+    with col3:
+        st.session_state.section_visibility['experience'] = st.checkbox(
+            "💼 Experience",
+            value=st.session_state.section_visibility.get('experience', True),
+            key="visibility_experience"
+        )
+    with col4:
+        st.session_state.section_visibility['projects'] = st.checkbox(
+            "🚀 Projects",
+            value=st.session_state.section_visibility.get('projects', True),
+            key="visibility_projects"
+        )
+    with col5:
+        st.session_state.section_visibility['education'] = st.checkbox(
+            "🎓 Education",
+            value=st.session_state.section_visibility.get('education', True),
+            key="visibility_education"
+        )
+
+    st.markdown("---")
     st.markdown("### 📝 Edit Resume Content")
     st.markdown("**Click on chips to select/unselect content. Selected items are highlighted in blue.**")
 
@@ -76,192 +123,214 @@ def show():
     data = st.session_state.trimmed_data
 
     # --- SECTION 1: Professional Summary ---
-    st.markdown("---")
-    st.markdown("#### 📋 Professional Summary")
+    if st.session_state.section_visibility.get('summary', True):
+        st.markdown("---")
+        st.markdown("#### 📋 Professional Summary")
 
-    # Get current summary - handle both list and dict formats
-    current_summaries = data.get('summaries', [])
+        # Get current summary - handle both list and dict formats
+        current_summaries = data.get('summaries', [])
 
-    # Convert to consistent format
-    if isinstance(current_summaries, list):
-        # List format: [{"id": "summary_1", "label": "Option 1", "text": "..."}]
-        current_summary_obj = current_summaries[0] if current_summaries else None
-        current_summary_type = current_summary_obj.get('label') if current_summary_obj else None
-        current_summary_text = current_summary_obj.get('text', '') if current_summary_obj else ''
-    else:
-        # Dict format: {"general": "text...", "fullstack": "text..."}
-        summary_keys = list(current_summaries.keys()) if current_summaries else []
-        current_summary_type = summary_keys[0] if summary_keys else None
-        current_summary_text = current_summaries.get(current_summary_type, '') if current_summary_type else ''
+        # Convert to consistent format
+        if isinstance(current_summaries, list):
+            # List format: [{"id": "summary_1", "label": "Option 1", "text": "..."}]
+            current_summary_obj = current_summaries[0] if current_summaries else None
+            current_summary_type = current_summary_obj.get('label') if current_summary_obj else None
+            current_summary_text = current_summary_obj.get('text', '') if current_summary_obj else ''
+        else:
+            # Dict format: {"general": "text...", "fullstack": "text..."}
+            summary_keys = list(current_summaries.keys()) if current_summaries else []
+            current_summary_type = summary_keys[0] if summary_keys else None
+            current_summary_text = current_summaries.get(current_summary_type, '') if current_summary_type else ''
 
-    # Get all summary types from full data - handle both formats
-    full_summaries = full_resume_data.get('summaries', [])
+        # Get all summary types from full data - handle both formats
+        full_summaries = full_resume_data.get('summaries', [])
 
-    if isinstance(full_summaries, list):
-        # List format
-        summary_types = [s.get('label', f"Option {i+1}") for i, s in enumerate(full_summaries)]
-        full_summaries_dict = {s.get('label'): s.get('text') for s in full_summaries}
-    else:
-        # Dict format
-        summary_types = list(full_summaries.keys())
-        full_summaries_dict = full_summaries
+        if isinstance(full_summaries, list):
+            # List format
+            summary_types = [s.get('label', f"Option {i+1}") for i, s in enumerate(full_summaries)]
+            full_summaries_dict = {s.get('label'): s.get('text') for s in full_summaries}
+        else:
+            # Dict format
+            summary_types = list(full_summaries.keys())
+            full_summaries_dict = full_summaries
 
-    # Render summary chips
-    st.markdown("**Select Summary Type:**")
-    if summary_types:
-        cols = st.columns(len(summary_types))
+        # Render summary chips
+        st.markdown("**Select Summary Type:**")
+        if summary_types:
+            cols = st.columns(len(summary_types))
 
-        for idx, sum_type in enumerate(summary_types):
-            with cols[idx]:
-                is_selected = (sum_type == current_summary_type)
-                button_type = "primary" if is_selected else "secondary"
-                label = f"✓ {sum_type}" if is_selected else sum_type
+            for idx, sum_type in enumerate(summary_types):
+                with cols[idx]:
+                    is_selected = (sum_type == current_summary_type)
+                    button_type = "primary" if is_selected else "secondary"
+                    label = f"✓ {sum_type}" if is_selected else sum_type
 
-                if st.button(label, key=f"summary_{sum_type}", type=button_type, use_container_width=True):
-                    # Replace with new summary from full data
-                    # Store in list format (the new standard)
-                    matching_summary = next((s for s in (full_summaries if isinstance(full_summaries, list) else []) if s.get('label') == sum_type), None)
+                    if st.button(label, key=f"summary_{sum_type}", type=button_type, use_container_width=True):
+                        # Replace with new summary from full data
+                        # Store in list format (the new standard)
+                        matching_summary = next((s for s in (full_summaries if isinstance(full_summaries, list) else []) if s.get('label') == sum_type), None)
 
-                    if matching_summary:
-                        st.session_state.trimmed_data['summaries'] = [matching_summary]
-                    else:
-                        # Fallback to dict format
-                        st.session_state.trimmed_data['summaries'] = [{
-                            "id": f"summary_{idx}",
-                            "label": sum_type,
-                            "text": full_summaries_dict.get(sum_type, '')
-                        }]
-                    st.rerun()
-    else:
-        st.info("No summary options available in resume data")
+                        if matching_summary:
+                            st.session_state.trimmed_data['summaries'] = [matching_summary]
+                        else:
+                            # Fallback to dict format
+                            st.session_state.trimmed_data['summaries'] = [{
+                                "id": f"summary_{idx}",
+                                "label": sum_type,
+                                "text": full_summaries_dict.get(sum_type, '')
+                            }]
+                        st.rerun()
+        else:
+            st.info("No summary options available in resume data")
 
-    # Editable summary text area - user can edit any selected summary
-    if current_summary_type and current_summary_text:
-        st.markdown("**Edit Selected Summary:**")
-        edited_summary = st.text_area(
-            f"Editing: {current_summary_type.title()} Summary",
-            value=current_summary_text,
-            height=150,
-            key="editable_summary"
-        )
+        # Editable summary text area - user can edit any selected summary
+        if current_summary_type and current_summary_text:
+            st.markdown("**Edit Selected Summary:**")
+            edited_summary = st.text_area(
+                f"Editing: {current_summary_type.title()} Summary",
+                value=current_summary_text,
+                height=150,
+                key="editable_summary"
+            )
 
-        # Update the summary in session state if it changed
-        if edited_summary != current_summary_text:
-            st.session_state.trimmed_data['summaries'][current_summary_type] = edited_summary
+            # Update the summary in session state if it changed
+            if edited_summary != current_summary_text:
+                st.session_state.trimmed_data['summaries'][current_summary_type] = edited_summary
 
     # --- SECTION 2: Technical Skills ---
-    st.markdown("---")
-    st.markdown("#### 🛠️ Technical Skills")
+    if st.session_state.section_visibility.get('skills', True):
+        st.markdown("---")
+        st.markdown("#### 🛠️ Technical Skills")
 
-    skills = data.get('skills', [])
-    full_skills = full_resume_data.get('skills', [])
+        skills = data.get('skills', [])
+        full_skills = full_resume_data.get('skills', [])
 
-    # Handle both v1.0 (dict) and v2.0 (array) formats
-    if isinstance(skills, dict) or isinstance(full_skills, dict):
-        st.warning("⚠️ Resume data is using the old v1.0 format. Please migrate to v2.0 format.")
+        # Handle both v1.0 (dict) and v2.0 (array) formats
+        if isinstance(skills, dict) or isinstance(full_skills, dict):
+            st.warning("⚠️ Resume data is using the old v1.0 format. Please migrate to v2.0 format.")
 
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.info("💡 **What will migration do?**\n\n- Convert hardcoded categories to flexible sections\n- Add min/max constraints per section\n- Create a backup file with `_v1.0_backup` suffix")
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                st.info("💡 **What will migration do?**\n\n- Convert hardcoded categories to flexible sections\n- Add min/max constraints per section\n- Create a backup file with `_v1.0_backup` suffix")
 
-        with col2:
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("🔄 Migrate to v2.0", type="primary", use_container_width=True):
-                with st.spinner("Migrating..."):
-                    from migrate_resume_json import migrate_with_backup
+            with col2:
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("🔄 Migrate to v2.0", type="primary", use_container_width=True):
+                    with st.spinner("Migrating..."):
+                        from migrate_resume_json import migrate_with_backup
 
-                    success, message, backup_path = migrate_with_backup(resume_data_path, '_v1.0_backup')
+                        success, message, backup_path = migrate_with_backup(resume_data_path, '_v1.0_backup')
 
-                    if success:
-                        st.success(f"✅ {message}")
-                        if backup_path:
-                            st.info(f"📁 Backup saved: `{backup_path}`")
+                        if success:
+                            st.success(f"✅ {message}")
+                            if backup_path:
+                                st.info(f"📁 Backup saved: `{backup_path}`")
 
-                        # Reload full resume data
-                        with open(resume_data_path, 'r', encoding='utf-8') as f:
-                            full_resume_data = json.load(f)
+                            # Reload full resume data
+                            with open(resume_data_path, 'r', encoding='utf-8') as f:
+                                full_resume_data = json.load(f)
 
-                        st.success("✅ Migration complete! Please go back to Generate page and regenerate the resume.")
-                        st.rerun()
-                    else:
-                        st.error(f"❌ {message}")
-        st.stop()
-
-    # New v2.0 format - array of skill sections
-    for idx, skill_section in enumerate(skills):
-        section_title = skill_section.get('title', f'Section {idx+1}')
-        st.markdown(f"**{section_title}:**")
-
-        # Get current selected items
-        current_skills = skill_section.get('items', [])
-
-        # Get full list from original data
-        full_section = full_skills[idx] if idx < len(full_skills) else skill_section
-        full_category_skills = full_section.get('items', [])
-
-        # Combine and deduplicate
-        all_skills = []
-        seen = set()
-
-        # Add selected first
-        for skill in current_skills:
-            if skill not in seen:
-                all_skills.append(skill)
-                seen.add(skill)
-
-        # Add unselected
-        for skill in full_category_skills:
-            if skill not in seen:
-                all_skills.append(skill)
-                seen.add(skill)
-
-        # Render chips in rows of 6
-        num_cols = 6
-        for i in range(0, len(all_skills), num_cols):
-            cols = st.columns(num_cols)
-            for j, skill in enumerate(all_skills[i:i+num_cols]):
-                with cols[j]:
-                    is_selected = skill in current_skills
-                    button_type = "primary" if is_selected else "secondary"
-                    label = f"✓ {skill}" if is_selected else skill
-
-                    if st.button(label, key=f"skill_{idx}_{i}_{j}_{skill.replace(' ', '_')[:20]}",
-                               type=button_type, use_container_width=True):
-                        # Toggle selection
-                        if is_selected:
-                            st.session_state.trimmed_data['skills'][idx]['items'].remove(skill)
+                            st.success("✅ Migration complete! Please go back to Generate page and regenerate the resume.")
+                            st.rerun()
                         else:
+                            st.error(f"❌ {message}")
+            st.stop()
+
+        # Initialize skill section visibility if not present
+        if 'skill_section_visibility' not in st.session_state:
+            st.session_state.skill_section_visibility = {f"skill_{idx}": True for idx in range(len(skills))}
+
+        # Skill section visibility checkboxes
+        st.markdown("**Select which skill sections to include:**")
+        skill_visibility_cols = st.columns(min(len(skills), 6))
+        for idx, skill_section in enumerate(skills):
+            section_title = skill_section.get('title', f'Section {idx+1}')
+            with skill_visibility_cols[idx % 6]:
+                st.session_state.skill_section_visibility[f"skill_{idx}"] = st.checkbox(
+                    section_title,
+                    value=st.session_state.skill_section_visibility.get(f"skill_{idx}", True),
+                    key=f"visibility_skill_section_{idx}"
+                )
+
+        # New v2.0 format - array of skill sections
+        for idx, skill_section in enumerate(skills):
+            # Only show section if it's enabled
+            if not st.session_state.skill_section_visibility.get(f"skill_{idx}", True):
+                continue
+
+            section_title = skill_section.get('title', f'Section {idx+1}')
+            st.markdown(f"**{section_title}:**")
+
+            # Get current selected items
+            current_skills = skill_section.get('items', [])
+
+            # Get full list from original data
+            full_section = full_skills[idx] if idx < len(full_skills) else skill_section
+            full_category_skills = full_section.get('items', [])
+
+            # Combine and deduplicate
+            all_skills = []
+            seen = set()
+
+            # Add selected first
+            for skill in current_skills:
+                if skill not in seen:
+                    all_skills.append(skill)
+                    seen.add(skill)
+
+            # Add unselected
+            for skill in full_category_skills:
+                if skill not in seen:
+                    all_skills.append(skill)
+                    seen.add(skill)
+
+            # Render chips in rows of 6
+            num_cols = 6
+            for i in range(0, len(all_skills), num_cols):
+                cols = st.columns(num_cols)
+                for j, skill in enumerate(all_skills[i:i+num_cols]):
+                    with cols[j]:
+                        is_selected = skill in current_skills
+                        button_type = "primary" if is_selected else "secondary"
+                        label = f"✓ {skill}" if is_selected else skill
+
+                        if st.button(label, key=f"skill_{idx}_{i}_{j}_{skill.replace(' ', '_')[:20]}",
+                                   type=button_type, use_container_width=True):
+                            # Toggle selection
+                            if is_selected:
+                                st.session_state.trimmed_data['skills'][idx]['items'].remove(skill)
+                            else:
+                                if 'items' not in st.session_state.trimmed_data['skills'][idx]:
+                                    st.session_state.trimmed_data['skills'][idx]['items'] = []
+                                st.session_state.trimmed_data['skills'][idx]['items'].append(skill)
+                            st.rerun()
+
+            # Custom skills button
+            if st.button(f"✏️ Add Custom {section_title}", key=f"custom_skill_{idx}_btn"):
+                st.session_state[f'show_custom_skill_{idx}'] = True
+
+            if st.session_state.get(f'show_custom_skill_{idx}', False):
+                custom_input = st.text_input(
+                    f"Add custom {section_title} (comma-separated)",
+                    key=f"custom_skill_{idx}_input",
+                    placeholder="e.g., React, Vue.js, Angular"
+                )
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("✅ Add", key=f"save_custom_skill_{idx}"):
+                        if custom_input.strip():
+                            new_items = [s.strip() for s in custom_input.split(',') if s.strip()]
                             if 'items' not in st.session_state.trimmed_data['skills'][idx]:
                                 st.session_state.trimmed_data['skills'][idx]['items'] = []
-                            st.session_state.trimmed_data['skills'][idx]['items'].append(skill)
-                        st.rerun()
-
-        # Custom skills button
-        if st.button(f"✏️ Add Custom {section_title}", key=f"custom_skill_{idx}_btn"):
-            st.session_state[f'show_custom_skill_{idx}'] = True
-
-        if st.session_state.get(f'show_custom_skill_{idx}', False):
-            custom_input = st.text_input(
-                f"Add custom {section_title} (comma-separated)",
-                key=f"custom_skill_{idx}_input",
-                placeholder="e.g., React, Vue.js, Angular"
-            )
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("✅ Add", key=f"save_custom_skill_{idx}"):
-                    if custom_input.strip():
-                        new_items = [s.strip() for s in custom_input.split(',') if s.strip()]
-                        if 'items' not in st.session_state.trimmed_data['skills'][idx]:
-                            st.session_state.trimmed_data['skills'][idx]['items'] = []
-                        st.session_state.trimmed_data['skills'][idx]['items'].extend(new_items)
-                        # Deduplicate
-                        st.session_state.trimmed_data['skills'][idx]['items'] = list(set(st.session_state.trimmed_data['skills'][idx]['items']))
+                            st.session_state.trimmed_data['skills'][idx]['items'].extend(new_items)
+                            # Deduplicate
+                            st.session_state.trimmed_data['skills'][idx]['items'] = list(set(st.session_state.trimmed_data['skills'][idx]['items']))
+                            st.session_state[f'show_custom_skill_{idx}'] = False
+                            st.rerun()
+                with col2:
+                    if st.button("❌ Cancel", key=f"cancel_custom_skill_{idx}"):
                         st.session_state[f'show_custom_skill_{idx}'] = False
                         st.rerun()
-            with col2:
-                if st.button("❌ Cancel", key=f"cancel_custom_skill_{idx}"):
-                    st.session_state[f'show_custom_skill_{idx}'] = False
-                    st.rerun()
 
     # --- SECTION 3: Professional Experience ---
     st.markdown("---")
@@ -609,11 +678,40 @@ def show():
                 output_dir = Path("./generated")
                 output_dir.mkdir(exist_ok=True)
 
+                # Filter data based on visibility settings
+                filtered_data = st.session_state.trimmed_data.copy()
+
+                # Remove sections that are not visible
+                if not st.session_state.section_visibility.get('summary', True):
+                    filtered_data.pop('summaries', None)
+
+                if not st.session_state.section_visibility.get('experience', True):
+                    filtered_data.pop('companies', None)
+
+                if not st.session_state.section_visibility.get('projects', True):
+                    filtered_data.pop('projects', None)
+
+                if not st.session_state.section_visibility.get('education', True):
+                    filtered_data.pop('education', None)
+
+                # Filter skill subsections based on visibility
+                if st.session_state.section_visibility.get('skills', True) and 'skills' in filtered_data:
+                    if isinstance(filtered_data['skills'], list):
+                        # Filter out unchecked skill subsections
+                        visible_skills = []
+                        for idx, skill_section in enumerate(filtered_data['skills']):
+                            if st.session_state.skill_section_visibility.get(f"skill_{idx}", True):
+                                visible_skills.append(skill_section)
+                        filtered_data['skills'] = visible_skills
+                else:
+                    # If skills section itself is unchecked, remove it
+                    filtered_data.pop('skills', None)
+
                 # Fill LaTeX template
                 filled_tex = output_dir / "resume_filled.tex"
                 fill_latex_template(
                     str(template_path),
-                    st.session_state.trimmed_data,
+                    filtered_data,
                     str(filled_tex)
                 )
 
