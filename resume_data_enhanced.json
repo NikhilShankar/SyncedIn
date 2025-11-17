@@ -1,4 +1,22 @@
 {
+  "version": "2.0",
+  "section_order": [
+    "summary",
+    "skills",
+    "experience",
+    "projects",
+    "Publications",
+    "Certifications",
+    "education"
+  ],
+  "font_settings": {
+    "family": "Lato",
+    "sizes": {
+      "title": 12,
+      "subtitle": 10,
+      "content": 9
+    }
+  },
   "config": {
     "page_limit": 2,
     "bullets": {
@@ -524,5 +542,47 @@
       "location": "Thalassery, Kerala, India"
     }
   ],
-  "version": "2.0"
+  "Publications": {
+    "title": "Publications",
+    "subtitle": "Book Released on Amazon",
+    "content": "Authored and self-published 'Mastering Android Development', a comprehensive guide covering modern Android development patterns, Clean Architecture, and Jetpack Compose. The book has received positive reviews from developers worldwide and serves as a practical resource for building production-grade Android applications.",
+    "rewrite": true,
+    "mandatory": false,
+    "type": "custom_section_template_1"
+  },
+  "Certifications": {
+    "title": "Certifications & Awards",
+    "rewrite": true,
+    "mandatory": false,
+    "type": "custom_section_template_3",
+    "sections": [
+      {
+        "title": "AWS Certified Solutions Architect",
+        "subtitle": "Jan 2024",
+        "content": [
+          "Achieved certification with 920/1000 score, demonstrating expertise in designing distributed systems",
+          "Specialized in serverless architectures using Lambda, API Gateway, and DynamoDB",
+          "Hands-on experience with 20+ AWS services including EC2, S3, RDS, and CloudFormation"
+        ]
+      },
+      {
+        "title": "Google Cloud Professional Developer",
+        "subtitle": "Aug 2023",
+        "content": [
+          "Certified in building scalable applications on Google Cloud Platform",
+          "Proficient in Cloud Functions, Cloud Run, and Kubernetes Engine",
+          "Implemented CI/CD pipelines using Cloud Build and Artifact Registry"
+        ]
+      },
+      {
+        "title": "Best Innovation Award",
+        "subtitle": "Slice, 2023",
+        "content": [
+          "Received company-wide innovation award for architecting UPI payment system",
+          "Recognized for reducing system latency by 20% and improving user experience",
+          "Led cross-functional team to deliver project 2 weeks ahead of schedule"
+        ]
+      }
+    ]
+  }
 }

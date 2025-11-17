@@ -165,6 +165,95 @@ class ResumeSelector:
     "database": ["exact database names"]
   }'''
 
+    def _get_custom_sections(self, full_resume_data):
+        """Identify custom sections (not standard sections)."""
+        standard_sections = ['summary', 'summaries', 'experience', 'companies', 'skills', 'projects', 'education',
+                            'static_info', 'config', 'display_settings', 'version', 'section_order', 'font_settings']
+
+        custom_sections = {}
+        for key, value in full_resume_data.items():
+            if key not in standard_sections and isinstance(value, dict) and 'type' in value:
+                custom_sections[key] = value
+
+        return custom_sections
+
+    def _build_custom_sections_constraints(self, full_resume_data, should_rewrite_selected):
+        """Build constraints text for custom sections."""
+        custom_sections = self._get_custom_sections(full_resume_data)
+
+        if not custom_sections:
+            return ""
+
+        constraints = []
+        for section_key, section_data in custom_sections.items():
+            title = section_data.get('title', section_key)
+            mandatory = section_data.get('mandatory', False)
+            rewrite = section_data.get('rewrite', False)
+
+            constraint_text = f"   - **{title}**:"
+            if mandatory:
+                constraint_text += " MANDATORY - must be included"
+            else:
+                constraint_text += " OPTIONAL - include if relevant to job description"
+
+            if rewrite and should_rewrite_selected:
+                constraint_text += " | REWRITE content to align with job requirements (keep structure, only improve wording)"
+            else:
+                constraint_text += " | Use EXACT content from original data"
+
+            constraints.append(constraint_text)
+
+        if constraints:
+            return "\n5. **Custom Sections:**\n" + "\n".join(constraints) + "\n"
+        return ""
+
+    def _build_custom_sections_json_schema(self, full_resume_data, should_rewrite_selected):
+        """Build JSON schema for custom sections."""
+        custom_sections = self._get_custom_sections(full_resume_data)
+
+        if not custom_sections:
+            return ""
+
+        schemas = []
+        for section_key, section_data in custom_sections.items():
+            template_type = section_data.get('type', '')
+            title = section_data.get('title', section_key)
+            rewrite = section_data.get('rewrite', False)
+
+            if template_type == 'custom_section_template_1':
+                # Simple template
+                content_instruction = "rephrased content using ONLY original information" if (rewrite and should_rewrite_selected) else "exact content"
+                schemas.append(f'''  "{section_key}": {{
+    "title": "{title}",
+    "subtitle": "exact subtitle",
+    "content": "{content_instruction}",
+    "rewrite": {str(rewrite).lower()},
+    "mandatory": {str(section_data.get('mandatory', False)).lower()},
+    "type": "{template_type}"
+  }}''')
+
+            elif template_type in ['custom_section_template_2', 'custom_section_template_3']:
+                # Subsections template
+                content_instruction = "rephrased content/bullets using ONLY original information" if (rewrite and should_rewrite_selected) else "exact content/bullets"
+                schemas.append(f'''  "{section_key}": {{
+    "title": "{title}",
+    "rewrite": {str(rewrite).lower()},
+    "mandatory": {str(section_data.get('mandatory', False)).lower()},
+    "type": "{template_type}",
+    "sections": [
+      {{
+        "title": "exact subsection title",
+        "subtitle": "exact subsection subtitle",
+        "content": {'"[' if template_type == 'custom_section_template_3' else '"'}"{content_instruction}"{']' if template_type == 'custom_section_template_3' else ''}
+      }},
+      ...copy all subsections from original
+    ]
+  }}''')
+
+        if schemas:
+            return ",\n" + ",\n".join(schemas)
+        return ""
+
     def _build_prompt(self, full_resume_data, job_description, should_rewrite_selected=False):
         """Build the prompt for Claude with instructions and data."""
 

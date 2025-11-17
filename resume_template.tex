@@ -62,6 +62,72 @@
     \end{tabular*}\vspace{-5pt}
 }
 
+% ---------- CUSTOM SECTION TEMPLATES ----------
+
+% Custom Section Template 1: Simple (like Professional Summary)
+% Parameters: #1=Title, #2=Subtitle (optional), #3=Content
+\newcommand{\customSectionTemplateOne}[3]{
+  \section{#1}
+  \ifx&#2&% Check if subtitle is empty
+    % No subtitle, just content
+    \normalfont{#3}
+  \else
+    % Has subtitle
+    \textit{\normalfont{#2}} \\
+    \vspace{4pt}
+    \normalfont{#3}
+  \fi
+}
+
+% Custom Section Template 2: With Subsections (no bullets)
+% Parameters: #1=Section Title
+% Content added dynamically via items
+\newcommand{\customSectionTemplateTwo}[1]{
+  \section{#1}
+  \begin{itemize}[leftmargin=0.05in, label={}]
+}
+% Helper for subsection items (title, subtitle, content)
+\newcommand{\customSubsectionItemTwo}[3]{
+  \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \normalfont #2 \\
+    \end{tabular*}
+    \vspace{2pt}
+    \normalfont{#3}
+    \vspace{6pt}
+}
+\newcommand{\customSectionTemplateTwoEnd}{
+  \end{itemize}
+}
+
+% Custom Section Template 3: With Subsections and Bullet Points
+% Parameters: #1=Section Title
+\newcommand{\customSectionTemplateThree}[1]{
+  \section{#1}
+  \begin{itemize}[leftmargin=0.05in, label={}]
+}
+% Helper for subsection with bullets (title, subtitle)
+\newcommand{\customSubsectionItemThree}[2]{
+  \item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \normalfont #2 \\
+    \end{tabular*}
+    \vspace{-4pt}
+    \begin{itemize}[leftmargin=0.15in, label=$\cdot$]
+}
+% Helper to add bullet point
+\newcommand{\customBulletItem}[1]{
+      \resumeItem{#1}
+}
+% Helper to end subsection with bullets
+\newcommand{\customSubsectionItemThreeEnd}{
+    \end{itemize}
+    \vspace{2pt}
+}
+\newcommand{\customSectionTemplateThreeEnd}{
+  \end{itemize}
+}
+
 \begin{document}
 
 %----------HEADER----------

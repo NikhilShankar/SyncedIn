@@ -23,6 +23,237 @@ def escape_latex_special_chars(text):
     return text
 
 
+# ============= SECTION BUILDER FUNCTIONS =============
+
+def build_summary_section(trimmed_resume_data, sections):
+    """Build Professional Summary section"""
+    summary_section = ""
+    if sections.get('summary', {}).get('enabled', True):
+        summaries = trimmed_resume_data.get('summaries', [])
+        if summaries:
+            summary_title = sections['summary'].get('title', 'Professional Summary')
+            # Handle both array (new format) and dict (old format) for backward compatibility
+            if isinstance(summaries, list):
+                summary_text = summaries[0].get('text', '') if summaries else ''
+            else:
+                # Backward compatibility with old dict format
+                summary_text = list(summaries.values())[0] if summaries else ''
+
+            if summary_text:
+                summary_section = f"%----------{summary_title.upper()}----------\n"
+                summary_section += f"\\section{{{summary_title}}}\n"
+                summary_section += escape_latex_special_chars(summary_text) + "\n"
+
+    return summary_section
+
+
+def build_experience_section(trimmed_resume_data, sections):
+    """Build Professional Experience section"""
+    experience_section = ""
+    if sections.get('experience', {}).get('enabled', True):
+        companies = trimmed_resume_data.get('companies', [])
+        if companies:
+            experience_title = sections['experience'].get('title', 'Professional Experience')
+            experience_section = f"%----------{experience_title.upper()}----------\n"
+            experience_section += f"\\section{{{experience_title}}}\n"
+            experience_section += "\\begin{itemize}[leftmargin=0.0in, label={}]\n"
+
+            for company in companies:
+                title = escape_latex_special_chars(company['position'])
+                dates = escape_latex_special_chars(company['dates'])
+                company_name = escape_latex_special_chars(company['name'])
+                location = escape_latex_special_chars(company['location'])
+
+                experience_section += f"\\resumeSubheading\n"
+                experience_section += f"  {{{title}}}{{{dates}}}\n"
+                experience_section += f"  {{{company_name}}}{{{location}}}\n"
+                experience_section += f"\\begin{{itemize}}[leftmargin=0.15in]\n"
+
+                for bullet in company.get('bullets', []):
+                    escaped_bullet = escape_latex_special_chars(bullet['text'])
+                    experience_section += f"  \\resumeItem{{{escaped_bullet}}}\n"
+
+                experience_section += f"\\end{{itemize}}\n\n"
+
+            experience_section += "\\end{itemize}\n"
+
+    return experience_section
+
+
+def build_skills_section(trimmed_resume_data, sections):
+    """Build Technical Skills section"""
+    skills_section = ""
+    if sections.get('skills', {}).get('enabled', True):
+        skills_content = trimmed_resume_data.get('skills', {})
+        if skills_content:
+            skills_title = sections['skills'].get('title', 'Technical Skills')
+
+            skills_section = f"%----------{skills_title.upper()}----------\n"
+            skills_section += f"\\section{{{skills_title}}}\n"
+            skills_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+            skills_section += "    \\normalfont{\\item{\n"
+
+            # Build skill category lines dynamically
+            skill_lines = []
+
+            # Handle both v1.0 (dict) and v2.0 (array) formats
+            if isinstance(skills_content, list):
+                # New v2.0 format - array of skill sections
+                for skill_section_data in skills_content:
+                    title = skill_section_data.get('title', '')
+                    items = skill_section_data.get('items', [])
+
+                    if items:  # Only add if there's content
+                        if isinstance(items, list):
+                            value_str = ", ".join(items)
+                        else:
+                            value_str = items
+                        skill_lines.append(f"     \\textbf{{{title}: }}{{{escape_latex_special_chars(value_str)}}}")
+            else:
+                # Old v1.0 format - dict with hardcoded categories (backward compatibility)
+                categories = sections['skills'].get('categories',
+                    ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"])
+                skill_keys = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
+
+                for i, key in enumerate(skill_keys):
+                    if i < len(categories):  # Only if we have a title for this category
+                        value = skills_content.get(key, [])
+                        if value:  # Only add if there's content
+                            if isinstance(value, list):
+                                value_str = ", ".join(value)
+                            else:
+                                value_str = value
+                            category_title = categories[i]
+                            skill_lines.append(f"     \\textbf{{{category_title}: }}{{{escape_latex_special_chars(value_str)}}}")
+
+            # Join with \\ and add final line
+            skills_section += " \\\\\n".join(skill_lines)
+            skills_section += "\n    }}\n\\end{itemize}\n"
+
+    return skills_section
+
+
+def build_projects_section(trimmed_resume_data, sections):
+    """Build Personal Projects section"""
+    projects_section = ""
+    if sections.get('projects', {}).get('enabled', True):
+        projects = trimmed_resume_data.get('projects', [])
+        if projects:
+            projects_title = sections['projects'].get('title', 'Personal Projects')
+            projects_section = f"%----------{projects_title.upper()}----------\n"
+            projects_section += f"\\section{{{projects_title}}}\n"
+            projects_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+
+            for project in projects:
+                projects_section += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
+
+                details_line = f"          \\textit{{{escape_latex_special_chars(project['tech'])}}} | {escape_latex_special_chars(project['date'])}"
+                if project.get('link'):
+                    details_line += f" | \\href{{{project['link']}}}{{Link}}"
+
+                projects_section += details_line + "\n\n"
+
+            projects_section += "\\end{itemize}\n"
+
+    return projects_section
+
+
+def build_education_section(trimmed_resume_data, sections):
+    """Build Education section"""
+    education_section = ""
+    if sections.get('education', {}).get('enabled', True):
+        education_data = trimmed_resume_data.get('education', [])
+        if education_data:
+            education_title = sections['education'].get('title', 'Education')
+            education_section = f"%----------{education_title.upper()}----------\n"
+            education_section += f"\\section{{{education_title}}}\n"
+            education_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+
+            for edu in education_data:
+                degree = escape_latex_special_chars(edu['degree'])
+                dates = escape_latex_special_chars(edu['dates'])
+                course = escape_latex_special_chars(edu['course'])
+                institution = escape_latex_special_chars(edu['institution'])
+                location = escape_latex_special_chars(edu['location'])
+                empty = ""
+                education_section += f"\\resumeThreeLineSubheading\n"
+                education_section += f"  {{{degree}}}\n"
+                education_section += f"  {{{dates}}}\n"
+                education_section += f"  {{{course}}}\n"
+                education_section += f"  {{{location}}}\n"
+                education_section += f"  {{{institution}}}\n"
+                education_section += f"  {{{empty}}}\n\n"
+
+            education_section += "\\end{itemize}\n"
+
+    return education_section
+
+
+def build_custom_section(section_key, section_data, trimmed_resume_data):
+    """
+    Build custom section based on template type
+
+    Template types:
+    - custom_section_template_1: Simple (title, optional subtitle, content)
+    - custom_section_template_2: Subsections (no bullets)
+    - custom_section_template_3: Subsections with bullets
+    """
+    custom_section = ""
+
+    if not section_data:
+        return custom_section
+
+    template_type = section_data.get('type', '')
+    title = escape_latex_special_chars(section_data.get('title', section_key))
+    subtitle = escape_latex_special_chars(section_data.get('subtitle', ''))
+
+    # Template 1: Simple section (like summary)
+    if template_type == 'custom_section_template_1':
+        content = escape_latex_special_chars(section_data.get('content', ''))
+        custom_section = f"%----------{title.upper()}----------\n"
+        custom_section += f"\\customSectionTemplateOne{{{title}}}{{{subtitle}}}{{{content}}}\n"
+
+    # Template 2: Subsections without bullets
+    elif template_type == 'custom_section_template_2':
+        sections_list = section_data.get('sections', [])
+        if sections_list:
+            custom_section = f"%----------{title.upper()}----------\n"
+            custom_section += f"\\customSectionTemplateTwo{{{title}}}\n"
+
+            for subsection in sections_list:
+                sub_title = escape_latex_special_chars(subsection.get('title', ''))
+                sub_subtitle = escape_latex_special_chars(subsection.get('subtitle', ''))
+                sub_content = escape_latex_special_chars(subsection.get('content', ''))
+                custom_section += f"  \\customSubsectionItemTwo{{{sub_title}}}{{{sub_subtitle}}}{{{sub_content}}}\n"
+
+            custom_section += "\\customSectionTemplateTwoEnd\n"
+
+    # Template 3: Subsections with bullets
+    elif template_type == 'custom_section_template_3':
+        sections_list = section_data.get('sections', [])
+        if sections_list:
+            custom_section = f"%----------{title.upper()}----------\n"
+            custom_section += f"\\customSectionTemplateThree{{{title}}}\n"
+
+            for subsection in sections_list:
+                sub_title = escape_latex_special_chars(subsection.get('title', ''))
+                sub_subtitle = escape_latex_special_chars(subsection.get('subtitle', ''))
+                custom_section += f"  \\customSubsectionItemThree{{{sub_title}}}{{{sub_subtitle}}}\n"
+
+                # Add bullet points
+                content = subsection.get('content', [])
+                if isinstance(content, list):
+                    for bullet in content:
+                        escaped_bullet = escape_latex_special_chars(bullet)
+                        custom_section += f"    \\customBulletItem{{{escaped_bullet}}}\n"
+
+                custom_section += "  \\customSubsectionItemThreeEnd\n"
+
+            custom_section += "\\customSectionTemplateThreeEnd\n"
+
+    return custom_section
+
+
 def fill_latex_template(template_path, trimmed_resume_data, output_path):
     """
     Fill LaTeX template with trimmed resume data from LLM.
@@ -105,159 +336,53 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
         template = template.replace('{{PORTFOLIO}}', static.get('portfolio', ''))
         template = template.replace('{{LINKS}}', '')
 
-    # --- 2. Build Summary Section ---
-    summary_section = ""
-    if sections.get('summary', {}).get('enabled', True):
-        summaries = trimmed_resume_data.get('summaries', [])
-        if summaries:
-            summary_title = sections['summary'].get('title', 'Professional Summary')
-            # Handle both array (new format) and dict (old format) for backward compatibility
-            if isinstance(summaries, list):
-                summary_text = summaries[0].get('text', '') if summaries else ''
-            else:
-                # Backward compatibility with old dict format
-                summary_text = list(summaries.values())[0] if summaries else ''
+    # --- 2. Build sections dynamically based on section_order ---
 
-            if summary_text:
-                summary_section = f"%----------{summary_title.upper()}----------\n"
-                summary_section += f"\\section{{{summary_title}}}\n"
-                summary_section += escape_latex_special_chars(summary_text)
+    # Get section_order from data, or use default order
+    default_section_order = ['summary', 'skills', 'experience', 'projects', 'education']
+    section_order = trimmed_resume_data.get('section_order', default_section_order)
 
-    template = template.replace('{{SUMMARY_SECTION}}', summary_section)
+    # Standard section names
+    standard_sections = ['summary', 'experience', 'skills', 'projects', 'education']
 
-    # --- 3. Build Experience Section ---
-    experience_section = ""
-    if sections.get('experience', {}).get('enabled', True):
-        companies = trimmed_resume_data.get('companies', [])
-        if companies:
-            experience_title = sections['experience'].get('title', 'Professional Experience')
-            experience_section = f"%----------{experience_title.upper()}----------\n"
-            experience_section += f"\\section{{{experience_title}}}\n"
-            experience_section += "\\begin{itemize}[leftmargin=0.0in, label={}]\n"
+    # Map section names to their builder functions
+    section_builders = {
+        'summary': build_summary_section,
+        'experience': build_experience_section,
+        'skills': build_skills_section,
+        'projects': build_projects_section,
+        'education': build_education_section
+    }
 
-            for company in companies:
-                title = escape_latex_special_chars(company['position'])
-                dates = escape_latex_special_chars(company['dates'])
-                company_name = escape_latex_special_chars(company['name'])
-                location = escape_latex_special_chars(company['location'])
+    # Build sections in the order specified
+    all_sections_latex = []
 
-                experience_section += f"\\resumeSubheading\n"
-                experience_section += f"  {{{title}}}{{{dates}}}\n"
-                experience_section += f"  {{{company_name}}}{{{location}}}\n"
-                experience_section += f"\\begin{{itemize}}[leftmargin=0.15in]\n"
+    for section_key in section_order:
+        if section_key in standard_sections:
+            # Standard section - use builder function
+            section_latex = section_builders[section_key](trimmed_resume_data, sections)
+            if section_latex:
+                all_sections_latex.append(section_latex)
+        else:
+            # Custom section - check if it exists in data
+            if section_key in trimmed_resume_data:
+                section_data = trimmed_resume_data[section_key]
+                section_latex = build_custom_section(section_key, section_data, trimmed_resume_data)
+                if section_latex:
+                    all_sections_latex.append(section_latex)
 
-                for bullet in company.get('bullets', []):
-                    escaped_bullet = escape_latex_special_chars(bullet['text'])
-                    experience_section += f"  \\resumeItem{{{escaped_bullet}}}\n"
+    # Join all sections with newlines
+    all_sections_content = "\n".join(all_sections_latex)
 
-                experience_section += f"\\end{{itemize}}\n\n"
+    # Replace old placeholders with empty strings (for backward compatibility)
+    template = template.replace('{{SUMMARY_SECTION}}', '')
+    template = template.replace('{{EXPERIENCE_SECTION}}', '')
+    template = template.replace('{{SKILLS_SECTION}}', '')
+    template = template.replace('{{EDUCATION_SECTION}}', '')
+    template = template.replace('{{PROJECTS_SECTION}}', '')
 
-            experience_section += "\\end{itemize}\n"
-
-    template = template.replace('{{EXPERIENCE_SECTION}}', experience_section)
-
-    # --- 4. Build Skills Section with Dynamic Categories ---
-    skills_section = ""
-    if sections.get('skills', {}).get('enabled', True):
-        skills_content = trimmed_resume_data.get('skills', {})
-        if skills_content:
-            skills_title = sections['skills'].get('title', 'Technical Skills')
-
-            skills_section = f"%----------{skills_title.upper()}----------\n"
-            skills_section += f"\\section{{{skills_title}}}\n"
-            skills_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
-            skills_section += "    \\normalfont{\\item{\n"
-
-            # Build skill category lines dynamically
-            skill_lines = []
-
-            # Handle both v1.0 (dict) and v2.0 (array) formats
-            if isinstance(skills_content, list):
-                # New v2.0 format - array of skill sections
-                for skill_section_data in skills_content:
-                    title = skill_section_data.get('title', '')
-                    items = skill_section_data.get('items', [])
-
-                    if items:  # Only add if there's content
-                        if isinstance(items, list):
-                            value_str = ", ".join(items)
-                        else:
-                            value_str = items
-                        skill_lines.append(f"     \\textbf{{{title}: }}{{{escape_latex_special_chars(value_str)}}}")
-            else:
-                # Old v1.0 format - dict with hardcoded categories (backward compatibility)
-                categories = sections['skills'].get('categories',
-                    ["Languages", "Platforms", "Skills", "Frameworks", "Tools", "Database"])
-                skill_keys = ['languages', 'platforms', 'skills', 'frameworks', 'tools', 'database']
-
-                for i, key in enumerate(skill_keys):
-                    if i < len(categories):  # Only if we have a title for this category
-                        value = skills_content.get(key, [])
-                        if value:  # Only add if there's content
-                            if isinstance(value, list):
-                                value_str = ", ".join(value)
-                            else:
-                                value_str = value
-                            category_title = categories[i]
-                            skill_lines.append(f"     \\textbf{{{category_title}: }}{{{escape_latex_special_chars(value_str)}}}")
-
-            # Join with \\ and add final line
-            skills_section += " \\\\\n".join(skill_lines)
-            skills_section += "\n    }}\n\\end{itemize}\n"
-
-    template = template.replace('{{SKILLS_SECTION}}', skills_section)
-
-    # --- 5. Build Education Section ---
-    education_section = ""
-    if sections.get('education', {}).get('enabled', True):
-        education_data = trimmed_resume_data.get('education', [])
-        if education_data:
-            education_title = sections['education'].get('title', 'Education')
-            education_section = f"%----------{education_title.upper()}----------\n"
-            education_section += f"\\section{{{education_title}}}\n"
-            education_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
-
-            for edu in education_data:
-                degree = escape_latex_special_chars(edu['degree'])
-                dates = escape_latex_special_chars(edu['dates'])
-                course = escape_latex_special_chars(edu['course'])
-                institution = escape_latex_special_chars(edu['institution'])
-                location = escape_latex_special_chars(edu['location'])
-                empty = ""
-                education_section += f"\\resumeThreeLineSubheading\n"
-                education_section += f"  {{{degree}}}\n"
-                education_section += f"  {{{dates}}}\n"
-                education_section += f"  {{{course}}}\n"
-                education_section += f"  {{{location}}}\n"
-                education_section += f"  {{{institution}}}\n"
-                education_section += f"  {{{empty}}}\n\n"
-
-            education_section += "\\end{itemize}\n"
-
-    template = template.replace('{{EDUCATION_SECTION}}', education_section)
-
-    # --- 6. Build Projects Section ---
-    projects_section = ""
-    if sections.get('projects', {}).get('enabled', True):
-        projects = trimmed_resume_data.get('projects', [])
-        if projects:
-            projects_title = sections['projects'].get('title', 'Personal Projects')
-            projects_section = f"%----------{projects_title.upper()}----------\n"
-            projects_section += f"\\section{{{projects_title}}}\n"
-            projects_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
-
-            for project in projects:
-                projects_section += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
-
-                details_line = f"          \\textit{{{escape_latex_special_chars(project['tech'])}}} | {escape_latex_special_chars(project['date'])}"
-                if project.get('link'):
-                    details_line += f" | \\href{{{project['link']}}}{{Link}}"
-
-                projects_section += details_line + "\n\n"
-
-            projects_section += "\\end{itemize}\n"
-
-    template = template.replace('{{PROJECTS_SECTION}}', projects_section)
+    # Insert all sections before \end{document}
+    template = template.replace('\\end{document}', all_sections_content + '\n\\end{document}')
 
     # Create output directory if it doesn't exist
     output_dir = os.path.dirname(output_path)
@@ -308,11 +433,10 @@ def compile_latex_to_pdf(tex_path, output_dir='./generated'):
 
 if __name__ == '__main__':
     """
-    Example usage with a MOCK trimmed JSON (simulating LLM output).
-    In production, this trimmed_resume_data would come from the LLM selector.
+    Example usage with resume data.
     """
 
-    # Load the FULL data from JSON (in production, LLM would receive this)
+    # Load the FULL data from JSON
     try:
         with open('resume_data_enhanced.json', 'r') as f:
             full_data = json.load(f)
@@ -323,140 +447,24 @@ if __name__ == '__main__':
         print("Error: 'resume_data_enhanced.json' is improperly formatted JSON.")
         exit()
 
-    # MOCK: Simulate LLM output - a trimmed version of the full JSON
-    # In production, this would be returned by llm_selector.py
-    trimmed_resume_data = {
-        "static_info": full_data["static_info"],
-        "summaries": [
-            full_data["summaries"][0]  # LLM selected first summary option
-        ],
-        "skills": {
-            # LLM trimmed skills based on job description
-            "languages": ["Kotlin", "Java", "Python", "Dart", "Golang"],
-            "platforms": ["Android Studio", "Firebase", "AWS", "IntelliJ", "VSCode"],
-            "skills": [
-                "Modular code using MVVM MVI and Clean Architecture",
-                "Multi Module App Design",
-                "Complex UI Development using Compose",
-                "UI Optimizations",
-                "Design patterns",
-                "Code Reviews and detecting code smells and bugs",
-                "Performance profiling",
-                "Mentoring Junior Developers"
-            ],
-            "frameworks": [
-                "Android SDK", "Jetpack Compose", "Retrofit", "OkHttp",
-                "Dagger", "Hilt", "Room", "Coroutines", "Livedata"
-            ],
-            "tools": ["Git", "AS Profiler", "Debugger", "Postman", "Leak Canary", "Github Actions"],
-            "database": ["SQLite", "Firebase Firestore", "MongoDB", "Room"]
-        },
-        "companies": [
-            {
-                "id": "slice",
-                "name": "Slice, Fintech",
-                "position": "Software Development Engineer 3 - Android",
-                "dates": "Nov 2022 - Feb 2024",
-                "location": "Bengaluru, India",
-                "bullets": [
-                    {
-                        "text": "Designed core architecture for the UPI payment system using Clean Architecture and MVI, serving 1.5 million users per day as of Feb 2024."},
-                    {
-                        "text": "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app."},
-                    {
-                        "text": "Optimized CI/CD settings in AWS Codebuild and Gradle files to reduce build times by 40% and cost by a huge 70%"},
-                    {"text": "Adopted unit tests for modules under the UPI project, achieving 90% code coverage."},
-                    {
-                        "text": "Designed a library to create statistical graphs in Jetpack Compose seamlessly and refactored code to achieve minimal re-compositions."}
-                ]
-            },
-            {
-                "id": "slice2",
-                "name": "Slice, Fintech",
-                "position": "Software Development Engineer 2 - Android",
-                "dates": "Nov 2020 - Nov 2022",
-                "location": "Bengaluru, India",
-                "bullets": [
-                    {
-                        "text": "Ensured quality of deliverables by mentoring Junior developers, doing extensive code reviews and walkthroughs and by helping to adhere to best coding practices."},
-                    {
-                        "text": "Designed and created architecture for web socket library for real-time chat and achieved seamless integration between backend API's and complex UI elements of chat feature."},
-                    {
-                        "text": "Analyzed, profiled, and reduced network latency by ~18-20%, resulting in faster transaction completion time across the fintech app."},
-                    {"text": "Adopted unit tests for modules under the UPI project, achieving 90% code coverage."}
-                ]
-            },
-            {
-                "id": "greedygame",
-                "name": "GreedyGame, Ad-Tech",
-                "position": "Fullstack Developer iOS, Backend",
-                "dates": "Sep 2015 - Oct 2019",
-                "location": "Bengaluru, India",
-                "bullets": [
-                    {
-                        "text": "Initiated development of the iOS plugin from scratch as a personal project by learning swift and iOS app development which was later incorporated as a separate product line in the organization attracting iOS app and game development companies into the business."},
-                    {
-                        "text": "Refactored the monolithic Backend written in NodeJS to microservices based architecture using Golang, which helped streamline the development and reduced overall development time, time for debugging issues, and time for deployment."},
-                    {
-                        "text": "Integrated Jenkins CI/CD pipeline for automating artifact creation thereby reducing previous manual effort of 2-3 hours"},
-                    {
-                        "text": "Developed integration documentation website in Angular JS thereby reducing integration related queries"}
-                ]
-            },
-            {
-                "id": "greedygame2",
-                "name": "GreedyGame, Ad-Tech",
-                "position": "Senior Developer | Android",
-                "dates": "Sep 2015 - Apr 2018",
-                "location": "Bengaluru, India",
-                "bullets": [
-                    {
-                        "text": "Developed core Android library, which other developers can integrate to show native ads, focusing on optimization and performance thereby reducing memory consumption and library conflicts"},
-                    {
-                        "text": "Refactored a single monolithic codebase into multiple modules following facade, adapter, mediator design patterns, and more, applying good coding standards, reducing development time and cross team conflicts."},
-                    {
-                        "text": "Integrated Admob, Mopub and Facebook Ads and wrote wrappers for Unity Game Engine and Cocos-2dx using JNI, C#, and C++, facilitating the Android library to inject ads into games and apps thereby increasing compatible dev environment by 4x"},
-                    {
-                        "text": "Created a Unity game engine plugin that reduced developers' initial integration time from 1-2 days to less than 10 minutes."}
-                ]
-            }
-        ],
-        "projects": [
-            {
-                "id": "aingel",
-                "name": "AIngel",
-                "tech": "Android, AI, LLMs, Machine Learning",
-                "description": "An android app to nurture relationships created using AI powered bots with LLMs and Machine Learning algorithms to find meaningful matches. This is currently part of Venture Tech Lab CEC Conestoga College.",
-                "date": "Jan 2025",
-                "link": ""
-            },
-            {
-                "id": "fanfight",
-                "name": "Fan Fight Club",
-                "tech": "Android, Python Scripts",
-                "description": "An android repository that can be used to generate multiple apps by using python scripts. Fan Fight Club Messi vs Ronaldo was one such app out of around 10 that were created which garnered 2 lakh installs with more than 200 ratings averaged at 4.7/5 stars",
-                "date": "2019",
-                "link": "https://bitbucket.org/nikhilshankarcs/fanfightclub"
-            }
-        ],
-        "education": full_data["education"]
-    }
+    # Use the full data (for testing section ordering)
+    trimmed_resume_data = full_data
 
-    # Fill template with the trimmed data
-    print("Filling LaTeX template with trimmed resume data...")
+    # Fill template with the data
+    print("Filling LaTeX template with resume data...")
     filled_tex = fill_latex_template(
         template_path='resume_template.tex',
         trimmed_resume_data=trimmed_resume_data,
         output_path='./generated/resume_filled.tex'
     )
 
-    print(f"✅ LaTeX file generated: {filled_tex}")
+    print(f"[OK] LaTeX file generated: {filled_tex}")
 
     # Try to compile to PDF (optional)
     print("\nAttempting PDF compilation...")
     pdf_path = compile_latex_to_pdf(filled_tex, output_dir='./generated')
 
     if pdf_path:
-        print(f"✅ Resume PDF generated: {pdf_path}")
+        print(f"[OK] Resume PDF generated: {pdf_path}")
     else:
-        print("❌ PDF compilation failed - please check the LaTeX log for errors.")
+        print("[ERROR] PDF compilation failed - please check the LaTeX log for errors.")
