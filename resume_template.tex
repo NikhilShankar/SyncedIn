@@ -1,5 +1,5 @@
 % Resume Template for TeXWorks - DYNAMIC VERSION
-\documentclass[11pt,a4paper]{article}
+\documentclass[{{CONTENT_FONTSIZE}}pt,a4paper]{article}
 
 \raggedright
 % Packages
@@ -17,12 +17,12 @@
 % Use the full font name (case-sensitive) or the filename.
 
 
-\setmainfont{Lato}
+\setmainfont{{{FONT_FAMILY}}}
 [
     % Use font family name instead of filenames for better cross-platform compatibility
-    BoldFont = Lato Bold,
-    ItalicFont = Lato Italic,
-    BoldItalicFont = Lato Bold Italic,
+    BoldFont = {{FONT_FAMILY}} Bold,
+    ItalicFont = {{FONT_FAMILY}} Italic,
+    BoldItalicFont = {{FONT_FAMILY}} Bold Italic,
 ]
 
 
@@ -36,8 +36,8 @@
     urlcolor=blue,
 }
 
-% Section formatting
-\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+% Section formatting (title size)
+\titleformat{\section}{\fontsize{{{TITLE_FONTSIZE}}}{{{TITLE_FONTSIZE_LEADING}}}\bfseries}{}{0em}{}[\titlerule]
 \titlespacing{\section}{0pt}{16pt}{10pt}
 
 % Remove page numbers

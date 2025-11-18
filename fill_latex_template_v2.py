@@ -299,6 +299,33 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     template = template.replace('{{PHONE}}', escape_latex_special_chars(static['phone']))
     template = template.replace('{{EMAIL}}', escape_latex_special_chars(static['email']))
 
+    # --- 1.1 Fill font settings ---
+    # Default font settings if not provided
+    default_font_settings = {
+        "family": "Lato",
+        "sizes": {
+            "title": 12,
+            "subtitle": 10,
+            "content": 11
+        }
+    }
+
+    font_settings = trimmed_resume_data.get('font_settings', default_font_settings)
+    font_family = font_settings.get('family', 'Lato')
+    sizes = font_settings.get('sizes', default_font_settings['sizes'])
+
+    title_size = sizes.get('title', 12)
+    subtitle_size = sizes.get('subtitle', 10)
+    content_size = sizes.get('content', 11)
+
+    # Calculate leading (line spacing) - typically 1.2x font size
+    title_leading = int(title_size * 1.2)
+
+    template = template.replace('{{FONT_FAMILY}}', font_family)
+    template = template.replace('{{CONTENT_FONTSIZE}}', str(content_size))
+    template = template.replace('{{TITLE_FONTSIZE}}', str(title_size))
+    template = template.replace('{{TITLE_FONTSIZE_LEADING}}', str(title_leading))
+
     # Handle links - support both old format (linkedin, leetcode fields) and new format (links array)
     if 'links' in static and isinstance(static['links'], list):
         # New format: links array

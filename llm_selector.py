@@ -357,7 +357,7 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
 4. **Summary:**
    - Select EXACTLY ONE summary from the available options that best matches the job description
 
-**STEP-BY-STEP SELECTION PROCESS:**
+{self._build_custom_sections_constraints(full_resume_data, should_rewrite_selected)}**STEP-BY-STEP SELECTION PROCESS:**
 
 Step 1: For EACH company, select bullets in this order:
    a) Start with most relevant bullets
@@ -436,7 +436,7 @@ Return ONLY a valid JSON object with this structure:
   ],
   "display_settings": {{
     ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
-  }}
+  }}{self._build_custom_sections_json_schema(full_resume_data, should_rewrite_selected)}
 }}
 
 **CRITICAL: Copy static_info, education, and display_settings EXACTLY from the resume data with ALL fields. Do NOT omit anything. If display_settings is present in the input, it MUST be included in the output.**
@@ -529,7 +529,7 @@ These are NON-NEGOTIABLE requirements. Your response is INVALID if ANY constrain
 4. **Summary:**
    - Select EXACTLY ONE summary from the available options that best matches the job description
 
-**STEP-BY-STEP SELECTION PROCESS:**
+{self._build_custom_sections_constraints(full_resume_data, should_rewrite_selected)}**STEP-BY-STEP SELECTION PROCESS:**
 
 Step 1: For EACH company, select bullets in this order:
    a) Start with most relevant bullets
@@ -608,7 +608,7 @@ Return ONLY a valid JSON object with this structure:
   ],
   "display_settings": {{
     ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
-  }}
+  }}{self._build_custom_sections_json_schema(full_resume_data, should_rewrite_selected)}
 }}
 
 **CRITICAL: Copy static_info, education, and display_settings EXACTLY from the resume data with ALL fields. Do NOT omit anything. If display_settings is present in the input, it MUST be included in the output.**
