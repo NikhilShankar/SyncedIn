@@ -549,9 +549,9 @@
   "font_settings": {
     "family": "Lato",
     "sizes": {
-      "title": 16,
-      "subtitle": 10,
-      "content": 11
+      "title": 12,
+      "subtitle": 11,
+      "content": 10
     }
   },
   "Awards": {
@@ -602,6 +602,19 @@
           "ok ok",
           "not okay"
         ]
+      }
+    ]
+  },
+  "Discussions": {
+    "title": "Discussions",
+    "rewrite": true,
+    "mandatory": false,
+    "type": "custom_section_template_2",
+    "sections": [
+      {
+        "title": "Some how",
+        "subtitle": "Awesome",
+        "content": "No need"
       }
     ]
   }

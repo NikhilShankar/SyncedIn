@@ -951,6 +951,7 @@ def show():
                         )
                         # Convert display name back to template key
                         section_data['type'] = list(TEMPLATE_OPTIONS.keys())[list(TEMPLATE_OPTIONS.values()).index(template_display)]
+                        template_type = section_data['type']  # Store for use below
 
                     with col2:
                         # Mandatory checkbox

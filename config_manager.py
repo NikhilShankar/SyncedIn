@@ -47,18 +47,18 @@ GLOBAL_CONFIG_FILE = "global_config.json"
 RESUME_DATA_FILE = "resume_data_enhanced.json"
 TRACKING_FILE = "applications_tracking.json"
 
-# Available Claude models
+# Available Claude models (full API model names)
 AVAILABLE_MODELS = [
-    "claude-sonnet-4-5",
-    "claude-sonnet-3-5",
-    "claude-opus-4",
-    "claude-haiku-3-5"
+    "claude-sonnet-4-20250514",
+    "claude-3-5-sonnet-20241022",
+    "claude-opus-4-20250514",
+    "claude-3-5-haiku-20241022"
 ]
 
 DEFAULT_GLOBAL_CONFIG = {
     "anthropic_api_key": "",
     "available_models": AVAILABLE_MODELS,
-    "selected_model": "claude-sonnet-4-5",
+    "selected_model": "claude-sonnet-4-20250514",
     "users": [],
     "current_user": None,
     "created_at": datetime.now().isoformat(),
@@ -145,7 +145,7 @@ def get_api_key() -> str:
 def get_selected_model() -> str:
     """Get the selected model"""
     config = load_global_config()
-    return config.get('selected_model', 'claude-sonnet-4-5')
+    return config.get('selected_model', 'claude-sonnet-4-20250514')
 
 
 def update_api_key(api_key: str):
@@ -335,7 +335,7 @@ def switch_user(username: str) -> bool:
     return True
 
 
-def initialize_first_user(username: str, api_key: str, model: str = "claude-sonnet-4-5"):
+def initialize_first_user(username: str, api_key: str, model: str = "claude-sonnet-4-20250514"):
     """Initialize the system with the first user during setup"""
     # Sanitize username
     username = username.strip().replace(' ', '_')
