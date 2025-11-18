@@ -538,13 +538,13 @@
   "version": "2.0",
   "section_order": [
     "summary",
-    "Key Note Speaker",
     "experience",
+    "Key Note Speaker",
     "Awards",
     "skills",
     "education",
-    "projects",
-    "Publications & Books"
+    "Publications & Books",
+    "projects"
   ],
   "font_settings": {
     "family": "Lato",

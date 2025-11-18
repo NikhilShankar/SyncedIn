@@ -225,7 +225,8 @@ class ResumeSelector:
                 content_instruction = "rephrased content using ONLY original information" if (rewrite and should_rewrite_selected) else "exact content"
                 schemas.append(f'''  "{section_key}": {{
     "title": "{title}",
-    "subtitle": "exact subtitle",
+    "subtitle": "exact subtitle (left-aligned below title, optional)",
+    "subtitle_right": "exact subtitle_right (right-aligned, optional)",
     "content": "{content_instruction}",
     "rewrite": {str(rewrite).lower()},
     "mandatory": {str(section_data.get('mandatory', False)).lower()},
@@ -243,7 +244,8 @@ class ResumeSelector:
     "sections": [
       {{
         "title": "exact subsection title",
-        "subtitle": "exact subsection subtitle",
+        "subtitle": "exact subsection subtitle (left-aligned below title, optional)",
+        "subtitle_right": "exact subsection subtitle_right (right-aligned, optional)",
         "content": {'"[' if template_type == 'custom_section_template_3' else '"'}"{content_instruction}"{']' if template_type == 'custom_section_template_3' else ''}
       }},
       ...copy all subsections from original

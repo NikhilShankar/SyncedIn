@@ -209,9 +209,10 @@ def build_custom_section(section_key, section_data, trimmed_resume_data):
 
     # Template 1: Simple section (like summary)
     if template_type == 'custom_section_template_1':
+        subtitle_right = escape_latex_special_chars(section_data.get('subtitle_right', ''))
         content = escape_latex_special_chars(section_data.get('content', ''))
         custom_section = f"%----------{title.upper()}----------\n"
-        custom_section += f"\\customSectionTemplateOne{{{title}}}{{{subtitle}}}{{{content}}}\n"
+        custom_section += f"\\customSectionTemplateOne{{{title}}}{{{subtitle}}}{{{subtitle_right}}}{{{content}}}\n"
 
     # Template 2: Subsections without bullets
     elif template_type == 'custom_section_template_2':
@@ -223,8 +224,9 @@ def build_custom_section(section_key, section_data, trimmed_resume_data):
             for subsection in sections_list:
                 sub_title = escape_latex_special_chars(subsection.get('title', ''))
                 sub_subtitle = escape_latex_special_chars(subsection.get('subtitle', ''))
+                sub_subtitle_right = escape_latex_special_chars(subsection.get('subtitle_right', ''))
                 sub_content = escape_latex_special_chars(subsection.get('content', ''))
-                custom_section += f"  \\customSubsectionItemTwo{{{sub_title}}}{{{sub_subtitle}}}{{{sub_content}}}\n"
+                custom_section += f"  \\customSubsectionItemTwo{{{sub_title}}}{{{sub_subtitle}}}{{{sub_subtitle_right}}}{{{sub_content}}}\n"
 
             custom_section += "\\customSectionTemplateTwoEnd\n"
 
@@ -238,7 +240,8 @@ def build_custom_section(section_key, section_data, trimmed_resume_data):
             for subsection in sections_list:
                 sub_title = escape_latex_special_chars(subsection.get('title', ''))
                 sub_subtitle = escape_latex_special_chars(subsection.get('subtitle', ''))
-                custom_section += f"  \\customSubsectionItemThree{{{sub_title}}}{{{sub_subtitle}}}\n"
+                sub_subtitle_right = escape_latex_special_chars(subsection.get('subtitle_right', ''))
+                custom_section += f"  \\customSubsectionItemThree{{{sub_title}}}{{{sub_subtitle}}}{{{sub_subtitle_right}}}\n"
 
                 # Add bullet points
                 content = subsection.get('content', [])

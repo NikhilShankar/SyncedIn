@@ -5,6 +5,13 @@ from pathlib import Path
 from datetime import datetime
 import config_manager
 
+# Template type descriptions
+TEMPLATE_OPTIONS = {
+    "custom_section_template_1": "📄 Simple (Title + Subtitle + Content)",
+    "custom_section_template_2": "📑 Subsections (No Bullets)",
+    "custom_section_template_3": "📋 Subsections with Bullets"
+}
+
 
 def show():
     """Edit Resume Data Page"""
@@ -934,14 +941,16 @@ def show():
                         section_data['title'] = new_title
 
                         # Template type
-                        template_type = st.selectbox(
+                        current_type = section_data.get('type', 'custom_section_template_1')
+                        template_display = st.selectbox(
                             "Template Type",
-                            ["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"],
-                            index=["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"].index(section_data.get('type', 'custom_section_template_1')),
+                            options=list(TEMPLATE_OPTIONS.values()),
+                            index=list(TEMPLATE_OPTIONS.keys()).index(current_type),
                             key=f"custom_type_{section_key}",
-                            help="Template 1: Simple (title + content), Template 2: Subsections (no bullets), Template 3: Subsections with bullets"
+                            help="Choose the layout format for this custom section"
                         )
-                        section_data['type'] = template_type
+                        # Convert display name back to template key
+                        section_data['type'] = list(TEMPLATE_OPTIONS.keys())[list(TEMPLATE_OPTIONS.values()).index(template_display)]
 
                     with col2:
                         # Mandatory checkbox
@@ -1075,12 +1084,14 @@ def show():
                 key="new_custom_title"
             )
 
-            new_template_type = st.selectbox(
+            new_template_display = st.selectbox(
                 "Template Type",
-                ["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"],
+                options=list(TEMPLATE_OPTIONS.values()),
                 key="new_custom_type",
-                help="Template 1: Simple (title + content), Template 2: Subsections (no bullets), Template 3: Subsections with bullets"
+                help="Choose the layout format for this custom section"
             )
+            # Convert display name to template key
+            new_template_type = list(TEMPLATE_OPTIONS.keys())[list(TEMPLATE_OPTIONS.values()).index(new_template_display)]
 
             col1, col2 = st.columns(2)
             with col1:

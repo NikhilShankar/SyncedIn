@@ -65,18 +65,17 @@
 % ---------- CUSTOM SECTION TEMPLATES ----------
 
 % Custom Section Template 1: Simple (like Professional Summary)
-% Parameters: #1=Title, #2=Subtitle (optional), #3=Content
-\newcommand{\customSectionTemplateOne}[3]{
+% Parameters: #1=Title, #2=Subtitle (optional, left-aligned below title), #3=Subtitle_right (optional, right-aligned), #4=Content
+\newcommand{\customSectionTemplateOne}[4]{
   \section{#1}
   \ifx&#2&% Check if subtitle is empty
-    % No subtitle, just content
-    \normalfont{#3}
+    % No subtitle
   \else
-    % Has subtitle
+    % Has subtitle (left-aligned below title)
     \textit{\normalfont{#2}} \\
     \vspace{4pt}
-    \normalfont{#3}
   \fi
+  \normalfont{#4}
 }
 
 % Custom Section Template 2: With Subsections (no bullets)
@@ -86,14 +85,21 @@
   \section{#1}
   \begin{itemize}[leftmargin=0.05in, label={}]
 }
-% Helper for subsection items (title, subtitle, content)
-\newcommand{\customSubsectionItemTwo}[3]{
+% Helper for subsection items (title, subtitle, subtitle_right, content)
+% #1=Title (bold, left), #2=Subtitle (italic, below title, left), #3=Subtitle_right (normal, right-aligned), #4=Content
+\newcommand{\customSubsectionItemTwo}[4]{
   \item
     \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & \normalfont #2 \\
+      \textbf{#1} & \normalfont #3 \\
     \end{tabular*}
+    \ifx&#2&% Check if subtitle is empty
+      % No subtitle
+    \else
+      \vspace{2pt}
+      \textit{\normalfont{#2}} \\
+    \fi
     \vspace{2pt}
-    \normalfont{#3}
+    \normalfont{#4}
     \vspace{6pt}
 }
 \newcommand{\customSectionTemplateTwoEnd}{
@@ -106,12 +112,19 @@
   \section{#1}
   \begin{itemize}[leftmargin=0.05in, label={}]
 }
-% Helper for subsection with bullets (title, subtitle)
-\newcommand{\customSubsectionItemThree}[2]{
+% Helper for subsection with bullets (title, subtitle, subtitle_right)
+% #1=Title (bold, left), #2=Subtitle (italic, below title, left), #3=Subtitle_right (normal, right-aligned)
+\newcommand{\customSubsectionItemThree}[3]{
   \item
     \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & \normalfont #2 \\
+      \textbf{#1} & \normalfont #3 \\
     \end{tabular*}
+    \ifx&#2&% Check if subtitle is empty
+      % No subtitle
+    \else
+      \vspace{2pt}
+      \textit{\normalfont{#2}} \\
+    \fi
     \vspace{-4pt}
     \begin{itemize}[leftmargin=0.15in, label=$\cdot$]
 }
