@@ -115,7 +115,7 @@ def show():
         st.markdown("## 📑 Sections")
         section = st.radio(
             "Navigate to:",
-            ["Static Info", "Summaries", "Companies", "Skills", "Projects", "Education", "Configuration", "Display Settings"],
+            ["Static Info", "Summaries", "Companies", "Skills", "Projects", "Education", "Custom Sections", "Template Settings", "Configuration", "Display Settings"],
             label_visibility="collapsed"
         )
 
@@ -899,6 +899,379 @@ def show():
             data['display_settings'] = display_settings
             st.session_state.modified = True
             st.success("✅ Display settings updated! Remember to save changes.")
+
+    # Section: Custom Sections
+    elif section == "Custom Sections":
+        st.header("📄 Custom Resume Sections")
+        st.markdown("Create custom sections like Publications, Certifications, Awards, etc.")
+
+        # Get all custom sections (non-standard sections with 'type' field)
+        standard_sections = ['summary', 'summaries', 'experience', 'companies', 'skills', 'projects', 'education',
+                            'static_info', 'config', 'display_settings', 'version', 'section_order', 'font_settings']
+
+        custom_sections = {}
+        for key, value in data.items():
+            if key not in standard_sections and isinstance(value, dict) and 'type' in value:
+                custom_sections[key] = value
+
+        # Display existing custom sections
+        if custom_sections:
+            st.markdown("### Existing Custom Sections")
+
+            for section_key in list(custom_sections.keys()):
+                section_data = custom_sections[section_key]
+
+                with st.expander(f"📋 {section_data.get('title', section_key)}", expanded=False):
+                    col1, col2 = st.columns([3, 1])
+
+                    with col1:
+                        # Title
+                        new_title = st.text_input(
+                            "Section Title",
+                            value=section_data.get('title', ''),
+                            key=f"custom_title_{section_key}"
+                        )
+                        section_data['title'] = new_title
+
+                        # Template type
+                        template_type = st.selectbox(
+                            "Template Type",
+                            ["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"],
+                            index=["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"].index(section_data.get('type', 'custom_section_template_1')),
+                            key=f"custom_type_{section_key}",
+                            help="Template 1: Simple (title + content), Template 2: Subsections (no bullets), Template 3: Subsections with bullets"
+                        )
+                        section_data['type'] = template_type
+
+                    with col2:
+                        # Mandatory checkbox
+                        mandatory = st.checkbox(
+                            "Mandatory",
+                            value=section_data.get('mandatory', False),
+                            key=f"custom_mandatory_{section_key}",
+                            help="If checked, this section will always be included"
+                        )
+                        section_data['mandatory'] = mandatory
+
+                        # Rewrite checkbox
+                        rewrite = st.checkbox(
+                            "Allow Rewrite",
+                            value=section_data.get('rewrite', False),
+                            key=f"custom_rewrite_{section_key}",
+                            help="If checked, AI can rewrite this section's content to match job description"
+                        )
+                        section_data['rewrite'] = rewrite
+
+                    # Template 1: Simple section
+                    if template_type == 'custom_section_template_1':
+                        subtitle = st.text_input(
+                            "Subtitle (optional)",
+                            value=section_data.get('subtitle', ''),
+                            key=f"custom_subtitle_{section_key}"
+                        )
+                        section_data['subtitle'] = subtitle
+
+                        content = st.text_area(
+                            "Content",
+                            value=section_data.get('content', ''),
+                            height=150,
+                            key=f"custom_content_{section_key}"
+                        )
+                        section_data['content'] = content
+
+                    # Template 2 & 3: Subsections
+                    elif template_type in ['custom_section_template_2', 'custom_section_template_3']:
+                        st.markdown("#### Subsections")
+
+                        sections_list = section_data.get('sections', [])
+
+                        # Display existing subsections
+                        for sub_idx, subsection in enumerate(sections_list):
+                            st.markdown(f"**Subsection {sub_idx + 1}**")
+
+                            col1, col2 = st.columns([3, 1])
+                            with col1:
+                                subsection['title'] = st.text_input(
+                                    "Subsection Title",
+                                    value=subsection.get('title', ''),
+                                    key=f"custom_sub_title_{section_key}_{sub_idx}"
+                                )
+                                subsection['subtitle'] = st.text_input(
+                                    "Subsection Subtitle",
+                                    value=subsection.get('subtitle', ''),
+                                    key=f"custom_sub_subtitle_{section_key}_{sub_idx}"
+                                )
+
+                            with col2:
+                                st.markdown("<br>", unsafe_allow_html=True)
+                                if st.button("🗑️", key=f"custom_sub_delete_{section_key}_{sub_idx}", help="Delete subsection"):
+                                    sections_list.pop(sub_idx)
+                                    st.session_state.modified = True
+                                    st.rerun()
+
+                            # Content (text for template 2, bullets for template 3)
+                            if template_type == 'custom_section_template_2':
+                                subsection['content'] = st.text_area(
+                                    "Content",
+                                    value=subsection.get('content', ''),
+                                    height=100,
+                                    key=f"custom_sub_content_{section_key}_{sub_idx}"
+                                )
+                            else:  # template 3 - bullets
+                                bullets = subsection.get('content', [])
+                                if not isinstance(bullets, list):
+                                    bullets = []
+
+                                bullets_text = st.text_area(
+                                    "Bullets (one per line)",
+                                    value="\n".join(bullets),
+                                    height=100,
+                                    key=f"custom_sub_bullets_{section_key}_{sub_idx}"
+                                )
+                                subsection['content'] = [b.strip() for b in bullets_text.split('\n') if b.strip()]
+
+                            st.markdown("---")
+
+                        # Add subsection button
+                        if st.button(f"➕ Add Subsection", key=f"custom_add_sub_{section_key}"):
+                            new_subsection = {
+                                "title": "Subsection Title",
+                                "subtitle": "Subtitle",
+                                "content": [] if template_type == 'custom_section_template_3' else ""
+                            }
+                            sections_list.append(new_subsection)
+                            st.session_state.modified = True
+                            st.rerun()
+
+                        section_data['sections'] = sections_list
+
+                    # Delete section button
+                    st.markdown("---")
+                    if st.button(f"🗑️ Delete Section: {new_title}", key=f"custom_delete_{section_key}", type="secondary"):
+                        del data[section_key]
+                        st.session_state.modified = True
+                        st.success(f"✅ Deleted {new_title}")
+                        st.rerun()
+
+                    # Update data
+                    data[section_key] = section_data
+
+        else:
+            st.info("No custom sections found. Create your first custom section below.")
+
+        # Add new custom section
+        st.markdown("---")
+        st.markdown("### ➕ Add New Custom Section")
+
+        with st.expander("Create New Section"):
+            new_section_key = st.text_input(
+                "Section Key (unique identifier, no spaces)",
+                key="new_custom_key",
+                help="e.g., 'Publications', 'Certifications', 'Awards'"
+            )
+
+            new_section_title = st.text_input(
+                "Section Title",
+                key="new_custom_title"
+            )
+
+            new_template_type = st.selectbox(
+                "Template Type",
+                ["custom_section_template_1", "custom_section_template_2", "custom_section_template_3"],
+                key="new_custom_type",
+                help="Template 1: Simple (title + content), Template 2: Subsections (no bullets), Template 3: Subsections with bullets"
+            )
+
+            col1, col2 = st.columns(2)
+            with col1:
+                new_mandatory = st.checkbox("Mandatory", key="new_custom_mandatory")
+            with col2:
+                new_rewrite = st.checkbox("Allow Rewrite", key="new_custom_rewrite")
+
+            if st.button("➕ Create Custom Section", type="primary"):
+                if new_section_key and new_section_title:
+                    # Check if key already exists
+                    if new_section_key in data:
+                        st.error(f"❌ Section key '{new_section_key}' already exists!")
+                    else:
+                        # Create new section based on template type
+                        if new_template_type == 'custom_section_template_1':
+                            new_section = {
+                                "title": new_section_title,
+                                "subtitle": "",
+                                "content": "Add your content here",
+                                "rewrite": new_rewrite,
+                                "mandatory": new_mandatory,
+                                "type": new_template_type
+                            }
+                        else:
+                            new_section = {
+                                "title": new_section_title,
+                                "rewrite": new_rewrite,
+                                "mandatory": new_mandatory,
+                                "type": new_template_type,
+                                "sections": [
+                                    {
+                                        "title": "Subsection 1",
+                                        "subtitle": "Subtitle",
+                                        "content": [] if new_template_type == 'custom_section_template_3' else "Content"
+                                    }
+                                ]
+                            }
+
+                        data[new_section_key] = new_section
+                        st.session_state.modified = True
+                        st.success(f"✅ Created new custom section: {new_section_title}")
+                        st.rerun()
+                else:
+                    st.error("Please provide both section key and title.")
+
+    # Section: Template Settings
+    elif section == "Template Settings":
+        st.header("🎨 Template Settings")
+        st.markdown("Configure section ordering and font settings for your resume")
+
+        # Initialize if not present
+        if 'section_order' not in data:
+            data['section_order'] = ['summary', 'skills', 'experience', 'projects', 'education']
+
+        if 'font_settings' not in data:
+            data['font_settings'] = {
+                "family": "Lato",
+                "sizes": {
+                    "title": 12,
+                    "subtitle": 10,
+                    "content": 11
+                }
+            }
+
+        # Section Ordering
+        st.markdown("### 📋 Section Ordering")
+        st.markdown("Drag sections to reorder how they appear in your resume")
+
+        section_order = data.get('section_order', [])
+
+        # Get all available sections (standard + custom)
+        standard_section_names = ['summary', 'skills', 'experience', 'projects', 'education']
+        custom_section_keys = []
+
+        for key, value in data.items():
+            if key not in ['summary', 'summaries', 'experience', 'companies', 'skills', 'projects', 'education',
+                          'static_info', 'config', 'display_settings', 'version', 'section_order', 'font_settings']:
+                if isinstance(value, dict) and 'type' in value:
+                    custom_section_keys.append(key)
+
+        all_sections = standard_section_names + custom_section_keys
+
+        # Display current order with move up/down buttons
+        st.markdown("#### Current Order:")
+        for idx, section_name in enumerate(section_order):
+            col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
+
+            with col1:
+                st.text(f"{idx + 1}. {section_name}")
+
+            with col2:
+                if idx > 0 and st.button("⬆️", key=f"move_up_{idx}"):
+                    section_order[idx], section_order[idx-1] = section_order[idx-1], section_order[idx]
+                    st.session_state.modified = True
+                    st.rerun()
+
+            with col3:
+                if idx < len(section_order) - 1 and st.button("⬇️", key=f"move_down_{idx}"):
+                    section_order[idx], section_order[idx+1] = section_order[idx+1], section_order[idx]
+                    st.session_state.modified = True
+                    st.rerun()
+
+            with col4:
+                if st.button("🗑️", key=f"remove_section_{idx}"):
+                    section_order.pop(idx)
+                    st.session_state.modified = True
+                    st.rerun()
+
+        # Add section to order
+        st.markdown("#### Add Section")
+        available_sections = [s for s in all_sections if s not in section_order]
+
+        if available_sections:
+            new_section = st.selectbox(
+                "Section to add",
+                available_sections,
+                key="add_section_select"
+            )
+
+            if st.button("➕ Add Section to Order"):
+                section_order.append(new_section)
+                st.session_state.modified = True
+                st.rerun()
+        else:
+            st.info("All sections are already in the order list")
+
+        data['section_order'] = section_order
+
+        st.markdown("---")
+
+        # Font Settings
+        st.markdown("### 🔤 Font Settings")
+
+        font_settings = data.get('font_settings', {})
+
+        # Font Family
+        font_family = st.text_input(
+            "Font Family",
+            value=font_settings.get('family', 'Lato'),
+            help="e.g., Lato, Arial, Times New Roman, Helvetica"
+        )
+        font_settings['family'] = font_family
+
+        # Font Sizes
+        st.markdown("#### Font Sizes (in points)")
+        col1, col2, col3 = st.columns(3)
+
+        sizes = font_settings.get('sizes', {})
+
+        with col1:
+            title_size = st.number_input(
+                "Title Size (Section Headings)",
+                min_value=8,
+                max_value=18,
+                value=sizes.get('title', 12),
+                key="font_title_size"
+            )
+            sizes['title'] = title_size
+
+        with col2:
+            subtitle_size = st.number_input(
+                "Subtitle Size (Subsections)",
+                min_value=8,
+                max_value=14,
+                value=sizes.get('subtitle', 10),
+                key="font_subtitle_size"
+            )
+            sizes['subtitle'] = subtitle_size
+
+        with col3:
+            content_size = st.number_input(
+                "Content Size (Body Text)",
+                min_value=8,
+                max_value=14,
+                value=sizes.get('content', 11),
+                key="font_content_size"
+            )
+            sizes['content'] = content_size
+
+        font_settings['sizes'] = sizes
+        data['font_settings'] = font_settings
+
+        # Preview
+        st.markdown("---")
+        st.markdown("### 👁️ Preview")
+        st.info(f"**Font Family:** {font_family}\n\n**Sizes:** Title: {title_size}pt | Subtitle: {subtitle_size}pt | Content: {content_size}pt")
+
+        # Save button
+        if st.button("💾 Update Template Settings", type="primary"):
+            st.session_state.modified = True
+            st.success("✅ Template settings updated! Remember to save changes.")
 
     # JSON Preview
     with st.expander("🔍 Preview JSON"):

@@ -535,5 +535,74 @@
       "location": "Thalassery, Kerala, India"
     }
   ],
-  "version": "2.0"
+  "version": "2.0",
+  "section_order": [
+    "summary",
+    "Key Note Speaker",
+    "experience",
+    "Awards",
+    "skills",
+    "education",
+    "projects",
+    "Publications & Books"
+  ],
+  "font_settings": {
+    "family": "Lato",
+    "sizes": {
+      "title": 16,
+      "subtitle": 10,
+      "content": 11
+    }
+  },
+  "Awards": {
+    "title": "Awards",
+    "subtitle": "",
+    "content": "At Greedygame awarded with the best coder of the century award",
+    "rewrite": true,
+    "mandatory": true,
+    "type": "custom_section_template_1"
+  },
+  "Publications & Books": {
+    "title": "Publications & Books",
+    "rewrite": true,
+    "mandatory": true,
+    "type": "custom_section_template_2",
+    "sections": [
+      {
+        "title": "Of Monsters And Saints",
+        "subtitle": "released in Amazon book store",
+        "content": "Bl abla black sheep"
+      },
+      {
+        "title": "Under the same skies",
+        "subtitle": "Released in IBook store",
+        "content": "Bla bla have you any wool"
+      }
+    ]
+  },
+  "Key Note Speaker": {
+    "title": "Key Note Speaker",
+    "rewrite": true,
+    "mandatory": true,
+    "type": "custom_section_template_3",
+    "sections": [
+      {
+        "title": "Google ",
+        "subtitle": "Lorem Ipusum",
+        "content": [
+          "1 hour long",
+          "Same day everyday",
+          "Of all things good"
+        ]
+      },
+      {
+        "title": "Amazon",
+        "subtitle": "lorem ipusum andi",
+        "content": [
+          "ok ok",
+          "not okay"
+        ]
+      }
+    ]
+  }
 }

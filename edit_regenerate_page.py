@@ -82,6 +82,18 @@ def show():
             'education': True
         }
 
+    # Add custom sections to visibility (dynamically)
+    data = st.session_state.trimmed_data
+    standard_sections = ['summary', 'summaries', 'experience', 'companies', 'skills', 'projects', 'education',
+                        'static_info', 'config', 'display_settings', 'version', 'section_order', 'font_settings']
+
+    custom_section_keys = []
+    for key, value in data.items():
+        if key not in standard_sections and isinstance(value, dict) and 'type' in value:
+            custom_section_keys.append(key)
+            if key not in st.session_state.section_visibility:
+                st.session_state.section_visibility[key] = True
+
     # Main section checkboxes
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
@@ -114,6 +126,19 @@ def show():
             value=st.session_state.section_visibility.get('education', True),
             key="visibility_education"
         )
+
+    # Custom sections visibility checkboxes
+    if custom_section_keys:
+        st.markdown("**Custom Sections:**")
+        custom_cols = st.columns(min(len(custom_section_keys), 5))
+        for idx, section_key in enumerate(custom_section_keys):
+            with custom_cols[idx % 5]:
+                section_title = data[section_key].get('title', section_key)
+                st.session_state.section_visibility[section_key] = st.checkbox(
+                    f"📄 {section_title}",
+                    value=st.session_state.section_visibility.get(section_key, True),
+                    key=f"visibility_{section_key}"
+                )
 
     st.markdown("---")
     st.markdown("### 📝 Edit Resume Content")
@@ -668,6 +693,82 @@ def show():
                 st.session_state.show_custom_education = False
                 st.rerun()
 
+    # --- SECTION 6: Custom Sections ---
+    if custom_section_keys:
+        for section_key in custom_section_keys:
+            # Only show if visible
+            if not st.session_state.section_visibility.get(section_key, True):
+                continue
+
+            st.markdown("---")
+            section_data = data[section_key]
+            section_title = section_data.get('title', section_key)
+            st.markdown(f"#### 📄 {section_title}")
+
+            template_type = section_data.get('type', 'custom_section_template_1')
+
+            # Simple view with edit capability
+            st.info(f"**Type:** {template_type} | **Mandatory:** {section_data.get('mandatory', False)} | **Rewrite:** {section_data.get('rewrite', False)}")
+
+            # Display content based on template type
+            if template_type == 'custom_section_template_1':
+                # Simple template
+                section_data['subtitle'] = st.text_input(
+                    "Subtitle",
+                    value=section_data.get('subtitle', ''),
+                    key=f"custom_subtitle_{section_key}"
+                )
+
+                section_data['content'] = st.text_area(
+                    "Content",
+                    value=section_data.get('content', ''),
+                    height=150,
+                    key=f"custom_content_{section_key}"
+                )
+
+            elif template_type in ['custom_section_template_2', 'custom_section_template_3']:
+                # Subsections template
+                sections_list = section_data.get('sections', [])
+
+                st.markdown("**Subsections:**")
+                for sub_idx, subsection in enumerate(sections_list):
+                    with st.expander(f"{subsection.get('title', f'Subsection {sub_idx+1}')}", expanded=False):
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            subsection['title'] = st.text_input(
+                                "Title",
+                                value=subsection.get('title', ''),
+                                key=f"custom_sub_title_{section_key}_{sub_idx}"
+                            )
+                        with col2:
+                            subsection['subtitle'] = st.text_input(
+                                "Subtitle",
+                                value=subsection.get('subtitle', ''),
+                                key=f"custom_sub_subtitle_{section_key}_{sub_idx}"
+                            )
+
+                        if template_type == 'custom_section_template_2':
+                            # Content as text
+                            subsection['content'] = st.text_area(
+                                "Content",
+                                value=subsection.get('content', ''),
+                                height=100,
+                                key=f"custom_sub_content_{section_key}_{sub_idx}"
+                            )
+                        else:
+                            # Content as bullets (template 3)
+                            bullets = subsection.get('content', [])
+                            if not isinstance(bullets, list):
+                                bullets = []
+
+                            bullets_text = st.text_area(
+                                "Bullets (one per line)",
+                                value="\n".join(bullets),
+                                height=100,
+                                key=f"custom_sub_bullets_{section_key}_{sub_idx}"
+                            )
+                            subsection['content'] = [b.strip() for b in bullets_text.split('\n') if b.strip()]
+
     # --- GENERATE BUTTON ---
     st.markdown("---")
     if st.button("🔄 Generate New PDF", type="primary", use_container_width=True):
@@ -706,6 +807,11 @@ def show():
                 else:
                     # If skills section itself is unchecked, remove it
                     filtered_data.pop('skills', None)
+
+                # Filter custom sections based on visibility
+                for section_key in custom_section_keys:
+                    if not st.session_state.section_visibility.get(section_key, True):
+                        filtered_data.pop(section_key, None)
 
                 # Fill LaTeX template
                 filled_tex = output_dir / "resume_filled.tex"
