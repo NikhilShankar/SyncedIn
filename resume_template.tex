@@ -47,7 +47,7 @@
 \newcommand{\resumeItem}[1]{\item\normalfont{#1}}
 \newcommand{\resumeSubheading}[4]{
   \vspace{-1pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \begin{tabular*}{0.97\textwidth}[t]{@{}l@{\extracolsep{\fill}}r@{}}
       \textbf{#1} & #2 \\
       \textit{\normalfont#3} & \textit{\normalfont #4} \\
     \end{tabular*}\vspace{-5pt}
@@ -55,7 +55,7 @@
 % New command for three lines of left/right-aligned content
 \newcommand{\resumeThreeLineSubheading}[6]{
   \vspace{-1pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \begin{tabular*}{0.97\textwidth}[t]{@{}l@{\extracolsep{\fill}}r@{}}
       \textbf{#1} & \normalfont #2 \\  % Line 1: Degree (Left) | Dates (Right)
       \textbf{\normalfont #3} & \normalfont #4 \\  % Line 2: Course (Left) | Location (Right)
       \normalfont #5 & \normalfont #6 \\  % Line 3: Institution (Left) | Blank (Right)
@@ -89,17 +89,18 @@
 % #1=Title (bold, left), #2=Subtitle (italic, below title, left), #3=Subtitle_right (normal, right-aligned), #4=Content
 \newcommand{\customSubsectionItemTwo}[4]{
   \item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \begin{tabular*}{\textwidth}[t]{@{}l@{\extracolsep{\fill}}r@{}}
+
       \textbf{#1} & \normalfont #3 \\
     \end{tabular*}
     \ifx&#2&% Check if subtitle is empty
       % No subtitle
     \else
       \vspace{2pt}
-      \textit{\normalfont{#2}} \\
+      \noindent\textit{\normalfont{#2}} \\
     \fi
     \vspace{2pt}
-    \normalfont{#4}
+    \noindent\normalfont{#4}
     \vspace{6pt}
 }
 \newcommand{\customSectionTemplateTwoEnd}{
@@ -116,14 +117,14 @@
 % #1=Title (bold, left), #2=Subtitle (italic, below title, left), #3=Subtitle_right (normal, right-aligned)
 \newcommand{\customSubsectionItemThree}[3]{
   \item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \begin{tabular*}{\textwidth}[t]{@{}l@{\extracolsep{\fill}}r@{}}
       \textbf{#1} & \normalfont #3 \\
     \end{tabular*}
     \ifx&#2&% Check if subtitle is empty
       % No subtitle
     \else
       \vspace{2pt}
-      \textit{\normalfont{#2}} \\
+      \noindent\textit{\normalfont{#2}} \\
     \fi
     \vspace{-4pt}
     \begin{itemize}[leftmargin=0.15in, label=$\cdot$]

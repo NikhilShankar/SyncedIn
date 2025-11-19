@@ -549,9 +549,9 @@
   "font_settings": {
     "family": "Lato",
     "sizes": {
-      "title": 12,
-      "subtitle": 11,
-      "content": 10
+      "title": 18,
+      "subtitle": 14,
+      "content": 14
     }
   },
   "Awards": {

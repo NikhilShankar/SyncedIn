@@ -90,7 +90,7 @@ def build_skills_section(trimmed_resume_data, sections):
 
             skills_section = f"%----------{skills_title.upper()}----------\n"
             skills_section += f"\\section{{{skills_title}}}\n"
-            skills_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+            skills_section += "\\begin{itemize}[leftmargin=0.0in, label={}]\n"
             skills_section += "    \\normalfont{\\item{\n"
 
             # Build skill category lines dynamically
@@ -142,7 +142,7 @@ def build_projects_section(trimmed_resume_data, sections):
             projects_title = sections['projects'].get('title', 'Personal Projects')
             projects_section = f"%----------{projects_title.upper()}----------\n"
             projects_section += f"\\section{{{projects_title}}}\n"
-            projects_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+            projects_section += "\\begin{itemize}[leftmargin=0.0in, label={}]\n"
 
             for project in projects:
                 projects_section += f"    \\item \\textbf{{{escape_latex_special_chars(project['name'])}}} - {escape_latex_special_chars(project['description'])}\n"
@@ -167,7 +167,7 @@ def build_education_section(trimmed_resume_data, sections):
             education_title = sections['education'].get('title', 'Education')
             education_section = f"%----------{education_title.upper()}----------\n"
             education_section += f"\\section{{{education_title}}}\n"
-            education_section += "\\begin{itemize}[leftmargin=0.05in, label={}]\n"
+            education_section += "\\begin{itemize}[leftmargin=0in, label={}]\n"
 
             for edu in education_data:
                 degree = escape_latex_special_chars(edu['degree'])
