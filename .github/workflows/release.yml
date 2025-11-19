@@ -42,7 +42,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./go-runner
+          context: .
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/syncedin-resume:${{ steps.version.outputs.version }}
