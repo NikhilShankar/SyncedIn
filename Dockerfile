@@ -65,7 +65,19 @@ RUN chmod +x entrypoint.sh && \
 
 # Install custom fonts system-wide for fontconfig
 RUN mkdir -p /usr/share/fonts/truetype/lato && \
-    cp fonts/*.ttf /usr/share/fonts/truetype/lato/ && \
+    cp fonts/Lato-*.ttf /usr/share/fonts/truetype/lato/ && \
+    fc-cache -f -v
+
+RUN mkdir -p /usr/share/fonts/truetype/montserrat && \
+    cp fonts/Montserrat-*.ttf /usr/share/fonts/truetype/montserrat/ && \
+    fc-cache -f -v
+
+RUN mkdir -p /usr/share/fonts/truetype/opensans && \
+    cp fonts/OpenSans-*.ttf /usr/share/fonts/truetype/opensans/ && \
+    fc-cache -f -v
+
+RUN mkdir -p /usr/share/fonts/truetype/roboto && \
+    cp fonts/Roboto-*.ttf /usr/share/fonts/truetype/roboto/ && \
     fc-cache -f -v
 
 # Create /data directory for bind mount

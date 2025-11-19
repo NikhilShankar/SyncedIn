@@ -140,6 +140,77 @@ def show():
                     key=f"visibility_{section_key}"
                 )
 
+    # --- Font Settings ---
+    st.markdown("---")
+    st.markdown("### 🔤 Font Settings")
+
+    # Get current font settings from trimmed data or use defaults
+    default_font_settings = {
+        "family": "Lato",
+        "sizes": {
+            "title": 12,
+            "subtitle": 10,
+            "content": 11
+        }
+    }
+    current_font_settings = st.session_state.trimmed_data.get('font_settings', default_font_settings)
+    current_sizes = current_font_settings.get('sizes', default_font_settings['sizes'])
+
+    # Available fonts (must be installed or in fonts folder)
+    available_fonts = ["Lato", "Roboto", "OpenSans", "Montserrat", "SourceSansPro"]
+
+    font_col1, font_col2, font_col3, font_col4 = st.columns(4)
+
+    with font_col1:
+        current_family = current_font_settings.get('family', 'Lato')
+        if current_family not in available_fonts:
+            available_fonts.append(current_family)
+
+        new_family = st.selectbox(
+            "Font Family",
+            options=available_fonts,
+            index=available_fonts.index(current_family),
+            key="font_family_select"
+        )
+
+    with font_col2:
+        new_title_size = st.number_input(
+            "Title Size",
+            min_value=8,
+            max_value=20,
+            value=current_sizes.get('title', 12),
+            key="font_title_size"
+        )
+
+    with font_col3:
+        new_subtitle_size = st.number_input(
+            "Subtitle Size",
+            min_value=6,
+            max_value=16,
+            value=current_sizes.get('subtitle', 10),
+            key="font_subtitle_size"
+        )
+
+    with font_col4:
+        new_content_size = st.number_input(
+            "Content Size",
+            min_value=8,
+            max_value=14,
+            value=current_sizes.get('content', 11),
+            key="font_content_size"
+        )
+
+    # Update font settings in trimmed data
+    if 'font_settings' not in st.session_state.trimmed_data:
+        st.session_state.trimmed_data['font_settings'] = default_font_settings.copy()
+
+    st.session_state.trimmed_data['font_settings']['family'] = new_family
+    st.session_state.trimmed_data['font_settings']['sizes'] = {
+        'title': new_title_size,
+        'subtitle': new_subtitle_size,
+        'content': new_content_size
+    }
+
     st.markdown("---")
     st.markdown("### 📝 Edit Resume Content")
     st.markdown("**Click on chips to select/unselect content. Selected items are highlighted in blue.**")
