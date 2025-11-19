@@ -323,11 +323,16 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
 
     # Calculate leading (line spacing) - typically 1.2x font size
     title_leading = int(title_size * 1.2)
+    subtitle_leading = int(subtitle_size * 1.2)
+    content_leading = int(content_size * 1.2)
 
     template = template.replace('{{FONT_FAMILY}}', font_family)
     template = template.replace('{{CONTENT_FONTSIZE}}', str(content_size))
+    template = template.replace('{{CONTENT_FONTSIZE_LEADING}}', str(content_leading))
     template = template.replace('{{TITLE_FONTSIZE}}', str(title_size))
     template = template.replace('{{TITLE_FONTSIZE_LEADING}}', str(title_leading))
+    template = template.replace('{{SUBTITLE_FONTSIZE}}', str(subtitle_size))
+    template = template.replace('{{SUBTITLE_FONTSIZE_LEADING}}', str(subtitle_leading))
 
     # Handle links - support both old format (linkedin, leetcode fields) and new format (links array)
     if 'links' in static and isinstance(static['links'], list):

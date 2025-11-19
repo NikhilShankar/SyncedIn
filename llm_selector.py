@@ -439,10 +439,11 @@ Return ONLY a valid JSON object with this structure:
   "display_settings": {{
     ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
   }},
+  "font_settings": {json.dumps(full_resume_data.get('font_settings', {"family": "Lato", "sizes": {"title": 12, "subtitle": 10, "content": 11}}))},  // ⚠️ REQUIRED - copy EXACTLY from resume data
   "section_order": {json.dumps(full_resume_data.get('section_order', ['summary', 'skills', 'experience', 'projects', 'education']))}  // ⚠️ REQUIRED - copy EXACTLY from resume data to maintain section ordering{self._build_custom_sections_json_schema(full_resume_data, should_rewrite_selected)}
 }}
 
-**CRITICAL: Copy static_info, education, display_settings, and section_order EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
+**CRITICAL: Copy static_info, education, display_settings, font_settings, and section_order EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
 
 **FINAL VALIDATION CHECKLIST (Check before returning):**
 - [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)
@@ -612,10 +613,11 @@ Return ONLY a valid JSON object with this structure:
   "display_settings": {{
     ... (copy the ENTIRE display_settings object EXACTLY as-is from resume data - do NOT modify or omit)
   }},
+  "font_settings": {json.dumps(full_resume_data.get('font_settings', {"family": "Lato", "sizes": {"title": 12, "subtitle": 10, "content": 11}}))},  // ⚠️ REQUIRED - copy EXACTLY from resume data
   "section_order": {json.dumps(full_resume_data.get('section_order', ['summary', 'skills', 'experience', 'projects', 'education']))}  // ⚠️ REQUIRED - copy EXACTLY from resume data to maintain section ordering{self._build_custom_sections_json_schema(full_resume_data, should_rewrite_selected)}
 }}
 
-**CRITICAL: Copy static_info, education, display_settings, and section_order EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
+**CRITICAL: Copy static_info, education, display_settings, font_settings, and section_order EXACTLY from the resume data with ALL fields. Do NOT omit anything.**
 
 **FINAL VALIDATION CHECKLIST (Check before returning):**
 - [ ] Total bullets = {config.get('bullets', {}).get('total_min', 16)}-{config.get('bullets', {}).get('total_max', 20)}? (Count them!)

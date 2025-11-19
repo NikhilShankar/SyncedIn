@@ -43,6 +43,10 @@
 % Remove page numbers
 \pagestyle{empty}
 
+% Custom font size commands for dynamic sizing
+\newcommand{\contentfontsize}{\fontsize{{{CONTENT_FONTSIZE}}}{{{CONTENT_FONTSIZE_LEADING}}}\selectfont}
+\newcommand{\subtitlefontsize}{\fontsize{{{SUBTITLE_FONTSIZE}}}{{{SUBTITLE_FONTSIZE_LEADING}}}\selectfont}
+
 % Custom commands
 \newcommand{\resumeItem}[1]{\item\normalfont{#1}}
 \newcommand{\resumeSubheading}[4]{
@@ -143,6 +147,7 @@
 }
 
 \begin{document}
+\contentfontsize
 
 %----------HEADER----------
 \begin{center}
