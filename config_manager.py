@@ -49,10 +49,10 @@ TRACKING_FILE = "applications_tracking.json"
 
 # Available Claude models (full API model names)
 AVAILABLE_MODELS = [
-    "claude-sonnet-4-20250514",
-    "claude-3-5-sonnet-20241022",
-    "claude-opus-4-20250514",
-    "claude-3-5-haiku-20241022"
+    "claude-sonnet-4-5-20250929",
+    "claude-haiku-4-5-20251001",
+    "claude-sonnet-4-5",
+    "claude-haiku-4-5"
 ]
 
 DEFAULT_GLOBAL_CONFIG = {

@@ -34,7 +34,7 @@ class ResumeSelector:
         if not self.api_key:
             raise ValueError("ANTHROPIC_API_KEY not found. Set it in .env file or pass as argument.")
 
-        self.model = model or os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-20250514')
+        self.model = model or os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929')
         self.client = Anthropic(api_key=self.api_key)
 
     def select_resume_content(self, full_resume_data, job_description, should_rewrite_selected=False):
