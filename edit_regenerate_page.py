@@ -176,27 +176,30 @@ def show():
     with font_col2:
         new_title_size = st.number_input(
             "Title Size",
-            min_value=8,
-            max_value=20,
-            value=current_sizes.get('title', 12),
+            min_value=8.0,
+            max_value=20.0,
+            value=float(current_sizes.get('title', 12)),
+            step=0.1,
             key="font_title_size"
         )
 
     with font_col3:
         new_subtitle_size = st.number_input(
             "Subtitle Size",
-            min_value=6,
-            max_value=16,
-            value=current_sizes.get('subtitle', 10),
+            min_value=6.0,
+            max_value=16.0,
+            value=float(current_sizes.get('subtitle', 10)),
+            step=0.1,
             key="font_subtitle_size"
         )
 
     with font_col4:
         new_content_size = st.number_input(
             "Content Size",
-            min_value=8,
-            max_value=14,
-            value=current_sizes.get('content', 11),
+            min_value=8.0,
+            max_value=14.0,
+            value=float(current_sizes.get('content', 11)),
+            step=0.1,
             key="font_content_size"
         )
 

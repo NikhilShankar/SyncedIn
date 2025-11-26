@@ -1245,9 +1245,10 @@ def show():
         with col1:
             title_size = st.number_input(
                 "Title Size (Section Headings)",
-                min_value=8,
-                max_value=18,
-                value=sizes.get('title', 12),
+                min_value=8.0,
+                max_value=18.0,
+                value=float(sizes.get('title', 12)),
+                step=0.1,
                 key="font_title_size"
             )
             sizes['title'] = title_size
@@ -1255,9 +1256,10 @@ def show():
         with col2:
             subtitle_size = st.number_input(
                 "Subtitle Size (Subsections)",
-                min_value=8,
-                max_value=14,
-                value=sizes.get('subtitle', 10),
+                min_value=8.0,
+                max_value=14.0,
+                value=float(sizes.get('subtitle', 10)),
+                step=0.1,
                 key="font_subtitle_size"
             )
             sizes['subtitle'] = subtitle_size
@@ -1265,9 +1267,10 @@ def show():
         with col3:
             content_size = st.number_input(
                 "Content Size (Body Text)",
-                min_value=8,
-                max_value=14,
-                value=sizes.get('content', 11),
+                min_value=8.0,
+                max_value=14.0,
+                value=float(sizes.get('content', 11)),
+                step=0.1,
                 key="font_content_size"
             )
             sizes['content'] = content_size

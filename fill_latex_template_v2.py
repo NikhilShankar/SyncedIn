@@ -321,12 +321,16 @@ def fill_latex_template(template_path, trimmed_resume_data, output_path):
     subtitle_size = sizes.get('subtitle', 10)
     content_size = sizes.get('content', 11)
 
-    # Calculate leading (line spacing) - typically 1.2x font size
-    title_leading = int(title_size * 1.2)
-    subtitle_leading = int(subtitle_size * 1.2)
-    content_leading = int(content_size * 1.2)
+    # Calculate leading (line spacing) - typically 1.2x font size (keep float precision)
+    title_leading = title_size * 1.2
+    subtitle_leading = subtitle_size * 1.2
+    content_leading = content_size * 1.2
+
+    # For documentclass, round to nearest integer (LaTeX only accepts standard sizes like 10pt, 11pt, 12pt)
+    content_size_rounded = round(content_size)
 
     template = template.replace('{{FONT_FAMILY}}', font_family)
+    template = template.replace('{{CONTENT_FONTSIZE_ROUNDED}}', str(content_size_rounded))
     template = template.replace('{{CONTENT_FONTSIZE}}', str(content_size))
     template = template.replace('{{CONTENT_FONTSIZE_LEADING}}', str(content_leading))
     template = template.replace('{{TITLE_FONTSIZE}}', str(title_size))
