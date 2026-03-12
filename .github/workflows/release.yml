@@ -66,8 +66,15 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # Get the branch that the tag was created from (usually main or the default branch)
+          # Get the default branch name
           DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+
+          # Checkout the actual branch (we're on a detached HEAD from the tag)
+          git fetch origin $DEFAULT_BRANCH
+          git checkout $DEFAULT_BRANCH
+
+          # Re-apply the docker-compose update on the branch
+          sed -i "s|image: .*/syncedin-resume:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/syncedin-resume:${{ steps.version.outputs.version }}|" go-runner/docker-compose.yml
 
           git add go-runner/docker-compose.yml
 
@@ -75,7 +82,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update docker-compose to ${{ steps.version.outputs.version }} [skip ci]"
-            git push origin HEAD:$DEFAULT_BRANCH
+            git push origin $DEFAULT_BRANCH
           fi
 
       # ============ BUILD GO EXECUTABLES ============
